@@ -6,7 +6,7 @@ import MainLayout from '@/components/layout/MainLayout';
 import MatchRating from '@/components/ui/MatchRating';
 import { getMatchById, getReviewsForMatch } from '@/utils/mockData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { toast } from '@/components/ui/sonner';
+import { toast } from "sonner";
 import { cn } from '@/lib/utils';
 
 const MatchDetails = () => {
