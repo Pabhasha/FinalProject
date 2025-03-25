@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock, Trophy } from 'lucide-react';
+import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock, Trophy, ChevronsDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { mockMatches, mockLists } from '@/utils/mockData';
 import { categories } from '@/utils/categoryData';

@@ -102,11 +102,11 @@
   }
 
   .match-card-hover {
-    @apply relative group cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+    @apply relative cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
   }
 
   .match-card-overlay {
-    @apply absolute inset-0 bg-black/80 flex flex-col justify-end p-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300;
+    @apply absolute inset-0 bg-black/80 flex flex-col justify-end p-3 opacity-0 transition-opacity duration-300;
   }
 
   .letterboxd-link {
