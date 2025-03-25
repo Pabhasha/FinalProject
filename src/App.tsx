@@ -9,6 +9,7 @@ import { ThemeProvider } from "next-themes";
 
 import Index from "./pages/Index";
 import MatchDetails from "./pages/MatchDetails";
+import CategoryPage from "./pages/CategoryPage";
 import Lists from "./pages/Lists";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
@@ -26,6 +27,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/match/:id" element={<MatchDetails />} />
+              <Route path="/category/:slug" element={<CategoryPage />} />
               <Route path="/lists" element={<Lists />} />
               <Route path="/profile" element={<Profile />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

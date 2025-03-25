@@ -1,12 +1,31 @@
 
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAuth } from '@/context/AuthContext';
-import { Settings, ListChecks, Star, MessageSquare } from 'lucide-react';
+import { getTeamById } from '@/utils/teamData';
+import { Settings, ListChecks, Star, MessageSquare, Edit2 } from 'lucide-react';
 import MatchCard from '@/components/ui/MatchCard';
 import { mockMatches } from '@/utils/mockData';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
+import RegisterForm from '@/components/auth/RegisterForm';
+import LoginForm from '@/components/auth/LoginForm';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from '@/components/ui/tabs';
 
 type TabType = 'logged' | 'reviews' | 'lists';
 
@@ -14,6 +33,9 @@ const Profile = () => {
   const { user, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('logged');
   const [watchedMatches] = useLocalStorage<string[]>('footballtrackr-watched', []);
+  
+  // Get favorite team data if user has selected one
+  const favoriteTeam = user?.favoriteTeamId ? getTeamById(user.favoriteTeamId) : undefined;
   
   // Filter matches that the user has watched
   const userWatchedMatches = mockMatches.filter(match => 
@@ -29,19 +51,36 @@ const Profile = () => {
           <p className="text-muted-foreground mb-6 max-w-md">
             Please sign in or create an account to view your profile and track your watched matches.
           </p>
-          <div className="flex space-x-4">
-            <a 
-              href="/login" 
-              className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md text-sm font-medium hover:bg-secondary/80 transition-colors"
-            >
-              Sign In
-            </a>
-            <a 
-              href="/register" 
-              className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
-            >
-              Create Account
-            </a>
+          <div className="flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="secondary">Sign In</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Sign In</DialogTitle>
+                  <DialogDescription>
+                    Sign in to your FootballTrackr account
+                  </DialogDescription>
+                </DialogHeader>
+                <LoginForm />
+              </DialogContent>
+            </Dialog>
+            
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>Create Account</Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Create Account</DialogTitle>
+                  <DialogDescription>
+                    Join FootballTrackr to track your football watching history
+                  </DialogDescription>
+                </DialogHeader>
+                <RegisterForm />
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </MainLayout>
@@ -92,13 +131,57 @@ const Profile = () => {
               {user?.bio && (
                 <p className="mt-2 text-sm max-w-2xl">{user.bio}</p>
               )}
+              
+              {/* Favorite Team */}
+              {favoriteTeam && (
+                <div className="mt-3 flex items-center">
+                  <span className="text-sm text-muted-foreground mr-2">Favorite Team:</span>
+                  <div className="flex items-center bg-card rounded-full px-3 py-1">
+                    {favoriteTeam.logo && (
+                      <img 
+                        src={favoriteTeam.logo} 
+                        alt={favoriteTeam.name} 
+                        className="w-5 h-5 mr-2 object-contain" 
+                      />
+                    )}
+                    <span className="text-sm">{favoriteTeam.name}</span>
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Edit Profile */}
-            <button className="mt-4 md:mt-0 md:ml-auto md:mb-3 flex items-center px-4 py-2 bg-secondary text-secondary-foreground rounded-md text-sm font-medium hover:bg-secondary/80 transition-colors">
-              <Settings className="w-4 h-4 mr-2" />
-              Edit Profile
-            </button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button 
+                  className="mt-4 md:mt-0 md:ml-auto md:mb-3" 
+                  variant="secondary"
+                >
+                  <Settings className="w-4 h-4 mr-2" />
+                  Edit Profile
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Edit Profile</DialogTitle>
+                  <DialogDescription>
+                    Update your profile information
+                  </DialogDescription>
+                </DialogHeader>
+                <Tabs defaultValue="profile" className="mt-4">
+                  <TabsList className="grid grid-cols-2">
+                    <TabsTrigger value="profile">Profile</TabsTrigger>
+                    <TabsTrigger value="team">Favorite Team</TabsTrigger>
+                  </TabsList>
+                  <TabsContent value="profile" className="space-y-4 pt-4">
+                    <p>Profile editing coming soon...</p>
+                  </TabsContent>
+                  <TabsContent value="team" className="space-y-4 pt-4">
+                    <p>Team editing coming soon...</p>
+                  </TabsContent>
+                </Tabs>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
         
@@ -176,12 +259,9 @@ const Profile = () => {
                   <p className="text-muted-foreground mb-4">
                     Start building your football watching history by logging matches you've watched.
                   </p>
-                  <a 
-                    href="/matches" 
-                    className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
-                  >
-                    Explore Matches
-                  </a>
+                  <Button asChild>
+                    <Link to="/">Explore Matches</Link>
+                  </Button>
                 </div>
               )}
             </div>
@@ -194,19 +274,13 @@ const Profile = () => {
                 Share your thoughts on matches you've watched by writing reviews.
               </p>
               {userWatchedMatches.length > 0 ? (
-                <a 
-                  href={`/match/${userWatchedMatches[0].id}`} 
-                  className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
-                >
-                  Write Your First Review
-                </a>
+                <Button asChild>
+                  <Link to={`/match/${userWatchedMatches[0].id}`}>Write Your First Review</Link>
+                </Button>
               ) : (
-                <a 
-                  href="/matches" 
-                  className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
-                >
-                  Explore Matches
-                </a>
+                <Button asChild>
+                  <Link to="/">Explore Matches</Link>
+                </Button>
               )}
             </div>
           )}
@@ -217,12 +291,9 @@ const Profile = () => {
               <p className="text-muted-foreground mb-4">
                 Create lists to organize your favorite matches, memorable moments, or greatest comebacks.
               </p>
-              <a 
-                href="/lists" 
-                className="px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-medium hover:bg-primary/90 transition-colors"
-              >
-                Create Your First List
-              </a>
+              <Button asChild>
+                <Link to="/lists">Create Your First List</Link>
+              </Button>
             </div>
           )}
         </div>
