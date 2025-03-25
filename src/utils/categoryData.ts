@@ -14,7 +14,7 @@ export interface Category {
 // Filter matches by competition
 const getMatchesByCompetition = (competition: string): Match[] => {
   return mockMatches.filter(match => 
-    match.competition.toLowerCase().includes(competition.toLowerCase())
+    match.competition.name.toLowerCase().includes(competition.toLowerCase())
   );
 };
 
@@ -31,7 +31,7 @@ const getMatchesByTeams = (team1: string, team2: string): Match[] => {
 // Filter matches by league
 const getMatchesByLeague = (league: string): Match[] => {
   return mockMatches.filter(match => 
-    match.competition.toLowerCase().includes(league.toLowerCase())
+    match.competition.name.toLowerCase().includes(league.toLowerCase())
   );
 };
 
