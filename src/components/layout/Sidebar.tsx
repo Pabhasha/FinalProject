@@ -1,15 +1,21 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock } from 'lucide-react';
+import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { mockMatches, mockLists } from '@/utils/mockData';
+import { categories } from '@/utils/categoryData';
 
 const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const [competitionsExpanded, setCompetitionsExpanded] = useState(true);
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
+  };
+
+  const toggleCompetitions = () => {
+    setCompetitionsExpanded(!competitionsExpanded);
   };
 
   // Get trending and top rated matches
@@ -40,6 +46,53 @@ const Sidebar: React.FC = () => {
       <div className="p-4">
         {/* Sections */}
         <div className="space-y-6">
+          {/* Competitions Section */}
+          <div>
+            <div 
+              className="flex items-center mb-3 cursor-pointer"
+              onClick={!collapsed ? toggleCompetitions : undefined}
+            >
+              <Trophy className="w-5 h-5 text-primary mr-2" />
+              {!collapsed && (
+                <>
+                  <h3 className="font-semibold text-sidebar-foreground">Competitions</h3>
+                  <div className="ml-auto">
+                    {competitionsExpanded ? (
+                      <ChevronsDown className="w-4 h-4" />
+                    ) : (
+                      <ChevronsRight className="w-4 h-4" />
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+            
+            {!collapsed && competitionsExpanded ? (
+              <ul className="space-y-2 pl-7">
+                {categories.map(category => (
+                  <li key={category.id}>
+                    <Link 
+                      to={`/category/${category.slug}`}
+                      className="flex items-start py-1.5 px-2 rounded hover:bg-sidebar-accent transition-colors text-sm"
+                    >
+                      <span className="truncate">{category.title}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            ) : collapsed ? (
+              <div className="flex justify-center">
+                <Link 
+                  to="/matches"
+                  className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-sidebar-accent"
+                  title="View Competitions"
+                >
+                  <Trophy className="w-5 h-5" />
+                </Link>
+              </div>
+            ) : null}
+          </div>
+          
           {/* Trending Matches */}
           <div>
             <div className="flex items-center mb-3">

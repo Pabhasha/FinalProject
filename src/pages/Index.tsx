@@ -3,6 +3,7 @@ import React from 'react';
 import MainLayout from '@/components/layout/MainLayout';
 import { categories } from '@/utils/categoryData';
 import CategoryCarousel from '@/components/ui/CategoryCarousel';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const Index = () => {
   return (
@@ -15,14 +16,19 @@ const Index = () => {
           </p>
         </section>
         
-        {categories.map((category) => (
-          <CategoryCarousel 
-            key={category.id}
-            title={category.title}
-            matches={category.matches}
-            categorySlug={category.slug}
-          />
-        ))}
+        <ScrollArea className="w-full">
+          <div className="space-y-10 pb-8">
+            {categories.map((category) => (
+              <CategoryCarousel 
+                key={category.id}
+                title={category.title}
+                matches={category.matches}
+                categorySlug={category.slug}
+                description={category.description}
+              />
+            ))}
+          </div>
+        </ScrollArea>
       </div>
     </MainLayout>
   );
