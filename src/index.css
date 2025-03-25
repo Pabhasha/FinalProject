@@ -108,6 +108,11 @@
   .match-card-overlay {
     @apply absolute inset-0 bg-black/80 flex flex-col justify-end p-3 opacity-0 transition-opacity duration-300;
   }
+  
+  /* Add a new class for the hover effect */
+  .match-card-hover:hover .match-card-overlay {
+    @apply opacity-100;
+  }
 
   .letterboxd-link {
     @apply relative inline-block after:content-[''] after:absolute after:w-full after:scale-x-0 after:h-0.5 after:bottom-0 after:left-0 after:bg-primary after:origin-bottom-right after:transition-transform after:duration-300 hover:after:scale-x-100 hover:after:origin-bottom-left;
