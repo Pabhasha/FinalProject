@@ -5,11 +5,12 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from 'sonner';
-import { Search } from 'lucide-react';
+import { Search, AlertCircle, Flag, Trophy } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { teams } from '@/utils/teamData';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import {
   Form,
   FormControl,
@@ -27,9 +28,19 @@ import {
 } from '@/components/ui/select';
 
 const registerSchema = z.object({
-  username: z.string().min(3, 'Username must be at least 3 characters').max(20, 'Username cannot exceed 20 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  username: z.string()
+    .min(3, 'Username must be at least 3 characters')
+    .max(20, 'Username cannot exceed 20 characters'),
+  email: z.string()
+    .email('Invalid email address format'),
+  password: z.string()
+    .min(8, 'Password must be at least 8 characters')
+    .refine(password => /[A-Z]/.test(password), {
+      message: 'Password must contain at least one uppercase letter',
+    })
+    .refine(password => /[0-9]/.test(password), {
+      message: 'Password must contain at least one number',
+    }),
   confirmPassword: z.string(),
   favoriteTeamId: z.string().min(1, 'Please select your favorite team'),
 }).refine((data) => data.password === data.confirmPassword, {
@@ -44,6 +55,7 @@ const RegisterForm = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [teamSearchQuery, setTeamSearchQuery] = useState('');
+  const [formError, setFormError] = useState<string | null>(null);
   
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -59,17 +71,21 @@ const RegisterForm = () => {
   const onSubmit = async (values: RegisterFormValues) => {
     try {
       setIsLoading(true);
+      setFormError(null);
+      
       await register(
         values.username,
         values.email,
         values.password,
         values.favoriteTeamId
       );
+      
       toast.success('Account created successfully!');
       navigate('/profile');
     } catch (error) {
-      toast.error('Failed to create account');
-      console.error(error);
+      const errorMessage = error instanceof Error ? error.message : 'Failed to create account';
+      setFormError(errorMessage);
+      toast.error(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -88,6 +104,13 @@ const RegisterForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {formError && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{formError}</AlertDescription>
+          </Alert>
+        )}
+
         <FormField
           control={form.control}
           name="username"
@@ -171,7 +194,10 @@ const RegisterForm = () => {
                   <SelectContent className="max-h-[300px]">
                     {clubTeams.length > 0 && (
                       <>
-                        <div className="px-2 py-1.5 text-sm font-semibold">Club Teams</div>
+                        <div className="px-2 py-1.5 text-sm font-semibold flex items-center gap-2 border-b">
+                          <Trophy className="h-4 w-4" />
+                          <span>Club Teams</span>
+                        </div>
                         {clubTeams.map(team => (
                           <SelectItem key={team.id} value={team.id} className="py-2">
                             <div className="flex items-center gap-2">
@@ -191,7 +217,10 @@ const RegisterForm = () => {
                     
                     {nationalTeams.length > 0 && (
                       <>
-                        <div className="px-2 py-1.5 text-sm font-semibold mt-1">National Teams</div>
+                        <div className="px-2 py-1.5 text-sm font-semibold mt-1 flex items-center gap-2 border-b">
+                          <Flag className="h-4 w-4" />
+                          <span>National Teams</span>
+                        </div>
                         {nationalTeams.map(team => (
                           <SelectItem key={team.id} value={team.id} className="py-2">
                             <div className="flex items-center gap-2">

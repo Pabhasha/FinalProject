@@ -18,7 +18,7 @@ const Auth = () => {
 
   return (
     <MainLayout>
-      <div className="page-transition max-w-md mx-auto mt-8">
+      <div className="page-transition max-w-md mx-auto mt-8 px-4">
         <div className="bg-card rounded-lg shadow-lg p-6">
           <h1 className="text-2xl font-bold text-center mb-6">
             {activeTab === "login" ? "Sign In" : "Create Account"}

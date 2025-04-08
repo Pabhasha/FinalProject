@@ -24,15 +24,19 @@ export const teams: Team[] = [
   { id: 'inter', name: 'Inter Milan', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/FC_Internazionale_Milano_2021.svg/180px-FC_Internazionale_Milano_2021.svg.png', country: 'Italy', type: 'club' },
   { id: 'psg', name: 'Paris Saint-Germain', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/a/a7/Paris_Saint-Germain_F.C..svg/180px-Paris_Saint-Germain_F.C..svg.png', country: 'France', type: 'club' },
   
-  // National Teams
-  { id: 'spain', name: 'Spain', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/3/31/Spain_National_Football_Team_badge.svg/180px-Spain_National_Football_Team_badge.svg.png', country: 'Spain', type: 'national' },
-  { id: 'germany', name: 'Germany', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/e/e3/DFBEagle.svg/180px-DFBEagle.svg.png', country: 'Germany', type: 'national' },
-  { id: 'france', name: 'France', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/1/12/France_national_football_team_seal.svg/180px-France_national_football_team_seal.svg.png', country: 'France', type: 'national' },
-  { id: 'england', name: 'England', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/8/8b/England_national_football_team_crest.svg/180px-England_national_football_team_crest.svg.png', country: 'England', type: 'national' },
-  { id: 'brazil', name: 'Brazil', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/9/99/Brazilian_Football_Confederation_logo.svg/180px-Brazilian_Football_Confederation_logo.svg.png', country: 'Brazil', type: 'national' },
-  { id: 'argentina', name: 'Argentina', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/c/c1/Argentina_national_football_team_logo.svg/180px-Argentina_national_football_team_logo.svg.png', country: 'Argentina', type: 'national' },
-  { id: 'italy', name: 'Italy', logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/bf/Flag_of_Italy_%28shield%29.svg/180px-Flag_of_Italy_%28shield%29.svg.png', country: 'Italy', type: 'national' },
-  { id: 'portugal', name: 'Portugal', logo: 'https://upload.wikimedia.org/wikipedia/en/thumb/5/5f/Portuguese_Football_Federation.svg/180px-Portuguese_Football_Federation.svg.png', country: 'Portugal', type: 'national' },
+  // National Teams - Updated to use consistent flag images
+  { id: 'spain', name: 'Spain', logo: 'https://flagcdn.com/w320/es.png', country: 'Spain', type: 'national' },
+  { id: 'germany', name: 'Germany', logo: 'https://flagcdn.com/w320/de.png', country: 'Germany', type: 'national' },
+  { id: 'france', name: 'France', logo: 'https://flagcdn.com/w320/fr.png', country: 'France', type: 'national' },
+  { id: 'england', name: 'England', logo: 'https://flagcdn.com/w320/gb-eng.png', country: 'England', type: 'national' },
+  { id: 'brazil', name: 'Brazil', logo: 'https://flagcdn.com/w320/br.png', country: 'Brazil', type: 'national' },
+  { id: 'argentina', name: 'Argentina', logo: 'https://flagcdn.com/w320/ar.png', country: 'Argentina', type: 'national' },
+  { id: 'italy', name: 'Italy', logo: 'https://flagcdn.com/w320/it.png', country: 'Italy', type: 'national' },
+  { id: 'portugal', name: 'Portugal', logo: 'https://flagcdn.com/w320/pt.png', country: 'Portugal', type: 'national' },
+  { id: 'netherlands', name: 'Netherlands', logo: 'https://flagcdn.com/w320/nl.png', country: 'Netherlands', type: 'national' },
+  { id: 'belgium', name: 'Belgium', logo: 'https://flagcdn.com/w320/be.png', country: 'Belgium', type: 'national' },
+  { id: 'croatia', name: 'Croatia', logo: 'https://flagcdn.com/w320/hr.png', country: 'Croatia', type: 'national' },
+  { id: 'uruguay', name: 'Uruguay', logo: 'https://flagcdn.com/w320/uy.png', country: 'Uruguay', type: 'national' },
 ];
 
 // Function to get team by ID

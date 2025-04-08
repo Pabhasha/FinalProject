@@ -5,6 +5,7 @@ import { User, LogOut, Menu, X } from 'lucide-react';
 import SearchBar from '@/components/ui/SearchBar';
 import { useAuth } from '@/context/AuthContext';
 import Logo from '@/components/ui/Logo';
+import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -43,7 +44,10 @@ const Navbar: React.FC = () => {
         </div>
 
         {/* User Menu / Auth */}
-        <div className="flex items-center">
+        <div className="flex items-center gap-2">
+          {/* Theme Toggle */}
+          <ThemeToggle />
+          
           {isAuthenticated ? (
             <div className="relative group">
               <button className="flex items-center space-x-2">
@@ -160,6 +164,10 @@ const Navbar: React.FC = () => {
                 </Link>
               </>
             )}
+            {/* Mobile Theme Toggle */}
+            <div className="py-2">
+              <ThemeToggle />
+            </div>
           </nav>
         </div>
       )}
