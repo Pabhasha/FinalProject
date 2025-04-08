@@ -110,13 +110,13 @@ const Sidebar: React.FC = () => {
                       to={`/match/${match.id}`}
                       className="flex items-center py-1.5 px-2 rounded hover:bg-sidebar-accent transition-colors text-sm"
                     >
-                      <div className="flex items-center gap-1 flex-shrink-0">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         <img 
                           src={match.homeTeam.logo} 
                           alt={match.homeTeam.name} 
                           className="w-4 h-4 object-contain" 
                         />
-                        <span className="mx-0.5 text-xs">vs</span>
+                        <span className="text-xs">vs</span>
                         <img 
                           src={match.awayTeam.logo} 
                           alt={match.awayTeam.name} 
@@ -178,13 +178,13 @@ const Sidebar: React.FC = () => {
                       to={`/match/${match.id}`}
                       className="flex items-center py-1.5 px-2 rounded hover:bg-sidebar-accent transition-colors text-sm"
                     >
-                      <div className="flex items-center gap-1 flex-shrink-0">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         <img 
                           src={match.homeTeam.logo} 
                           alt={match.homeTeam.name} 
                           className="w-4 h-4 object-contain" 
                         />
-                        <span className="mx-0.5 text-xs">vs</span>
+                        <span className="text-xs">vs</span>
                         <img 
                           src={match.awayTeam.logo} 
                           alt={match.awayTeam.name} 
@@ -289,13 +289,13 @@ const Sidebar: React.FC = () => {
                       to={`/match/${match.id}`}
                       className="flex items-center py-1.5 px-2 rounded hover:bg-sidebar-accent transition-colors text-sm"
                     >
-                      <div className="flex items-center gap-1 flex-shrink-0">
+                      <div className="flex items-center gap-2 flex-shrink-0">
                         <img 
                           src={match.homeTeam.logo} 
                           alt={match.homeTeam.name} 
                           className="w-4 h-4 object-contain" 
                         />
-                        <span className="mx-0.5 text-xs">vs</span>
+                        <span className="text-xs">vs</span>
                         <img 
                           src={match.awayTeam.logo} 
                           alt={match.awayTeam.name} 

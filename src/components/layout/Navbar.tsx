@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { User, LogOut, Menu, X } from 'lucide-react';
 import SearchBar from '@/components/ui/SearchBar';
 import { useAuth } from '@/context/AuthContext';
+import Logo from '@/components/ui/Logo';
 
 const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -19,9 +20,7 @@ const Navbar: React.FC = () => {
         {/* Logo */}
         <div className="flex items-center">
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold bg-gradient-to-r from-blaugrana-primary to-blaugrana-secondary bg-clip-text text-transparent">
-              Football<span className="text-foreground">Trackr</span>
-            </span>
+            <Logo variant="default" className="flex items-center" />
           </Link>
         </div>
 
@@ -62,7 +61,7 @@ const Navbar: React.FC = () => {
               </button>
               
               {/* Dropdown Menu */}
-              <div className="absolute right-0 mt-2 w-48 py-2 bg-card rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-border">
+              <div className="absolute right-0 mt-2 w-48 py-2 bg-card rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 border border-border z-50">
                 <Link 
                   to="/profile" 
                   className="block px-4 py-2 text-sm text-foreground hover:bg-primary hover:text-primary-foreground"
@@ -117,7 +116,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-card border-b border-border animate-fade-in">
+        <div className="md:hidden bg-card border-b border-border animate-fade-in z-50">
           <div className="px-4 py-3">
             <SearchBar />
           </div>
