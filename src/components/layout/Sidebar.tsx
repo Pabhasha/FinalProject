@@ -52,15 +52,15 @@ const Sidebar: React.FC = () => {
               className="flex items-center mb-3 cursor-pointer"
               onClick={!collapsed ? toggleCompetitions : undefined}
             >
-              <Trophy className="w-5 h-5 text-primary mr-2" />
+              <Trophy className="w-5 h-5 text-primary mr-2 flex-shrink-0" />
               {!collapsed && (
                 <>
                   <h3 className="font-semibold text-sidebar-foreground">Competitions</h3>
                   <div className="ml-auto">
                     {competitionsExpanded ? (
-                      <ChevronsDown className="w-4 h-4" />
+                      <ChevronsDown className="w-4 h-4 flex-shrink-0" />
                     ) : (
-                      <ChevronsRight className="w-4 h-4" />
+                      <ChevronsRight className="w-4 h-4 flex-shrink-0" />
                     )}
                   </div>
                 </>
@@ -73,7 +73,7 @@ const Sidebar: React.FC = () => {
                   <li key={category.id}>
                     <Link 
                       to={`/category/${category.slug}`}
-                      className="flex items-start py-1.5 px-2 rounded hover:bg-sidebar-accent transition-colors text-sm"
+                      className="flex items-center py-1.5 px-2 rounded hover:bg-sidebar-accent transition-colors text-sm"
                     >
                       <span className="truncate">{category.title}</span>
                     </Link>
@@ -96,7 +96,7 @@ const Sidebar: React.FC = () => {
           {/* Trending Matches */}
           <div>
             <div className="flex items-center mb-3">
-              <TrendingUp className="w-5 h-5 text-primary mr-2" />
+              <TrendingUp className="w-5 h-5 text-primary mr-2 flex-shrink-0" />
               {!collapsed && (
                 <h3 className="font-semibold text-sidebar-foreground">Trending Matches</h3>
               )}
@@ -110,13 +110,13 @@ const Sidebar: React.FC = () => {
                       to={`/match/${match.id}`}
                       className="flex items-center py-1.5 px-2 rounded hover:bg-sidebar-accent transition-colors text-sm"
                     >
-                      <div className="flex items-center">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         <img 
                           src={match.homeTeam.logo} 
                           alt={match.homeTeam.name} 
                           className="w-4 h-4 object-contain" 
                         />
-                        <span className="mx-1 text-xs">vs</span>
+                        <span className="mx-0.5 text-xs">vs</span>
                         <img 
                           src={match.awayTeam.logo} 
                           alt={match.awayTeam.name} 
@@ -164,7 +164,7 @@ const Sidebar: React.FC = () => {
           {/* Top Rated Matches */}
           <div>
             <div className="flex items-center mb-3">
-              <Star className="w-5 h-5 text-primary mr-2" />
+              <Star className="w-5 h-5 text-primary mr-2 flex-shrink-0" />
               {!collapsed && (
                 <h3 className="font-semibold text-sidebar-foreground">Top Rated</h3>
               )}
@@ -178,13 +178,13 @@ const Sidebar: React.FC = () => {
                       to={`/match/${match.id}`}
                       className="flex items-center py-1.5 px-2 rounded hover:bg-sidebar-accent transition-colors text-sm"
                     >
-                      <div className="flex items-center">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         <img 
                           src={match.homeTeam.logo} 
                           alt={match.homeTeam.name} 
                           className="w-4 h-4 object-contain" 
                         />
-                        <span className="mx-1 text-xs">vs</span>
+                        <span className="mx-0.5 text-xs">vs</span>
                         <img 
                           src={match.awayTeam.logo} 
                           alt={match.awayTeam.name} 
@@ -232,7 +232,7 @@ const Sidebar: React.FC = () => {
           {/* Lists */}
           <div>
             <div className="flex items-center mb-3">
-              <ListChecks className="w-5 h-5 text-primary mr-2" />
+              <ListChecks className="w-5 h-5 text-primary mr-2 flex-shrink-0" />
               {!collapsed && (
                 <h3 className="font-semibold text-sidebar-foreground">Popular Lists</h3>
               )}
@@ -275,7 +275,7 @@ const Sidebar: React.FC = () => {
           {/* Recently Added */}
           <div>
             <div className="flex items-center mb-3">
-              <Clock className="w-5 h-5 text-primary mr-2" />
+              <Clock className="w-5 h-5 text-primary mr-2 flex-shrink-0" />
               {!collapsed && (
                 <h3 className="font-semibold text-sidebar-foreground">Recently Added</h3>
               )}
@@ -289,13 +289,13 @@ const Sidebar: React.FC = () => {
                       to={`/match/${match.id}`}
                       className="flex items-center py-1.5 px-2 rounded hover:bg-sidebar-accent transition-colors text-sm"
                     >
-                      <div className="flex items-center">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         <img 
                           src={match.homeTeam.logo} 
                           alt={match.homeTeam.name} 
                           className="w-4 h-4 object-contain" 
                         />
-                        <span className="mx-1 text-xs">vs</span>
+                        <span className="mx-0.5 text-xs">vs</span>
                         <img 
                           src={match.awayTeam.logo} 
                           alt={match.awayTeam.name} 
