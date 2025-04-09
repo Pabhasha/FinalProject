@@ -154,33 +154,35 @@ const MatchCard: React.FC<MatchCardProps> = ({
             "bg-gradient-to-t from-black/90 via-black/50 to-transparent",
             isPremium ? "opacity-100" : "match-card-overlay"
           )}>
-            {/* Team badges and names */}
-            <div className="flex items-center justify-between mb-2 gap-1">
+            {/* Improved team badges and names layout */}
+            <div className="flex justify-between mb-2">
               {/* Home team */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center max-w-[40%]">
                 <img 
                   src={match.homeTeam.logo} 
                   alt={match.homeTeam.name} 
                   className="w-6 h-6 object-contain mb-1" 
                 />
-                <span className="text-white font-medium text-xs text-center truncate max-w-[60px]">
+                <span className="text-white font-medium text-xs text-center truncate w-full">
                   {match.homeTeam.name}
                 </span>
               </div>
               
               {/* VS */}
-              <span className="text-white/70 text-xs font-bold">
-                VS
-              </span>
+              <div className="flex flex-col items-center">
+                <span className="text-white/70 text-xs font-bold">
+                  VS
+                </span>
+              </div>
               
               {/* Away team */}
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center max-w-[40%]">
                 <img 
                   src={match.awayTeam.logo} 
                   alt={match.awayTeam.name} 
                   className="w-6 h-6 object-contain mb-1" 
                 />
-                <span className="text-white font-medium text-xs text-center truncate max-w-[60px]">
+                <span className="text-white font-medium text-xs text-center truncate w-full">
                   {match.awayTeam.name}
                 </span>
               </div>
@@ -261,23 +263,6 @@ const MatchCard: React.FC<MatchCardProps> = ({
       {isPremium && (
         <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-amber-600 text-black text-xs font-bold px-2 py-0.5 rounded shadow-md">
           PREMIUM
-        </div>
-      )}
-
-      {/* Content Indicator Dots - only visible on hover */}
-      {hovered && !isFlipped && (
-        <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex space-x-1">
-          {matchVariants.map((_, index) => (
-            <div 
-              key={index} 
-              className={cn(
-                "w-1.5 h-1.5 rounded-full",
-                activeContentIndex === index 
-                  ? "bg-blaugrana-primary" 
-                  : "bg-white/30"
-              )}
-            ></div>
-          ))}
         </div>
       )}
     </div>
