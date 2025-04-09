@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Match } from '@/utils/mockData';
 import MatchRating from './MatchRating';
+import { Calendar, Trophy } from 'lucide-react';
 
 interface MatchCardProps {
   match: Match;
@@ -22,6 +23,7 @@ const MatchCard: React.FC<MatchCardProps> = ({
   const [hovered, setHovered] = useState(false);
   const [activeContentIndex, setActiveContentIndex] = useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const [isFlipped, setIsFlipped] = useState(false);
   
   // Define alternative content for the match
   const matchVariants = [
@@ -68,6 +70,7 @@ const MatchCard: React.FC<MatchCardProps> = ({
     } else {
       stopRotation();
       setActiveContentIndex(0); // Reset to default content when not hovering
+      setIsFlipped(false);
     }
     
     return () => stopRotation(); // Cleanup on unmount
@@ -100,6 +103,13 @@ const MatchCard: React.FC<MatchCardProps> = ({
   const isPremium = variant === 'premium';
   const currentContent = matchVariants[activeContentIndex];
 
+  // Handle card flip
+  const handleFlip = () => {
+    if (hovered) {
+      setIsFlipped(!isFlipped);
+    }
+  };
+
   return (
     <div 
       className={cn(
@@ -107,14 +117,19 @@ const MatchCard: React.FC<MatchCardProps> = ({
         isPremium ? "match-card-premium hover:scale-[1.02]" : "match-card-hover",
         isPremium && hovered ? "glow-box" : "",
         cardSizes[size],
-        className
+        className,
+        isFlipped ? "card-flipped" : ""
       )}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={handleFlip}
     >
       <Link to={`/match/${match.id}`} className="block h-full">
         {/* Poster Image */}
-        <div className="relative w-full h-full">
+        <div className={cn(
+          "relative w-full h-full transition-all duration-500",
+          isFlipped ? "opacity-0" : "opacity-100"
+        )}>
           {!imageLoaded && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-800 animate-pulse">
               <div className="w-10 h-10 rounded-full bg-gray-700/50 flex items-center justify-center">
@@ -128,78 +143,117 @@ const MatchCard: React.FC<MatchCardProps> = ({
             className={cn(
               "w-full h-full object-cover transition-all duration-500",
               imageLoaded ? "opacity-100" : "opacity-0",
-              hovered && isPremium ? "scale-110 blur-sm" : ""
+              hovered && isPremium ? "scale-105 blur-sm" : ""
             )}
             onLoad={() => setImageLoaded(true)}
           />
+
+          {/* Front Content Overlay */}
+          <div className={cn(
+            "absolute inset-0 flex flex-col justify-end p-3",
+            "bg-gradient-to-t from-black/90 via-black/50 to-transparent",
+            isPremium ? "opacity-100" : "match-card-overlay"
+          )}>
+            {/* Team badges and names */}
+            <div className="flex items-center justify-between mb-2 gap-1">
+              {/* Home team */}
+              <div className="flex flex-col items-center">
+                <img 
+                  src={match.homeTeam.logo} 
+                  alt={match.homeTeam.name} 
+                  className="w-6 h-6 object-contain mb-1" 
+                />
+                <span className="text-white font-medium text-xs text-center truncate max-w-[60px]">
+                  {match.homeTeam.name}
+                </span>
+              </div>
+              
+              {/* VS */}
+              <span className="text-white/70 text-xs font-bold">
+                VS
+              </span>
+              
+              {/* Away team */}
+              <div className="flex flex-col items-center">
+                <img 
+                  src={match.awayTeam.logo} 
+                  alt={match.awayTeam.name} 
+                  className="w-6 h-6 object-contain mb-1" 
+                />
+                <span className="text-white font-medium text-xs text-center truncate max-w-[60px]">
+                  {match.awayTeam.name}
+                </span>
+              </div>
+            </div>
+            
+            {/* Score */}
+            <div className={cn(
+              "relative z-10 bg-black/50 backdrop-blur-sm rounded-md px-3 py-1.5 mb-2",
+              "border border-white/10 text-center",
+              scoreFontSizes[size],
+              isPremium ? "font-bold text-white animate-pulse" : "font-semibold text-white"
+            )}>
+              {activeContentIndex === 0 ? formatScore(match) : currentContent.score}
+            </div>
+            
+            <div className="flex justify-between items-center">
+              {activeContentIndex === 0 ? (
+                <MatchRating matchId={match.id} size={size === 'sm' ? 'sm' : 'md'} />
+              ) : (
+                <span className="text-xs text-blaugrana-primary font-medium">{currentContent.highlight}</span>
+              )}
+              
+              <div className="flex items-center gap-1">
+                <img 
+                  src={match.competition.logo} 
+                  alt={match.competition.name} 
+                  className="w-4 h-4 object-contain" 
+                />
+                <span className="text-xs text-gray-300 truncate max-w-[60px]">
+                  {match.competition.name}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Overlay Content */}
+        {/* Card Back (Flipped State) - Only visible when flipped */}
         <div className={cn(
-          "absolute inset-0 flex flex-col justify-end p-4",
-          "bg-gradient-to-t from-black/90 via-black/50 to-transparent",
-          isPremium ? "opacity-100" : "match-card-overlay"
+          "absolute inset-0 bg-gray-900/95 p-3",
+          "flex flex-col justify-between",
+          "transition-all duration-500 transform backface-hidden",
+          isFlipped ? "opacity-100" : "opacity-0"
         )}>
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center gap-2">
-              <img 
-                src={match.homeTeam.logo} 
-                alt={match.homeTeam.name} 
-                className="w-6 h-6 object-contain" 
-              />
-              <span className="text-white font-semibold truncate max-w-[80px]">
-                {match.homeTeam.name}
-              </span>
-            </div>
-            <span className="text-white/70 text-sm">
-              vs
-            </span>
-            <div className="flex items-center gap-2">
-              <span className="text-white font-semibold truncate max-w-[80px]">
-                {match.awayTeam.name}
-              </span>
-              <img 
-                src={match.awayTeam.logo} 
-                alt={match.awayTeam.name} 
-                className="w-6 h-6 object-contain" 
-              />
+          <div className="text-center">
+            <h3 className="text-white font-bold text-sm mb-1">{match.homeTeam.name} vs {match.awayTeam.name}</h3>
+            <div className="flex justify-center items-center gap-2 text-xs text-gray-300 mb-3">
+              <Calendar className="w-3 h-3" />
+              <span>{new Date(match.date).toLocaleDateString()}</span>
             </div>
           </div>
           
-          <div className={cn(
-            "relative z-10 bg-black/50 backdrop-blur-sm rounded-md px-4 py-2 mb-3",
-            "border border-white/10 text-center",
-            scoreFontSizes[size],
-            isPremium ? "font-bold text-white animate-pulse" : "font-semibold text-white"
-          )}>
-            {activeContentIndex === 0 ? formatScore(match) : currentContent.score}
-          </div>
-          
-          <div className="flex justify-between items-center mb-1">
-            {activeContentIndex === 0 ? (
-              <MatchRating matchId={match.id} size={size === 'sm' ? 'sm' : 'md'} />
-            ) : (
-              <span className="text-xs text-blaugrana-primary font-semibold">{currentContent.highlight}</span>
-            )}
+          <div className="space-y-2">
+            <div className="flex items-center gap-1.5">
+              <Trophy className="w-3.5 h-3.5 text-amber-400" />
+              <span className="text-xs text-white">{match.competition.name}</span>
+            </div>
             
-            <div className="flex items-center gap-1">
-              <img 
-                src={match.competition.logo} 
-                alt={match.competition.name} 
-                className="w-4 h-4 object-contain" 
-              />
-              <span className="text-xs text-gray-300">
-                {match.competition.name}
-              </span>
+            <div className="flex items-center gap-1.5">
+              <span className="w-3.5 h-3.5 flex items-center justify-center text-amber-400">🏟️</span>
+              <span className="text-xs text-white truncate">{match.stadium.name}, {match.stadium.city}</span>
             </div>
+            
+            {match.stage && (
+              <div className="flex items-center gap-1.5">
+                <span className="w-3.5 h-3.5 flex items-center justify-center text-amber-400">🏆</span>
+                <span className="text-xs text-white">{match.stage}</span>
+              </div>
+            )}
           </div>
           
-          {/* Only show date on default view */}
-          {activeContentIndex === 0 && (
-            <div className="mt-1 text-xs text-gray-400">
-              {new Date(match.date).toLocaleDateString()}
-            </div>
-          )}
+          <div className="text-center bg-blaugrana-primary/20 rounded py-1 border border-blaugrana-primary/30">
+            <span className="text-xs text-white font-medium">Tap to flip back</span>
+          </div>
         </div>
       </Link>
 
@@ -210,8 +264,8 @@ const MatchCard: React.FC<MatchCardProps> = ({
         </div>
       )}
 
-      {/* Content Indicator Dots */}
-      {hovered && (
+      {/* Content Indicator Dots - only visible on hover */}
+      {hovered && !isFlipped && (
         <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex space-x-1">
           {matchVariants.map((_, index) => (
             <div 

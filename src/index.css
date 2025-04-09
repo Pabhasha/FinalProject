@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -112,6 +111,20 @@
   /* Add a new class for the hover effect */
   .match-card-hover:hover .match-card-overlay {
     @apply opacity-100;
+  }
+
+  /* Card flip classes */
+  .card-flipped .card-front {
+    transform: rotateY(180deg);
+  }
+
+  .card-flipped .card-back {
+    transform: rotateY(0);
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
   }
 
   .letterboxd-link {
