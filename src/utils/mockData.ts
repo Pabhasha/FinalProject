@@ -1,4 +1,3 @@
-
 export interface Match {
   id: string;
   homeTeam: {
@@ -245,6 +244,36 @@ export const mockMatches: Match[] = [
     },
     poster: "https://www.manutd.com/AssetPicker/images/0/0/10/126/687725/Legends-Profile_Teddy-Sheringham1523463036428.jpg",
     highlights: "https://www.youtube.com/watch?v=0-ZDuHXfLro"
+  },
+  {
+    id: "m7",
+    homeTeam: {
+      name: "Barcelona",
+      logo: "https://media.api-sports.io/football/teams/529.png",
+      country: "Spain"
+    },
+    awayTeam: {
+      name: "Real Madrid",
+      logo: "https://media.api-sports.io/football/teams/541.png",
+      country: "Spain"
+    },
+    score: {
+      homeScore: 6,
+      awayScore: 2
+    },
+    date: "2009-05-02T19:00:00Z",
+    competition: {
+      name: "La Liga",
+      logo: "https://media.api-sports.io/football/leagues/140.png"
+    },
+    stage: "Matchday 34",
+    stadium: {
+      name: "Santiago Bernabéu",
+      city: "Madrid",
+      country: "Spain"
+    },
+    poster: "https://fcbarcelona.darkroom.tech/1200/675/65ad44e78bb951d37d1e0fadb853f8d0:3d5af1f362cb7b8bad31ddc221ab674d/11-barcelona-6-real-madrid-2-enorme-espectacle-al-santiago-bernabeu.jpg",
+    highlights: "https://www.youtube.com/watch?v=VPRAB0wFXpw"
   }
 ];
 
@@ -312,17 +341,14 @@ export const mockLists: List[] = [
   }
 ];
 
-// Helper function to get a match by ID
 export const getMatchById = (id: string): Match | undefined => {
   return mockMatches.find(match => match.id === id);
 };
 
-// Helper function to get reviews for a match
 export const getReviewsForMatch = (matchId: string): Review[] => {
   return mockReviews.filter(review => review.matchId === matchId);
 };
 
-// Helper function to get lists containing a match
 export const getListsContainingMatch = (matchId: string): List[] => {
   return mockLists.filter(list => list.matches.includes(matchId));
 };
