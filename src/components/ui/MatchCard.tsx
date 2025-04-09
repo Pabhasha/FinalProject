@@ -52,7 +52,7 @@ const MatchCard: React.FC<MatchCardProps> = ({
     if (intervalRef.current) return;
     intervalRef.current = setInterval(() => {
       setActiveContentIndex((prevIndex) => (prevIndex + 1) % matchVariants.length);
-    }, 5000);
+    }, 2500); // Changed from 5000 to 2500 milliseconds (2.5 seconds)
   };
 
   // Stop content rotation
