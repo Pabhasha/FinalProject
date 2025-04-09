@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Match } from '@/utils/mockData';
@@ -20,6 +20,58 @@ const MatchCard: React.FC<MatchCardProps> = ({
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const [activeContentIndex, setActiveContentIndex] = useState(0);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  
+  // Define alternative content for the match
+  const matchVariants = [
+    {
+      title: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
+      score: `${match.score.homeScore}-${match.score.awayScore}`,
+      highlight: "Full Time",
+      poster: match.poster
+    },
+    {
+      title: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
+      score: `Half Time: ${Math.floor(match.score.homeScore/2)}-${Math.floor(match.score.awayScore/2)}`,
+      highlight: "Key Moment",
+      poster: match.poster // Using same poster but could be different angles
+    },
+    {
+      title: `${match.competition.name}`,
+      score: `${match.date}`,
+      highlight: "Match Info",
+      poster: match.poster
+    }
+  ];
+
+  // Start content rotation
+  const startRotation = () => {
+    if (intervalRef.current) return;
+    intervalRef.current = setInterval(() => {
+      setActiveContentIndex((prevIndex) => (prevIndex + 1) % matchVariants.length);
+    }, 5000);
+  };
+
+  // Stop content rotation
+  const stopRotation = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+  };
+
+  // Handle hover effects and cleanup
+  useEffect(() => {
+    if (hovered) {
+      startRotation();
+    } else {
+      stopRotation();
+      setActiveContentIndex(0); // Reset to default content when not hovering
+    }
+    
+    return () => stopRotation(); // Cleanup on unmount
+  }, [hovered]);
 
   // Determine sizing based on the size prop
   const cardSizes = {
@@ -46,6 +98,7 @@ const MatchCard: React.FC<MatchCardProps> = ({
   };
 
   const isPremium = variant === 'premium';
+  const currentContent = matchVariants[activeContentIndex];
 
   return (
     <div 
@@ -70,7 +123,7 @@ const MatchCard: React.FC<MatchCardProps> = ({
             </div>
           )}
           <img
-            src={match.poster}
+            src={currentContent.poster}
             alt={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
             className={cn(
               "w-full h-full object-cover transition-all duration-500",
@@ -119,11 +172,15 @@ const MatchCard: React.FC<MatchCardProps> = ({
             scoreFontSizes[size],
             isPremium ? "font-bold text-white animate-pulse" : "font-semibold text-white"
           )}>
-            {formatScore(match)}
+            {activeContentIndex === 0 ? formatScore(match) : currentContent.score}
           </div>
           
           <div className="flex justify-between items-center mb-1">
-            <MatchRating matchId={match.id} size={size === 'sm' ? 'sm' : 'md'} />
+            {activeContentIndex === 0 ? (
+              <MatchRating matchId={match.id} size={size === 'sm' ? 'sm' : 'md'} />
+            ) : (
+              <span className="text-xs text-blaugrana-primary font-semibold">{currentContent.highlight}</span>
+            )}
             
             <div className="flex items-center gap-1">
               <img 
@@ -137,9 +194,12 @@ const MatchCard: React.FC<MatchCardProps> = ({
             </div>
           </div>
           
-          <div className="mt-1 text-xs text-gray-400">
-            {new Date(match.date).toLocaleDateString()}
-          </div>
+          {/* Only show date on default view */}
+          {activeContentIndex === 0 && (
+            <div className="mt-1 text-xs text-gray-400">
+              {new Date(match.date).toLocaleDateString()}
+            </div>
+          )}
         </div>
       </Link>
 
@@ -147,6 +207,23 @@ const MatchCard: React.FC<MatchCardProps> = ({
       {isPremium && (
         <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-amber-600 text-black text-xs font-bold px-2 py-0.5 rounded shadow-md">
           PREMIUM
+        </div>
+      )}
+
+      {/* Content Indicator Dots */}
+      {hovered && (
+        <div className="absolute bottom-1 left-1/2 transform -translate-x-1/2 flex space-x-1">
+          {matchVariants.map((_, index) => (
+            <div 
+              key={index} 
+              className={cn(
+                "w-1.5 h-1.5 rounded-full",
+                activeContentIndex === index 
+                  ? "bg-blaugrana-primary" 
+                  : "bg-white/30"
+              )}
+            ></div>
+          ))}
         </div>
       )}
     </div>

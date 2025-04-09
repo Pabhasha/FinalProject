@@ -17,18 +17,13 @@ const ThemeToggle: React.FC = () => {
       variant="ghost" 
       size="sm" 
       onClick={toggleTheme}
-      className="flex items-center gap-2"
+      className="flex items-center gap-1.5"
+      title={isDark ? "Switch to light mode" : "Switch to dark mode"}
     >
       {isDark ? (
-        <>
-          <Sun className="h-4 w-4" />
-          <span className="hidden md:inline">Light</span>
-        </>
+        <Sun className="h-4 w-4 text-yellow-400" />
       ) : (
-        <>
-          <Moon className="h-4 w-4" />
-          <span className="hidden md:inline">Dark</span>
-        </>
+        <Moon className="h-4 w-4 text-blue-700" />
       )}
     </Button>
   );

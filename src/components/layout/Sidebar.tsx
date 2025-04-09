@@ -1,11 +1,9 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock, Trophy, ChevronsDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { mockMatches, mockLists } from '@/utils/mockData';
 import { categories } from '@/utils/categoryData';
-import ThemeToggle from '@/components/ui/ThemeToggle';
 
 const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
@@ -45,13 +43,6 @@ const Sidebar: React.FC = () => {
           <ChevronsLeft className="w-5 h-5" />
         )}
       </button>
-
-      {/* Theme Toggle (Desktop) */}
-      {!collapsed && (
-        <div className="absolute top-4 right-12">
-          <ThemeToggle />
-        </div>
-      )}
 
       {/* Sidebar Content */}
       <div className="p-4 mt-14">
