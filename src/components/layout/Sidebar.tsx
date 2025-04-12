@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock, Trophy, ChevronsDown } from 'lucide-react';
@@ -31,10 +32,10 @@ const Sidebar: React.FC = () => {
         collapsed ? "w-16" : "w-64"
       )}
     >
-      {/* Toggle Button */}
+      {/* Toggle Button - moved up to reduce gap */}
       <button 
         onClick={toggleSidebar}
-        className="absolute top-4 right-2 w-8 h-8 flex items-center justify-center text-sidebar-foreground hover:text-primary transition-all hover:scale-110"
+        className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center text-sidebar-foreground hover:text-primary transition-all hover:scale-110"
         aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
       >
         {collapsed ? (
@@ -44,8 +45,8 @@ const Sidebar: React.FC = () => {
         )}
       </button>
 
-      {/* Sidebar Content */}
-      <div className="p-4 mt-14">
+      {/* Sidebar Content - adjusted mt value to remove gap */}
+      <div className="p-4 mt-6">
         {/* Sections */}
         <div className="space-y-6">
           {/* Competitions Section */}

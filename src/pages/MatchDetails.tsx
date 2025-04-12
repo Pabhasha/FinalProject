@@ -161,26 +161,26 @@ const MatchDetails = () => {
                 <span className="text-sm font-medium">{match.competition.name} • {match.stage}</span>
               </div>
               
-              {/* Teams and Score */}
-              <div className="flex flex-wrap items-center mb-4">
-                <div className="flex items-center mr-4 mb-2">
+              {/* Teams and Score - Fixed layout overflow */}
+              <div className="flex flex-wrap items-center mb-4 w-full">
+                <div className="flex items-center mr-4 mb-2 flex-shrink-0">
                   <img 
                     src={match.homeTeam.logo} 
                     alt={match.homeTeam.name} 
-                    className="w-10 h-10 object-contain mr-2" 
+                    className="w-10 h-10 object-contain mr-2 flex-shrink-0" 
                   />
-                  <h1 className="text-xl md:text-3xl font-bold truncate max-w-[200px] md:max-w-none">{match.homeTeam.name}</h1>
+                  <h1 className="text-xl md:text-3xl font-bold break-words max-w-[150px] sm:max-w-[200px] md:max-w-xs">{match.homeTeam.name}</h1>
                 </div>
                 
-                <div className="text-xl md:text-3xl font-bold px-3 mb-2">{formatScore()}</div>
+                <div className="text-xl md:text-3xl font-bold px-3 mb-2 flex-shrink-0">{formatScore()}</div>
                 
-                <div className="flex items-center mb-2">
+                <div className="flex items-center mb-2 flex-shrink-0">
                   <img 
                     src={match.awayTeam.logo} 
                     alt={match.awayTeam.name} 
-                    className="w-10 h-10 object-contain mr-2" 
+                    className="w-10 h-10 object-contain mr-2 flex-shrink-0" 
                   />
-                  <h1 className="text-xl md:text-3xl font-bold truncate max-w-[200px] md:max-w-none">{match.awayTeam.name}</h1>
+                  <h1 className="text-xl md:text-3xl font-bold break-words max-w-[150px] sm:max-w-[200px] md:max-w-xs">{match.awayTeam.name}</h1>
                 </div>
               </div>
               
