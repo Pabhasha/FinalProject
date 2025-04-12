@@ -1,5 +1,5 @@
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 // Admin credentials (in a real app, this would be handled by a backend)
@@ -12,7 +12,7 @@ interface AdminContextType {
   logout: () => void;
 }
 
-const AdminContext = createContext<AdminContextType | undefined>(undefined);
+export const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider = ({ children }: { children: ReactNode }) => {
   const [adminToken, setAdminToken] = useLocalStorage<string | null>('footballtrackr-admin-token', null);
@@ -45,12 +45,4 @@ export const AdminProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </AdminContext.Provider>
   );
-};
-
-export const useAdmin = () => {
-  const context = useContext(AdminContext);
-  if (context === undefined) {
-    throw new Error('useAdmin must be used within an AdminProvider');
-  }
-  return context;
 };

@@ -1,16 +1,16 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 // Import initial data to populate the admin dashboard
-import { matches as initialMatches } from '@/utils/mockData';
+import { mockMatches as initialMatches } from '@/utils/mockData';
 
 export const useMatchAdmin = () => {
-  const [matches, setMatches] = useLocalStorage<any[]>('footballtrackr-matches', initialMatches);
+  const [matches, setMatches] = useLocalStorage<any[]>('footballtrackr-matches', initialMatches || []);
 
   // Get all matches, optionally filtered by category
   const getMatches = (category?: string) => {
-    if (!category) return matches;
+    if (!category || category === 'all') return matches;
     return matches.filter((match) => match.category === category);
   };
 
