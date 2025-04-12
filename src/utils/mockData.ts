@@ -1,4 +1,3 @@
-
 export interface Match {
   id: string;
   homeTeam: {
@@ -492,6 +491,319 @@ export const mockMatches: Match[] = [
     },
     poster: "https://i.guim.co.uk/img/static/sys-images/Sport/Pix/pictures/2009/9/20/1253464554169/Michael-Owen-scores-the-w-001.jpg?width=465&dpr=1&s=none",
     highlights: "https://www.youtube.com/watch?v=43FnCO1DKI0"
+  },
+  
+  // New El Clásico humiliations where Barcelona thrashed Real Madrid
+  {
+    id: "m15",
+    homeTeam: {
+      name: "Barcelona",
+      logo: "https://media.api-sports.io/football/teams/529.png",
+      country: "Spain"
+    },
+    awayTeam: {
+      name: "Real Madrid",
+      logo: "https://media.api-sports.io/football/teams/541.png",
+      country: "Spain"
+    },
+    score: {
+      homeScore: 5,
+      awayScore: 1
+    },
+    date: "2018-10-28T19:15:00Z",
+    competition: {
+      name: "La Liga",
+      logo: "https://media.api-sports.io/football/leagues/140.png"
+    },
+    stage: "Matchday 10",
+    stadium: {
+      name: "Camp Nou",
+      city: "Barcelona",
+      country: "Spain"
+    },
+    poster: "https://assets.goal.com/v3/assets/bltcc7a7ffd2fbf71f5/blt08d51c69c1d96ac2/60dd7b34f249d30efec860ad/53821191c0545a6924e6872659504f9170becc2b.jpg",
+    highlights: "https://www.youtube.com/watch?v=PdHAGGVY74c"
+  },
+  {
+    id: "m16",
+    homeTeam: {
+      name: "Real Madrid",
+      logo: "https://media.api-sports.io/football/teams/541.png",
+      country: "Spain"
+    },
+    awayTeam: {
+      name: "Barcelona",
+      logo: "https://media.api-sports.io/football/teams/529.png",
+      country: "Spain"
+    },
+    score: {
+      homeScore: 0,
+      awayScore: 3
+    },
+    date: "2005-11-19T21:00:00Z",
+    competition: {
+      name: "La Liga",
+      logo: "https://media.api-sports.io/football/leagues/140.png"
+    },
+    stage: "Matchday 12",
+    stadium: {
+      name: "Santiago Bernabéu",
+      city: "Madrid",
+      country: "Spain"
+    },
+    poster: "https://www.fcbarcelona.com/fcbarcelona/photo/2016/11/19/e6f3ef0c-30f5-49a9-9fe7-81ba504b51b7/33402627.jpg",
+    highlights: "https://www.youtube.com/watch?v=eWx08lSDzMk"
+  },
+  {
+    id: "m17",
+    homeTeam: {
+      name: "Real Madrid",
+      logo: "https://media.api-sports.io/football/teams/541.png",
+      country: "Spain"
+    },
+    awayTeam: {
+      name: "Barcelona",
+      logo: "https://media.api-sports.io/football/teams/529.png",
+      country: "Spain"
+    },
+    score: {
+      homeScore: 2,
+      awayScore: 6
+    },
+    date: "2009-05-02T20:00:00Z",
+    competition: {
+      name: "La Liga",
+      logo: "https://media.api-sports.io/football/leagues/140.png"
+    },
+    stage: "Matchday 34",
+    stadium: {
+      name: "Santiago Bernabéu",
+      city: "Madrid",
+      country: "Spain"
+    },
+    poster: "https://www.fcbarcelona.com/fcbarcelona/photo/2019/05/02/15b2c269-57b9-4ef3-af78-d4d0e07e8e14/mini_XAVIINIESTA.jpg",
+    highlights: "https://www.youtube.com/watch?v=VPRAB0wFXpw"
+  },
+  {
+    id: "m18",
+    homeTeam: {
+      name: "Real Madrid",
+      logo: "https://media.api-sports.io/football/teams/541.png",
+      country: "Spain"
+    },
+    awayTeam: {
+      name: "Barcelona",
+      logo: "https://media.api-sports.io/football/teams/529.png",
+      country: "Spain"
+    },
+    score: {
+      homeScore: 0,
+      awayScore: 4
+    },
+    date: "2019-11-21T20:00:00Z",
+    competition: {
+      name: "La Liga",
+      logo: "https://media.api-sports.io/football/leagues/140.png"
+    },
+    stage: "Matchday 18",
+    stadium: {
+      name: "Santiago Bernabéu",
+      city: "Madrid",
+      country: "Spain"
+    },
+    poster: "https://www.fcbarcelona.com/fcbarcelona/photo/2023/08/30/99d2d508-f927-43a2-9b0d-e4ba1bbc48d0/2019-12-18-REALMADRID-FCB-30.jpg",
+    highlights: "https://www.youtube.com/watch?v=ZVJ1tUQQx3A"
+  },
+  
+  // Additional World Cup matches
+  {
+    id: "m19",
+    homeTeam: {
+      name: "Italy",
+      logo: "https://media.api-sports.io/football/teams/768.png",
+      country: "Italy"
+    },
+    awayTeam: {
+      name: "France",
+      logo: "https://media.api-sports.io/football/teams/2.png",
+      country: "France"
+    },
+    score: {
+      homeScore: 1,
+      awayScore: 1,
+      extraTime: true,
+      penalties: {
+        homeScore: 5,
+        awayScore: 3
+      }
+    },
+    date: "2006-07-09T19:00:00Z",
+    competition: {
+      name: "FIFA World Cup",
+      logo: "https://media.api-sports.io/football/leagues/1.png"
+    },
+    stage: "Final",
+    stadium: {
+      name: "Olympiastadion",
+      city: "Berlin",
+      country: "Germany"
+    },
+    poster: "https://editorial.uefa.com/resources/0278-15bacb5e4143-fba23213b6ac-1000/format/article-lead/the_headbutt_that_shook_the_world_at_germany_2006.jpeg",
+    highlights: "https://www.youtube.com/watch?v=XilSm6vEK-I"
+  },
+  {
+    id: "m20",
+    homeTeam: {
+      name: "Croatia",
+      logo: "https://media.api-sports.io/football/teams/3.png",
+      country: "Croatia"
+    },
+    awayTeam: {
+      name: "England",
+      logo: "https://media.api-sports.io/football/teams/10.png",
+      country: "England"
+    },
+    score: {
+      homeScore: 2,
+      awayScore: 1,
+      extraTime: true
+    },
+    date: "2018-07-11T19:00:00Z",
+    competition: {
+      name: "FIFA World Cup",
+      logo: "https://media.api-sports.io/football/leagues/1.png"
+    },
+    stage: "Semi-final",
+    stadium: {
+      name: "Luzhniki Stadium",
+      city: "Moscow",
+      country: "Russia"
+    },
+    poster: "https://digitalhub.fifa.com/transform/94f8b2c0-a6e7-45d0-910b-ca1567a05fb1/FIFAWC2018-CRO-ENG-MatchHighlights-CRO-goals",
+    highlights: "https://www.youtube.com/watch?v=13MiXOJ9nTY"
+  },
+  {
+    id: "m21",
+    homeTeam: {
+      name: "Germany",
+      logo: "https://media.api-sports.io/football/teams/25.png",
+      country: "Germany"
+    },
+    awayTeam: {
+      name: "Argentina",
+      logo: "https://media.api-sports.io/football/teams/26.png",
+      country: "Argentina"
+    },
+    score: {
+      homeScore: 1,
+      awayScore: 0,
+      extraTime: true
+    },
+    date: "2014-07-13T20:00:00Z",
+    competition: {
+      name: "FIFA World Cup",
+      logo: "https://media.api-sports.io/football/leagues/1.png"
+    },
+    stage: "Final",
+    stadium: {
+      name: "Maracanã Stadium",
+      city: "Rio de Janeiro",
+      country: "Brazil"
+    },
+    poster: "https://digitalhub.fifa.com/transform/8efa8a7c-15e5-4985-a7bd-67389ef8cc08/Argentina-v-Germany-2014-FIFA-World-Cup-Brazil-Final",
+    highlights: "https://www.youtube.com/watch?v=GHehA_mJ4rk"
+  },
+  
+  // Additional Premier League classics
+  {
+    id: "m22",
+    homeTeam: {
+      name: "Arsenal",
+      logo: "https://media.api-sports.io/football/teams/42.png",
+      country: "England"
+    },
+    awayTeam: {
+      name: "Liverpool",
+      logo: "https://media.api-sports.io/football/teams/40.png",
+      country: "England"
+    },
+    score: {
+      homeScore: 4,
+      awayScore: 4
+    },
+    date: "2009-04-21T19:00:00Z",
+    competition: {
+      name: "Premier League",
+      logo: "https://media.api-sports.io/football/leagues/39.png"
+    },
+    stage: "Matchday 34",
+    stadium: {
+      name: "Emirates Stadium",
+      city: "London",
+      country: "England"
+    },
+    poster: "https://i2-prod.liverpoolecho.co.uk/incoming/article6717562.ece/ALTERNATES/s810/GP72980327.jpg",
+    highlights: "https://www.youtube.com/watch?v=CXMIX_Cvwh0"
+  },
+  {
+    id: "m23",
+    homeTeam: {
+      name: "Manchester United",
+      logo: "https://media.api-sports.io/football/teams/33.png",
+      country: "England"
+    },
+    awayTeam: {
+      name: "Arsenal",
+      logo: "https://media.api-sports.io/football/teams/42.png",
+      country: "England"
+    },
+    score: {
+      homeScore: 8,
+      awayScore: 2
+    },
+    date: "2011-08-28T15:00:00Z",
+    competition: {
+      name: "Premier League",
+      logo: "https://media.api-sports.io/football/leagues/39.png"
+    },
+    stage: "Matchday 3",
+    stadium: {
+      name: "Old Trafford",
+      city: "Manchester",
+      country: "England"
+    },
+    poster: "https://i2-prod.manchestereveningnews.co.uk/incoming/article19276197.ece/ALTERNATES/s810/2_JS208104261.jpg",
+    highlights: "https://www.youtube.com/watch?v=B7eNA35r8Hk"
+  },
+  {
+    id: "m24",
+    homeTeam: {
+      name: "Tottenham Hotspur",
+      logo: "https://media.api-sports.io/football/teams/47.png",
+      country: "England"
+    },
+    awayTeam: {
+      name: "Manchester United",
+      logo: "https://media.api-sports.io/football/teams/33.png",
+      country: "England"
+    },
+    score: {
+      homeScore: 3,
+      awayScore: 5
+    },
+    date: "2001-09-29T14:00:00Z",
+    competition: {
+      name: "Premier League",
+      logo: "https://media.api-sports.io/football/leagues/39.png"
+    },
+    stage: "Matchday 7",
+    stadium: {
+      name: "White Hart Lane",
+      city: "London",
+      country: "England"
+    },
+    poster: "https://www.manutd.com/AssetPicker/images/0/0/16/231/1084066/GettyImages_514897201632870544064_large.jpg",
+    highlights: "https://www.youtube.com/watch?v=3kQMjNla0SI"
   }
 ];
 
