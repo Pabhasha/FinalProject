@@ -1,3 +1,4 @@
+
 export interface Match {
   id: string;
   homeTeam: {
@@ -274,6 +275,223 @@ export const mockMatches: Match[] = [
     },
     poster: "https://fcbarcelona.darkroom.tech/1200/675/65ad44e78bb951d37d1e0fadb853f8d0:3d5af1f362cb7b8bad31ddc221ab674d/11-barcelona-6-real-madrid-2-enorme-espectacle-al-santiago-bernabeu.jpg",
     highlights: "https://www.youtube.com/watch?v=VPRAB0wFXpw"
+  },
+  
+  // New World Cup matches
+  {
+    id: "m8",
+    homeTeam: {
+      name: "Brazil",
+      logo: "https://media.api-sports.io/football/teams/6.png",
+      country: "Brazil"
+    },
+    awayTeam: {
+      name: "Germany",
+      logo: "https://media.api-sports.io/football/teams/25.png",
+      country: "Germany"
+    },
+    score: {
+      homeScore: 1,
+      awayScore: 7
+    },
+    date: "2014-07-08T20:00:00Z",
+    competition: {
+      name: "FIFA World Cup",
+      logo: "https://media.api-sports.io/football/leagues/1.png"
+    },
+    stage: "Semi-final",
+    stadium: {
+      name: "Estádio Mineirão",
+      city: "Belo Horizonte",
+      country: "Brazil"
+    },
+    poster: "https://cdn.britannica.com/83/192683-050-9F23360E/Germany-Brazil-FIFA-World-Cup-2014.jpg",
+    highlights: "https://www.youtube.com/watch?v=DUSojCb7CFM"
+  },
+  {
+    id: "m9",
+    homeTeam: {
+      name: "Spain",
+      logo: "https://media.api-sports.io/football/teams/9.png",
+      country: "Spain"
+    },
+    awayTeam: {
+      name: "Netherlands",
+      logo: "https://media.api-sports.io/football/teams/1118.png",
+      country: "Netherlands"
+    },
+    score: {
+      homeScore: 1,
+      awayScore: 0,
+      extraTime: true
+    },
+    date: "2010-07-11T19:30:00Z",
+    competition: {
+      name: "FIFA World Cup",
+      logo: "https://media.api-sports.io/football/leagues/1.png"
+    },
+    stage: "Final",
+    stadium: {
+      name: "Soccer City Stadium",
+      city: "Johannesburg",
+      country: "South Africa"
+    },
+    poster: "https://cdn.cnn.com/cnnnext/dam/assets/100711175249-spain-netherlands-world-cup-horizontal-large.jpg",
+    highlights: "https://www.youtube.com/watch?v=825BX1iQqXs"
+  },
+  
+  // New El Clásico matches
+  {
+    id: "m10",
+    homeTeam: {
+      name: "Real Madrid",
+      logo: "https://media.api-sports.io/football/teams/541.png",
+      country: "Spain"
+    },
+    awayTeam: {
+      name: "Barcelona",
+      logo: "https://media.api-sports.io/football/teams/529.png",
+      country: "Spain"
+    },
+    score: {
+      homeScore: 0,
+      awayScore: 4
+    },
+    date: "2015-11-21T19:15:00Z",
+    competition: {
+      name: "La Liga",
+      logo: "https://media.api-sports.io/football/leagues/140.png"
+    },
+    stage: "Matchday 12",
+    stadium: {
+      name: "Santiago Bernabéu",
+      city: "Madrid",
+      country: "Spain"
+    },
+    poster: "https://www.fcbarcelona.com/fcbarcelona/photo/2018/03/22/f5d8a7c8-d7c9-4184-8101-16b236b3a0c3/mini_2015-11-21_REALMADRID-BARCELONA_12.JPG",
+    highlights: "https://www.youtube.com/watch?v=7OZ8Gtp52jc"
+  },
+  {
+    id: "m11",
+    homeTeam: {
+      name: "Barcelona",
+      logo: "https://media.api-sports.io/football/teams/529.png",
+      country: "Spain"
+    },
+    awayTeam: {
+      name: "Real Madrid",
+      logo: "https://media.api-sports.io/football/teams/541.png",
+      country: "Spain"
+    },
+    score: {
+      homeScore: 5,
+      awayScore: 0
+    },
+    date: "2010-11-29T20:00:00Z",
+    competition: {
+      name: "La Liga",
+      logo: "https://media.api-sports.io/football/leagues/140.png"
+    },
+    stage: "Matchday 13",
+    stadium: {
+      name: "Camp Nou",
+      city: "Barcelona",
+      country: "Spain"
+    },
+    poster: "https://assets.goal.com/v3/assets/bltcc7a7ffd2fbf71f5/blt42c83090760abe58/60dc62149a4c2d39be77283d/962c29f1278de6acf4d914a0fde7e5843e14c20e.jpg",
+    highlights: "https://www.youtube.com/watch?v=rCXksQN0RkQ"
+  },
+  
+  // New Premier League matches
+  {
+    id: "m12",
+    homeTeam: {
+      name: "Manchester City",
+      logo: "https://media.api-sports.io/football/teams/50.png",
+      country: "England"
+    },
+    awayTeam: {
+      name: "Queens Park Rangers",
+      logo: "https://media.api-sports.io/football/teams/69.png",
+      country: "England"
+    },
+    score: {
+      homeScore: 3,
+      awayScore: 2
+    },
+    date: "2012-05-13T15:00:00Z",
+    competition: {
+      name: "Premier League",
+      logo: "https://media.api-sports.io/football/leagues/39.png"
+    },
+    stage: "Matchday 38",
+    stadium: {
+      name: "Etihad Stadium",
+      city: "Manchester",
+      country: "England"
+    },
+    poster: "https://www.si.com/.image/t_share/MTc0NDg2MDIzNzQwMDgwMzcz/sergio-agc3bcero-celebration.jpg",
+    highlights: "https://www.youtube.com/watch?v=4XSo5Z0hEAs"
+  },
+  {
+    id: "m13",
+    homeTeam: {
+      name: "Liverpool",
+      logo: "https://media.api-sports.io/football/teams/40.png",
+      country: "England"
+    },
+    awayTeam: {
+      name: "Newcastle United",
+      logo: "https://media.api-sports.io/football/teams/34.png",
+      country: "England"
+    },
+    score: {
+      homeScore: 4,
+      awayScore: 3
+    },
+    date: "1996-04-03T19:00:00Z",
+    competition: {
+      name: "Premier League",
+      logo: "https://media.api-sports.io/football/leagues/39.png"
+    },
+    stage: "Matchday 30",
+    stadium: {
+      name: "Anfield",
+      city: "Liverpool",
+      country: "England"
+    },
+    poster: "https://i2-prod.liverpoolecho.co.uk/incoming/article17056419.ece/ALTERNATES/s1200c/0_GettyImages-677731.jpg",
+    highlights: "https://www.youtube.com/watch?v=3mzb5ZlTh2w"
+  },
+  {
+    id: "m14",
+    homeTeam: {
+      name: "Manchester United",
+      logo: "https://media.api-sports.io/football/teams/33.png",
+      country: "England"
+    },
+    awayTeam: {
+      name: "Manchester City",
+      logo: "https://media.api-sports.io/football/teams/50.png",
+      country: "England"
+    },
+    score: {
+      homeScore: 4,
+      awayScore: 3
+    },
+    date: "2009-09-20T15:30:00Z",
+    competition: {
+      name: "Premier League",
+      logo: "https://media.api-sports.io/football/leagues/39.png"
+    },
+    stage: "Matchday 6",
+    stadium: {
+      name: "Old Trafford",
+      city: "Manchester",
+      country: "England"
+    },
+    poster: "https://i.guim.co.uk/img/static/sys-images/Sport/Pix/pictures/2009/9/20/1253464554169/Michael-Owen-scores-the-w-001.jpg?width=465&dpr=1&s=none",
+    highlights: "https://www.youtube.com/watch?v=43FnCO1DKI0"
   }
 ];
 
