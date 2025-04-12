@@ -8,6 +8,9 @@ import { getMatchById, getReviewsForMatch } from '@/utils/mockData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { toast } from "sonner";
 import { cn } from '@/lib/utils';
+import { useFavorites } from '@/hooks/useFavorites';
+import { useLists } from '@/hooks/useLists';
+import ListModal from '@/components/ui/ListModal';
 
 const MatchDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,6 +21,19 @@ const MatchDetails = () => {
   const [userRating, setUserRating] = useState<number>(0);
   const [watchedMatches, setWatchedMatches] = useLocalStorage<string[]>('footballtrackr-watched', []);
   const [hasWatched, setHasWatched] = useState(false);
+  
+  // Favorites functionality
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const [isFavorited, setIsFavorited] = useState(false);
+  
+  // Lists functionality
+  const { isListModalOpen, openListModal, closeListModal } = useLists();
+  
+  useEffect(() => {
+    if (id) {
+      setIsFavorited(isFavorite(id));
+    }
+  }, [id, isFavorite]);
   
   useEffect(() => {
     if (id && watchedMatches.includes(id)) {
@@ -74,6 +90,39 @@ const MatchDetails = () => {
       });
     }
   };
+  
+  const handleToggleFavorite = () => {
+    if (id) {
+      const isNowFavorite = toggleFavorite(id);
+      setIsFavorited(isNowFavorite);
+      toast(isNowFavorite ? "Added to favorites" : "Removed from favorites", {
+        description: isNowFavorite 
+          ? "This match has been added to your favorites." 
+          : "This match has been removed from your favorites.",
+      });
+    }
+  };
+  
+  const handleShareMatch = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url)
+      .then(() => {
+        toast("Link copied to clipboard", {
+          description: "Share this match with your friends!",
+        });
+      })
+      .catch(() => {
+        toast("Failed to copy link", {
+          description: "Please try again or copy the URL manually.",
+        });
+      });
+  };
+  
+  const handleAddToList = () => {
+    if (id) {
+      openListModal(id);
+    }
+  };
 
   return (
     <MainLayout>
@@ -113,25 +162,25 @@ const MatchDetails = () => {
               </div>
               
               {/* Teams and Score */}
-              <div className="flex items-center mb-4">
-                <div className="flex items-center mr-4">
+              <div className="flex flex-wrap items-center mb-4">
+                <div className="flex items-center mr-4 mb-2">
                   <img 
                     src={match.homeTeam.logo} 
                     alt={match.homeTeam.name} 
                     className="w-10 h-10 object-contain mr-2" 
                   />
-                  <h1 className="text-xl md:text-3xl font-bold">{match.homeTeam.name}</h1>
+                  <h1 className="text-xl md:text-3xl font-bold truncate max-w-[200px] md:max-w-none">{match.homeTeam.name}</h1>
                 </div>
                 
-                <div className="text-xl md:text-3xl font-bold px-3">{formatScore()}</div>
+                <div className="text-xl md:text-3xl font-bold px-3 mb-2">{formatScore()}</div>
                 
-                <div className="flex items-center">
+                <div className="flex items-center mb-2">
                   <img 
                     src={match.awayTeam.logo} 
                     alt={match.awayTeam.name} 
                     className="w-10 h-10 object-contain mr-2" 
                   />
-                  <h1 className="text-xl md:text-3xl font-bold">{match.awayTeam.name}</h1>
+                  <h1 className="text-xl md:text-3xl font-bold truncate max-w-[200px] md:max-w-none">{match.awayTeam.name}</h1>
                 </div>
               </div>
               
@@ -189,13 +238,32 @@ const MatchDetails = () => {
                 
                 {/* More Actions */}
                 <div className="flex items-center space-x-4 ml-auto">
-                  <button className="w-9 h-9 flex items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
-                    <Heart className="w-4 h-4" />
+                  <button 
+                    className={cn(
+                      "w-9 h-9 flex items-center justify-center rounded-full transition-colors",
+                      isFavorited 
+                        ? "bg-red-500 text-white hover:bg-red-600" 
+                        : "bg-secondary hover:bg-secondary/80"
+                    )}
+                    onClick={handleToggleFavorite}
+                    aria-label={isFavorited ? "Remove from favorites" : "Add to favorites"}
+                  >
+                    <Heart className={cn("w-4 h-4", isFavorited && "fill-current")} />
                   </button>
-                  <button className="w-9 h-9 flex items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
+                  
+                  <button 
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+                    onClick={handleAddToList}
+                    aria-label="Add to list"
+                  >
                     <ListChecks className="w-4 h-4" />
                   </button>
-                  <button className="w-9 h-9 flex items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors">
+                  
+                  <button 
+                    className="w-9 h-9 flex items-center justify-center rounded-full bg-secondary hover:bg-secondary/80 transition-colors"
+                    onClick={handleShareMatch}
+                    aria-label="Share match"
+                  >
                     <Share2 className="w-4 h-4" />
                   </button>
                 </div>
@@ -267,6 +335,13 @@ const MatchDetails = () => {
           )}
         </section>
       </div>
+      
+      {/* List Modal */}
+      <ListModal 
+        isOpen={isListModalOpen}
+        onClose={closeListModal}
+        matchId={id || null}
+      />
     </MainLayout>
   );
 };
