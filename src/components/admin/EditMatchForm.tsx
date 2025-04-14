@@ -15,7 +15,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { useMatchAdmin } from '@/hooks/useMatchAdmin';
+import { MatchData } from '@/hooks/useMatchAdmin';
 
 const matchSchema = z.object({
   home: z.string().min(1, 'Home team is required'),
@@ -26,13 +28,16 @@ const matchSchema = z.object({
   result: z.string().min(1, 'Result is required'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
   location: z.string().min(1, 'Location is required'),
+  highlights: z.string().optional(),
+  isPublished: z.boolean().default(true),
   image: z.any().optional(),
+  background: z.any().optional(),
 });
 
 type MatchFormValues = z.infer<typeof matchSchema>;
 
 interface EditMatchFormProps {
-  match: any;
+  match: MatchData;
   onClose: () => void;
 }
 
@@ -40,6 +45,7 @@ const EditMatchForm = ({ match, onClose }: EditMatchFormProps) => {
   const { updateMatch } = useMatchAdmin();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(match.image || null);
+  const [backgroundPreview, setBackgroundPreview] = useState<string | null>(match.background || match.image || null);
 
   // Extract home and away from title
   const titleParts = match.title.split(' vs ');
@@ -57,6 +63,8 @@ const EditMatchForm = ({ match, onClose }: EditMatchFormProps) => {
       result: match.result || '',
       description: match.description || '',
       location: match.location || '',
+      highlights: match.highlights || '',
+      isPublished: match.isPublished !== false,
     },
   });
 
@@ -72,12 +80,25 @@ const EditMatchForm = ({ match, onClose }: EditMatchFormProps) => {
     }
   };
 
+  const handleBackgroundChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setBackgroundPreview(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+      form.setValue('background', file);
+    }
+  };
+
   const onSubmit = async (values: MatchFormValues) => {
     setIsSubmitting(true);
     try {
       // In a real app, we would upload any new image to a server
       // For this demo, we'll just use the image preview as the "URL"
       const imageUrl = imagePreview || match.image || '/placeholder.svg';
+      const backgroundUrl = backgroundPreview || match.background || imageUrl;
       
       await updateMatch({
         ...match,
@@ -89,6 +110,9 @@ const EditMatchForm = ({ match, onClose }: EditMatchFormProps) => {
         description: values.description,
         location: values.location,
         image: imageUrl,
+        background: backgroundUrl,
+        highlights: values.highlights || undefined,
+        isPublished: values.isPublished,
       });
       
       toast.success('Match updated successfully');
@@ -231,26 +255,87 @@ const EditMatchForm = ({ match, onClose }: EditMatchFormProps) => {
             </FormItem>
           )}
         />
-        
-        <div className="space-y-2">
-          <FormLabel>Match Poster Image</FormLabel>
-          <Input 
-            type="file" 
-            accept="image/*" 
-            onChange={handleImageChange} 
-            className="cursor-pointer"
-          />
-          
-          {imagePreview && (
-            <div className="mt-4 border rounded-md overflow-hidden w-full max-w-md">
-              <img 
-                src={imagePreview} 
-                alt="Match poster preview" 
-                className="w-full h-auto object-cover"
-              />
-            </div>
+
+        <FormField
+          control={form.control}
+          name="highlights"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>YouTube Highlights URL</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="https://www.youtube.com/watch?v=..." 
+                  type="url"
+                  {...field} 
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
+        />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <FormLabel>Match Poster Image</FormLabel>
+            <Input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleImageChange} 
+              className="cursor-pointer"
+            />
+            
+            {imagePreview && (
+              <div className="mt-4 border rounded-md overflow-hidden w-full max-w-md">
+                <img 
+                  src={imagePreview} 
+                  alt="Match poster preview" 
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <FormLabel>Match Background Image</FormLabel>
+            <Input 
+              type="file" 
+              accept="image/*" 
+              onChange={handleBackgroundChange} 
+              className="cursor-pointer"
+            />
+            
+            {backgroundPreview && (
+              <div className="mt-4 border rounded-md overflow-hidden w-full max-w-md">
+                <img 
+                  src={backgroundPreview} 
+                  alt="Match background preview" 
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+            )}
+          </div>
         </div>
+
+        <FormField
+          control={form.control}
+          name="isPublished"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">
+                  Publish Match
+                </FormLabel>
+                <FormMessage />
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
         
         <div className="flex justify-end space-x-4 pt-4">
           <Button 
