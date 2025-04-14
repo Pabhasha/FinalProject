@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 
 // Import initial data to populate the admin dashboard
-import { mockMatches as initialMatches } from '@/utils/mockData';
+import { mockMatches as importedMockMatches } from '@/utils/mockData';
 
 export interface MatchData {
   id: string;
@@ -27,6 +27,32 @@ export interface MatchData {
     watchedCount: number;
   };
 }
+
+// Convert mockMatches to the correct MatchData format
+const initialMatches: MatchData[] = importedMockMatches.map(match => ({
+  id: match.id,
+  slug: `${match.homeTeam.name.toLowerCase()}-vs-${match.awayTeam.name.toLowerCase()}-${match.date.replace(/[^0-9]/g, '')}`,
+  title: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
+  competition: match.competition.name,
+  category: match.competition.name.toLowerCase().includes('world cup') ? 'world-cup' :
+           match.homeTeam.name === 'Barcelona' || match.awayTeam.name === 'Barcelona' && 
+           match.homeTeam.name === 'Real Madrid' || match.awayTeam.name === 'Real Madrid' ? 'el-clasico' : 'premier-league',
+  date: match.date,
+  result: `${match.score.homeScore}-${match.score.awayScore}${match.score.penalties ? ` (${match.score.penalties.homeScore}-${match.score.penalties.awayScore})` : ''}`,
+  description: `${match.homeTeam.name} faced ${match.awayTeam.name} in an exciting match at ${match.stadium.name}.`,
+  location: `${match.stadium.name}, ${match.stadium.city}, ${match.stadium.country}`,
+  image: match.poster,
+  background: match.poster,
+  highlights: match.highlights,
+  isPublished: true,
+  ratings: [],
+  reviews: [],
+  engagementStats: {
+    ratingCount: 0,
+    reviewCount: 0,
+    watchedCount: 0
+  }
+}));
 
 export const useMatchAdmin = () => {
   const [matches, setMatches] = useLocalStorage<MatchData[]>('footballtrackr-matches', initialMatches || []);
