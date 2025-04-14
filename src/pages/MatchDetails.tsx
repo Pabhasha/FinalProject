@@ -150,7 +150,7 @@ const MatchDetails = () => {
           
           {/* Content Overlay */}
           <div className="relative h-full container mx-auto px-4 flex flex-col justify-end pb-12">
-            <div className="max-w-3xl animate-fade-in">
+            <div className="max-w-4xl animate-fade-in">
               {/* Competition Badge */}
               <div className="inline-flex items-center bg-card/60 backdrop-blur-sm px-3 py-1.5 rounded-full mb-6">
                 <img 
@@ -161,26 +161,39 @@ const MatchDetails = () => {
                 <span className="text-sm font-medium">{match.competition.name} • {match.stage}</span>
               </div>
               
-              {/* Teams and Score - Fixed layout overflow */}
-              <div className="flex flex-wrap items-center mb-4 w-full">
-                <div className="flex items-center mr-4 mb-2 flex-shrink-0">
-                  <img 
-                    src={match.homeTeam.logo} 
-                    alt={match.homeTeam.name} 
-                    className="w-10 h-10 object-contain mr-2 flex-shrink-0" 
-                  />
-                  <h1 className="text-xl md:text-3xl font-bold break-words max-w-[150px] sm:max-w-[200px] md:max-w-xs">{match.homeTeam.name}</h1>
+              {/* Teams and Score - Improved responsive layout */}
+              <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-2 mb-4 w-full">
+                {/* Home Team - Now in its own column */}
+                <div className="flex items-center justify-end">
+                  <div className="flex items-center mr-2">
+                    <img 
+                      src={match.homeTeam.logo} 
+                      alt={match.homeTeam.name} 
+                      className="w-8 h-8 sm:w-10 sm:h-10 object-contain mr-2 flex-shrink-0" 
+                    />
+                    <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold truncate max-w-[120px] sm:max-w-[180px] md:max-w-[220px]">
+                      {match.homeTeam.name}
+                    </h1>
+                  </div>
                 </div>
                 
-                <div className="text-xl md:text-3xl font-bold px-3 mb-2 flex-shrink-0">{formatScore()}</div>
+                {/* Score - In center column with fixed width */}
+                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold px-2 md:px-4 text-center whitespace-nowrap">
+                  {formatScore()}
+                </div>
                 
-                <div className="flex items-center mb-2 flex-shrink-0">
-                  <img 
-                    src={match.awayTeam.logo} 
-                    alt={match.awayTeam.name} 
-                    className="w-10 h-10 object-contain mr-2 flex-shrink-0" 
-                  />
-                  <h1 className="text-xl md:text-3xl font-bold break-words max-w-[150px] sm:max-w-[200px] md:max-w-xs">{match.awayTeam.name}</h1>
+                {/* Away Team - Now in its own column */}
+                <div className="flex items-center">
+                  <div className="flex items-center ml-2">
+                    <img 
+                      src={match.awayTeam.logo} 
+                      alt={match.awayTeam.name} 
+                      className="w-8 h-8 sm:w-10 sm:h-10 object-contain mr-2 flex-shrink-0" 
+                    />
+                    <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold truncate max-w-[120px] sm:max-w-[180px] md:max-w-[220px]">
+                      {match.awayTeam.name}
+                    </h1>
+                  </div>
                 </div>
               </div>
               

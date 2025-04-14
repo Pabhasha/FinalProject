@@ -161,6 +161,27 @@
   .football-badge {
     @apply inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium;
   }
+
+  /* Responsive text classes */
+  .text-fit {
+    @apply text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl;
+    @apply font-bold truncate;
+  }
+  
+  .team-name {
+    @apply truncate max-w-[120px] sm:max-w-[160px] md:max-w-[200px] lg:max-w-[260px];
+    @apply text-lg sm:text-xl md:text-2xl font-bold;
+  }
+
+  .match-title {
+    @apply truncate max-w-full;
+    @apply text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold;
+  }
+
+  .match-metadata {
+    @apply text-xs sm:text-sm truncate;
+    @apply text-muted-foreground;
+  }
 }
 
 @keyframes fade-in {

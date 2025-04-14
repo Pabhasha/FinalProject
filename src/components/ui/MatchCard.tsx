@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -25,7 +24,6 @@ const MatchCard: React.FC<MatchCardProps> = ({
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const [isFlipped, setIsFlipped] = useState(false);
   
-  // Define alternative content for the match
   const matchVariants = [
     {
       title: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
@@ -37,7 +35,7 @@ const MatchCard: React.FC<MatchCardProps> = ({
       title: `${match.homeTeam.name} vs ${match.awayTeam.name}`,
       score: `Half Time: ${Math.floor(match.score.homeScore/2)}-${Math.floor(match.score.awayScore/2)}`,
       highlight: "Key Moment",
-      poster: match.poster // Using same poster but could be different angles
+      poster: match.poster
     },
     {
       title: `${match.competition.name}`,
@@ -47,15 +45,13 @@ const MatchCard: React.FC<MatchCardProps> = ({
     }
   ];
 
-  // Start content rotation
   const startRotation = () => {
     if (intervalRef.current) return;
     intervalRef.current = setInterval(() => {
       setActiveContentIndex((prevIndex) => (prevIndex + 1) % matchVariants.length);
-    }, 2500); // Changed from 5000 to 2500 milliseconds (2.5 seconds)
+    }, 2500);
   };
 
-  // Stop content rotation
   const stopRotation = () => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
@@ -63,20 +59,18 @@ const MatchCard: React.FC<MatchCardProps> = ({
     }
   };
 
-  // Handle hover effects and cleanup
   useEffect(() => {
     if (hovered) {
       startRotation();
     } else {
       stopRotation();
-      setActiveContentIndex(0); // Reset to default content when not hovering
+      setActiveContentIndex(0);
       setIsFlipped(false);
     }
     
-    return () => stopRotation(); // Cleanup on unmount
+    return () => stopRotation();
   }, [hovered]);
 
-  // Determine sizing based on the size prop
   const cardSizes = {
     sm: 'w-32 h-48',
     md: 'w-40 h-60',
@@ -103,7 +97,6 @@ const MatchCard: React.FC<MatchCardProps> = ({
   const isPremium = variant === 'premium';
   const currentContent = matchVariants[activeContentIndex];
 
-  // Handle card flip
   const handleFlip = () => {
     if (hovered) {
       setIsFlipped(!isFlipped);
@@ -125,7 +118,6 @@ const MatchCard: React.FC<MatchCardProps> = ({
       onClick={handleFlip}
     >
       <Link to={`/match/${match.id}`} className="block h-full">
-        {/* Poster Image */}
         <div className={cn(
           "relative w-full h-full transition-all duration-500",
           isFlipped ? "opacity-0" : "opacity-100"
@@ -148,47 +140,41 @@ const MatchCard: React.FC<MatchCardProps> = ({
             onLoad={() => setImageLoaded(true)}
           />
 
-          {/* Front Content Overlay */}
           <div className={cn(
             "absolute inset-0 flex flex-col justify-end p-3",
             "bg-gradient-to-t from-black/90 via-black/50 to-transparent",
             isPremium ? "opacity-100" : "match-card-overlay"
           )}>
-            {/* Improved team badges and names layout */}
             <div className="flex justify-between mb-2">
-              {/* Home team */}
               <div className="flex flex-col items-center max-w-[40%]">
                 <img 
                   src={match.homeTeam.logo} 
                   alt={match.homeTeam.name} 
                   className="w-6 h-6 object-contain mb-1" 
                 />
-                <span className="text-white font-medium text-xs text-center truncate w-full">
+                <span className="text-white font-medium text-xs text-center truncate w-full" title={match.homeTeam.name}>
                   {match.homeTeam.name}
                 </span>
               </div>
               
-              {/* VS */}
               <div className="flex flex-col items-center">
                 <span className="text-white/70 text-xs font-bold">
                   VS
                 </span>
               </div>
               
-              {/* Away team */}
               <div className="flex flex-col items-center max-w-[40%]">
                 <img 
                   src={match.awayTeam.logo} 
                   alt={match.awayTeam.name} 
                   className="w-6 h-6 object-contain mb-1" 
                 />
-                <span className="text-white font-medium text-xs text-center truncate w-full">
+                <span className="text-white font-medium text-xs text-center truncate w-full" title={match.awayTeam.name}>
                   {match.awayTeam.name}
                 </span>
               </div>
             </div>
             
-            {/* Score */}
             <div className={cn(
               "relative z-10 bg-black/50 backdrop-blur-sm rounded-md px-3 py-1.5 mb-2",
               "border border-white/10 text-center",
@@ -219,7 +205,6 @@ const MatchCard: React.FC<MatchCardProps> = ({
           </div>
         </div>
 
-        {/* Card Back (Flipped State) - Only visible when flipped */}
         <div className={cn(
           "absolute inset-0 bg-gray-900/95 p-3",
           "flex flex-col justify-between",
@@ -227,7 +212,9 @@ const MatchCard: React.FC<MatchCardProps> = ({
           isFlipped ? "opacity-100" : "opacity-0"
         )}>
           <div className="text-center">
-            <h3 className="text-white font-bold text-sm mb-1">{match.homeTeam.name} vs {match.awayTeam.name}</h3>
+            <h3 className="text-white font-bold text-sm mb-1 truncate" title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}>
+              {match.homeTeam.name} vs {match.awayTeam.name}
+            </h3>
             <div className="flex justify-center items-center gap-2 text-xs text-gray-300 mb-3">
               <Calendar className="w-3 h-3" />
               <span>{new Date(match.date).toLocaleDateString()}</span>
@@ -259,7 +246,6 @@ const MatchCard: React.FC<MatchCardProps> = ({
         </div>
       </Link>
 
-      {/* Premium Badge */}
       {isPremium && (
         <div className="absolute top-2 right-2 bg-gradient-to-r from-yellow-400 to-amber-600 text-black text-xs font-bold px-2 py-0.5 rounded shadow-md">
           PREMIUM
