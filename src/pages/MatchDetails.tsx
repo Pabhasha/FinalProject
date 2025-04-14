@@ -158,7 +158,7 @@ const MatchDetails = () => {
                   alt={match.competition.name} 
                   className="w-5 h-5 mr-2" 
                 />
-                <span className="text-sm font-medium">{match.competition.name} • {match.stage}</span>
+                <span className="text-sm font-medium text-left">{match.competition.name} • {match.stage}</span>
               </div>
               
               {/* Teams and Score - Improved responsive layout */}
@@ -171,7 +171,7 @@ const MatchDetails = () => {
                       alt={match.homeTeam.name} 
                       className="w-8 h-8 sm:w-10 sm:h-10 object-contain mr-2 flex-shrink-0" 
                     />
-                    <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold truncate max-w-[120px] sm:max-w-[180px] md:max-w-[220px]">
+                    <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-left truncate max-w-[200px] sm:max-w-[220px] md:max-w-[250px]">
                       {match.homeTeam.name}
                     </h1>
                   </div>
@@ -190,7 +190,7 @@ const MatchDetails = () => {
                       alt={match.awayTeam.name} 
                       className="w-8 h-8 sm:w-10 sm:h-10 object-contain mr-2 flex-shrink-0" 
                     />
-                    <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold truncate max-w-[120px] sm:max-w-[180px] md:max-w-[220px]">
+                    <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-left truncate max-w-[200px] sm:max-w-[220px] md:max-w-[250px]">
                       {match.awayTeam.name}
                     </h1>
                   </div>
@@ -198,7 +198,7 @@ const MatchDetails = () => {
               </div>
               
               {/* Match Meta */}
-              <div className="text-sm text-muted-foreground mb-8">
+              <div className="text-sm text-muted-foreground text-left mb-8">
                 {new Date(match.date).toLocaleDateString('en-US', { 
                   year: 'numeric', 
                   month: 'long', 

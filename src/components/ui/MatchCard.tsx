@@ -152,7 +152,7 @@ const MatchCard: React.FC<MatchCardProps> = ({
                   alt={match.homeTeam.name} 
                   className="w-6 h-6 object-contain mb-1" 
                 />
-                <span className="text-white font-medium text-xs text-center truncate w-full" title={match.homeTeam.name}>
+                <span className="text-white font-medium text-xs text-left truncate w-full" title={match.homeTeam.name}>
                   {match.homeTeam.name}
                 </span>
               </div>
@@ -169,7 +169,7 @@ const MatchCard: React.FC<MatchCardProps> = ({
                   alt={match.awayTeam.name} 
                   className="w-6 h-6 object-contain mb-1" 
                 />
-                <span className="text-white font-medium text-xs text-center truncate w-full" title={match.awayTeam.name}>
+                <span className="text-white font-medium text-xs text-left truncate w-full" title={match.awayTeam.name}>
                   {match.awayTeam.name}
                 </span>
               </div>
