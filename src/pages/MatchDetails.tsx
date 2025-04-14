@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Star, Heart, MessageSquare, Share2, ListChecks, Play } from 'lucide-react';
@@ -150,9 +151,9 @@ const MatchDetails = () => {
                 <img 
                   src={match.competition.logo} 
                   alt={match.competition.name} 
-                  className="w-5 h-5 mr-2" 
+                  className="w-5 h-5 mr-2 flex-shrink-0" 
                 />
-                <span className="text-sm font-medium text-left truncate max-w-[300px]">
+                <span className="text-sm font-medium whitespace-normal pr-1 max-w-[280px] sm:max-w-full">
                   {match.competition.name} • {match.stage}
                 </span>
               </div>

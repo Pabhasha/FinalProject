@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -182,6 +183,13 @@
   .match-metadata {
     @apply text-xs sm:text-sm truncate;
     @apply text-muted-foreground;
+  }
+
+  /* Competition badge */
+  .competition-badge {
+    @apply inline-flex items-center bg-card/60 backdrop-blur-sm px-3 py-1.5 rounded-full;
+    @apply overflow-visible whitespace-normal;
+    @apply w-auto max-w-full;
   }
 }
 
