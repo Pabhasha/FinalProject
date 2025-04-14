@@ -169,8 +169,9 @@
   }
   
   .team-name {
-    @apply truncate max-w-[120px] sm:max-w-[160px] md:max-w-[200px] lg:max-w-[260px];
-    @apply text-lg sm:text-xl md:text-2xl font-bold;
+    @apply truncate;
+    @apply text-xl md:text-2xl lg:text-3xl font-bold;
+    @apply max-w-[150px] sm:max-w-[180px] md:max-w-[220px] lg:max-w-[280px];
   }
 
   .match-title {

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Star, Heart, MessageSquare, Share2, ListChecks, Play } from 'lucide-react';
@@ -11,22 +10,23 @@ import { cn } from '@/lib/utils';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useLists } from '@/hooks/useLists';
 import ListModal from '@/components/ui/ListModal';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { Card, CardContent } from '@/components/ui/card';
 
 const MatchDetails = () => {
   const { id } = useParams<{ id: string }>();
   const match = getMatchById(id || '');
   const reviews = getReviewsForMatch(id || '');
+  const isMobile = useIsMobile();
   
   const [imageLoaded, setImageLoaded] = useState(false);
   const [userRating, setUserRating] = useState<number>(0);
   const [watchedMatches, setWatchedMatches] = useLocalStorage<string[]>('footballtrackr-watched', []);
   const [hasWatched, setHasWatched] = useState(false);
   
-  // Favorites functionality
   const { isFavorite, toggleFavorite } = useFavorites();
   const [isFavorited, setIsFavorited] = useState(false);
   
-  // Lists functionality
   const { isListModalOpen, openListModal, closeListModal } = useLists();
   
   useEffect(() => {
@@ -127,9 +127,7 @@ const MatchDetails = () => {
   return (
     <MainLayout>
       <div className="page-transition">
-        {/* Hero Banner with Match Details */}
         <div className="relative h-[70vh] min-h-[500px] -mx-4 sm:-mx-8 md:-mx-12 lg:-mx-24 overflow-hidden">
-          {/* Poster Background */}
           <div 
             className={cn(
               "absolute inset-0 bg-cover bg-center transition-opacity duration-1000",
@@ -138,67 +136,66 @@ const MatchDetails = () => {
             style={{ backgroundImage: `url(${match.poster})` }}
           ></div>
           
-          {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-background via-background/90 to-background/60"></div>
           
-          {/* Loading State */}
           {!imageLoaded && (
             <div className="absolute inset-0 bg-card flex items-center justify-center">
               <div className="animate-pulse w-16 h-16 rounded-full bg-muted"></div>
             </div>
           )}
           
-          {/* Content Overlay */}
           <div className="relative h-full container mx-auto px-4 flex flex-col justify-end pb-12">
             <div className="max-w-4xl animate-fade-in">
-              {/* Competition Badge */}
               <div className="inline-flex items-center bg-card/60 backdrop-blur-sm px-3 py-1.5 rounded-full mb-6">
                 <img 
                   src={match.competition.logo} 
                   alt={match.competition.name} 
                   className="w-5 h-5 mr-2" 
                 />
-                <span className="text-sm font-medium text-left">{match.competition.name} • {match.stage}</span>
+                <span className="text-sm font-medium text-left truncate max-w-[300px]">
+                  {match.competition.name} • {match.stage}
+                </span>
               </div>
               
-              {/* Teams and Score - Improved responsive layout */}
-              <div className="grid grid-cols-[1fr,auto,1fr] items-center gap-2 mb-4 w-full">
-                {/* Home Team - Now in its own column */}
-                <div className="flex items-center justify-end">
-                  <div className="flex items-center mr-2">
-                    <img 
-                      src={match.homeTeam.logo} 
-                      alt={match.homeTeam.name} 
-                      className="w-8 h-8 sm:w-10 sm:h-10 object-contain mr-2 flex-shrink-0" 
-                    />
-                    <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-left truncate max-w-[200px] sm:max-w-[220px] md:max-w-[250px]">
-                      {match.homeTeam.name}
-                    </h1>
+              <div className="flex flex-col mb-4 w-full">
+                <div className="flex justify-center items-center mb-6 w-full">
+                  <div className="flex-1 flex justify-end items-center pr-4 max-w-[40%]">
+                    <div className="flex items-center">
+                      <div className="flex flex-col items-end">
+                        <span className="team-name text-right">
+                          {match.homeTeam.name}
+                        </span>
+                      </div>
+                      <img 
+                        src={match.homeTeam.logo} 
+                        alt={match.homeTeam.name} 
+                        className="w-10 h-10 md:w-12 md:h-12 object-contain ml-3 flex-shrink-0" 
+                      />
+                    </div>
                   </div>
-                </div>
-                
-                {/* Score - In center column with fixed width */}
-                <div className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold px-2 md:px-4 text-center whitespace-nowrap">
-                  {formatScore()}
-                </div>
-                
-                {/* Away Team - Now in its own column */}
-                <div className="flex items-center">
-                  <div className="flex items-center ml-2">
-                    <img 
-                      src={match.awayTeam.logo} 
-                      alt={match.awayTeam.name} 
-                      className="w-8 h-8 sm:w-10 sm:h-10 object-contain mr-2 flex-shrink-0" 
-                    />
-                    <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-left truncate max-w-[200px] sm:max-w-[220px] md:max-w-[250px]">
-                      {match.awayTeam.name}
-                    </h1>
+                  
+                  <div className="px-4 py-2 mx-2 bg-card/30 backdrop-blur-sm rounded-md text-2xl md:text-4xl font-bold">
+                    {formatScore()}
+                  </div>
+                  
+                  <div className="flex-1 flex justify-start items-center pl-4 max-w-[40%]">
+                    <div className="flex items-center">
+                      <img 
+                        src={match.awayTeam.logo} 
+                        alt={match.awayTeam.name} 
+                        className="w-10 h-10 md:w-12 md:h-12 object-contain mr-3 flex-shrink-0" 
+                      />
+                      <div className="flex flex-col items-start">
+                        <span className="team-name text-left">
+                          {match.awayTeam.name}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
               
-              {/* Match Meta */}
-              <div className="text-sm text-muted-foreground text-left mb-8">
+              <div className="text-sm text-muted-foreground text-center mb-8 max-w-full overflow-hidden text-ellipsis whitespace-nowrap">
                 {new Date(match.date).toLocaleDateString('en-US', { 
                   year: 'numeric', 
                   month: 'long', 
@@ -206,9 +203,7 @@ const MatchDetails = () => {
                 })} • {match.stadium.name}, {match.stadium.city}, {match.stadium.country}
               </div>
               
-              {/* Action Buttons */}
-              <div className="flex flex-wrap gap-4">
-                {/* Rate */}
+              <div className="flex flex-wrap justify-center gap-4">
                 <div className="flex items-center">
                   <div className="mr-3">
                     <MatchRating 
@@ -221,7 +216,6 @@ const MatchDetails = () => {
                   <span className="text-sm text-muted-foreground">Rate</span>
                 </div>
                 
-                {/* Watch */}
                 <button 
                   onClick={handleAddToWatched}
                   disabled={hasWatched}
@@ -236,7 +230,6 @@ const MatchDetails = () => {
                   {hasWatched ? "Watched" : "Log Match"}
                 </button>
                 
-                {/* Highlights */}
                 {match.highlights && (
                   <a 
                     href={match.highlights}
@@ -249,8 +242,7 @@ const MatchDetails = () => {
                   </a>
                 )}
                 
-                {/* More Actions */}
-                <div className="flex items-center space-x-4 ml-auto">
+                <div className="flex items-center space-x-4">
                   <button 
                     className={cn(
                       "w-9 h-9 flex items-center justify-center rounded-full transition-colors",
@@ -285,7 +277,6 @@ const MatchDetails = () => {
           </div>
         </div>
         
-        {/* Reviews Section */}
         <section className="py-12">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl font-bold">Reviews</h2>
@@ -299,7 +290,6 @@ const MatchDetails = () => {
               {reviews.map(review => (
                 <div key={review.id} className="bg-card rounded-lg p-6 shadow-sm">
                   <div className="flex items-start">
-                    {/* User Avatar */}
                     <img 
                       src={review.userAvatar || 'https://randomuser.me/api/portraits/lego/1.jpg'} 
                       alt={review.username} 
@@ -307,7 +297,6 @@ const MatchDetails = () => {
                     />
                     
                     <div className="flex-1">
-                      {/* Review Header */}
                       <div className="flex items-center justify-between mb-3">
                         <div>
                           <h3 className="font-semibold">{review.username}</h3>
@@ -318,10 +307,8 @@ const MatchDetails = () => {
                         <MatchRating matchId={review.matchId} initialRating={review.rating} readOnly size="sm" />
                       </div>
                       
-                      {/* Review Content */}
                       <p className="text-sm mb-4">{review.content}</p>
                       
-                      {/* Actions */}
                       <div className="flex items-center text-sm text-muted-foreground">
                         <button className="flex items-center hover:text-primary transition-colors">
                           <Heart className="w-4 h-4 mr-1" />
@@ -349,7 +336,6 @@ const MatchDetails = () => {
         </section>
       </div>
       
-      {/* List Modal */}
       <ListModal 
         isOpen={isListModalOpen}
         onClose={closeListModal}

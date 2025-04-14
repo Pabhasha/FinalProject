@@ -145,14 +145,14 @@ const MatchCard: React.FC<MatchCardProps> = ({
             "bg-gradient-to-t from-black/90 via-black/50 to-transparent",
             isPremium ? "opacity-100" : "match-card-overlay"
           )}>
-            <div className="flex justify-between mb-2">
-              <div className="flex flex-col items-center max-w-[40%]">
+            <div className="flex justify-between mb-2 gap-1">
+              <div className="flex flex-col items-center">
                 <img 
                   src={match.homeTeam.logo} 
                   alt={match.homeTeam.name} 
                   className="w-6 h-6 object-contain mb-1" 
                 />
-                <span className="text-white font-medium text-xs text-left truncate w-full" title={match.homeTeam.name}>
+                <span className="text-white font-medium text-xs text-center truncate w-14" title={match.homeTeam.name}>
                   {match.homeTeam.name}
                 </span>
               </div>
@@ -163,13 +163,13 @@ const MatchCard: React.FC<MatchCardProps> = ({
                 </span>
               </div>
               
-              <div className="flex flex-col items-center max-w-[40%]">
+              <div className="flex flex-col items-center">
                 <img 
                   src={match.awayTeam.logo} 
                   alt={match.awayTeam.name} 
                   className="w-6 h-6 object-contain mb-1" 
                 />
-                <span className="text-white font-medium text-xs text-left truncate w-full" title={match.awayTeam.name}>
+                <span className="text-white font-medium text-xs text-center truncate w-14" title={match.awayTeam.name}>
                   {match.awayTeam.name}
                 </span>
               </div>
