@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { Star, Heart, MessageSquare, Share2, ListChecks, Play } from 'lucide-react';
@@ -13,6 +12,7 @@ import { useLists } from '@/hooks/useLists';
 import ListModal from '@/components/ui/ListModal';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Card, CardContent } from '@/components/ui/card';
+import { ReviewActions } from '@/components/ui/ReviewActions';
 
 const MatchDetails = () => {
   const { id } = useParams<{ id: string }>();
@@ -147,7 +147,7 @@ const MatchDetails = () => {
           
           <div className="relative h-full container mx-auto px-4 flex flex-col justify-end pb-12">
             <div className="max-w-4xl animate-fade-in">
-              <div className="inline-flex items-center bg-card/60 backdrop-blur-sm px-3 py-1.5 rounded-full mb-6">
+              <div className="competition-badge mb-6">
                 <img 
                   src={match.competition.logo} 
                   alt={match.competition.name} 
@@ -310,17 +310,10 @@ const MatchDetails = () => {
                       
                       <p className="text-sm mb-4">{review.content}</p>
                       
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <button className="flex items-center hover:text-primary transition-colors">
-                          <Heart className="w-4 h-4 mr-1" />
-                          <span>{review.likes}</span>
-                        </button>
-                        <span className="mx-3">•</span>
-                        <button className="flex items-center hover:text-primary transition-colors">
-                          <MessageSquare className="w-4 h-4 mr-1" />
-                          <span>Reply</span>
-                        </button>
-                      </div>
+                      <ReviewActions 
+                        reviewId={review.id}
+                        initialLikes={review.likes}
+                      />
                     </div>
                   </div>
                 </div>
