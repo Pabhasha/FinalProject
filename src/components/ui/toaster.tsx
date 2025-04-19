@@ -25,6 +25,7 @@ export function Toaster() {
             className={cn(
               "group shadow-lg shadow-primary/5 border-primary/20 animate-enter",
               "backdrop-blur-sm bg-opacity-95 dark:bg-opacity-90",
+              "motion-safe:animate-fade-in motion-safe:animate-duration-300",
               variant === "success" && "border-green-500/30 bg-green-500/10",
               variant === "destructive" && "border-destructive/30 bg-destructive/10",
               variant === "info" && "border-primary/30 bg-primary/10",
@@ -41,7 +42,9 @@ export function Toaster() {
                 </ToastTitle>
               )}
               {description && (
-                <ToastDescription className="text-foreground/70">{description}</ToastDescription>
+                <ToastDescription className="text-foreground/70">
+                  {description}
+                </ToastDescription>
               )}
             </div>
             {action}

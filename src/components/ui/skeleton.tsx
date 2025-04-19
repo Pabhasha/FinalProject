@@ -10,6 +10,7 @@ function Skeleton({
       className={cn(
         "animate-pulse rounded-md bg-muted/60", 
         "relative overflow-hidden",
+        "motion-safe:animate-pulse motion-safe:animate-duration-2000",
         className
       )}
       {...props}
