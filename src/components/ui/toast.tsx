@@ -2,7 +2,7 @@
 import * as React from "react"
 import * as ToastPrimitives from "@radix-ui/react-toast"
 import { cva, type VariantProps } from "class-variance-authority"
-import { X } from "lucide-react"
+import { X, CheckCircle, AlertTriangle, AlertCircle, Info } from "lucide-react"
 
 import { cn } from "@/lib/utils"
 
@@ -30,10 +30,10 @@ const toastVariants = cva(
       variant: {
         default: "border bg-background text-foreground",
         destructive:
-          "destructive group border-destructive bg-destructive text-destructive-foreground",
-        success: "success group border-green-600/20 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-300",
-        warning: "warning group border-yellow-600/20 bg-yellow-50 dark:bg-yellow-950/30 text-yellow-800 dark:text-yellow-300", 
-        info: "info group border-blue-600/20 bg-blue-50 dark:bg-blue-950/30 text-blue-800 dark:text-blue-300",
+          "group border-destructive/30 bg-destructive/10 text-destructive-foreground",
+        success: "group border-green-600/20 bg-green-50 dark:bg-green-950/30 text-green-800 dark:text-green-300",
+        warning: "group border-yellow-600/20 bg-yellow-50 dark:bg-yellow-950/30 text-yellow-800 dark:text-yellow-300", 
+        info: "group border-blue-600/20 bg-blue-50 dark:bg-blue-950/30 text-blue-800 dark:text-blue-300",
       },
     },
     defaultVariants: {
@@ -51,7 +51,7 @@ const Toast = React.forwardRef<
     <ToastPrimitives.Root
       ref={ref}
       className={cn(toastVariants({ variant }), 
-        "group backdrop-blur-sm bg-opacity-90 dark:bg-opacity-90",
+        "group backdrop-blur-sm bg-opacity-95 dark:bg-opacity-90",
         "data-[state=open]:animate-enter",
         "border-opacity-50 shadow-lg",
         className)}
@@ -100,7 +100,7 @@ const ToastTitle = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ToastPrimitives.Title
     ref={ref}
-    className={cn("text-sm font-semibold", className)}
+    className={cn("text-sm font-semibold flex items-center gap-1.5", className)}
     {...props}
   />
 ))

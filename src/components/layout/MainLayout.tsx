@@ -4,6 +4,7 @@ import { useTheme } from 'next-themes';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import { cn } from '@/lib/utils';
+import { motion } from 'framer-motion';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -29,12 +30,18 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
       <div className="flex flex-1">
         <Sidebar />
         <main className="flex-1 overflow-x-hidden">
-          <div className="container mx-auto py-8 px-4 animate-fade-in">
+          <motion.div 
+            className="container mx-auto py-8 px-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
             {children}
-          </div>
+          </motion.div>
         </main>
       </div>
-      <footer className="border-t border-border py-6 px-4 text-center text-sm text-muted-foreground">
+      <footer className="border-t border-border/40 py-6 px-4 text-center text-sm text-muted-foreground">
         <div className="container mx-auto">
           <div className="flex flex-wrap items-center justify-center gap-4 md:justify-between">
             <div className="flex flex-wrap items-center gap-4">
@@ -44,8 +51,10 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               <a href="/" className="hover:text-primary transition-colors letterboxd-link">API</a>
               <a href="/" className="hover:text-primary transition-colors letterboxd-link">Contact</a>
             </div>
-            <div>
-              © {new Date().getFullYear()} FootballTrackr. Made with passion for football.
+            <div className="flex items-center gap-1">
+              <span className="text-primary">©</span> {new Date().getFullYear()} 
+              <span className="text-gradient font-medium ml-1">FootballTrackr</span> 
+              <span className="hidden md:inline ml-1">• Made with passion for football.</span>
             </div>
           </div>
         </div>

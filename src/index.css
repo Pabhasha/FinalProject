@@ -44,6 +44,15 @@
     --blaugrana-secondary: 352, 100%, 46%;
  
     --radius: 0.5rem;
+    
+    --success: 142 76% 36%;
+    --success-foreground: 210 40% 98%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 210 40% 98%;
+    
+    --info: 221 83% 53%;
+    --info-foreground: 210 40% 98%;
   }
  
   .dark {
@@ -84,6 +93,15 @@
 
     --blaugrana-primary: 220, 100%, 60%;
     --blaugrana-secondary: 352, 100%, 60%;
+    
+    --success: 142 70% 45%;
+    --success-foreground: 210 40% 98%;
+    
+    --warning: 38 95% 60%;
+    --warning-foreground: 210 40% 98%;
+    
+    --info: 221 83% 65%;
+    --info-foreground: 210 40% 98%;
   }
 }
  
@@ -201,6 +219,13 @@
   .review-card {
     @apply bg-card rounded-lg p-6 shadow-sm hover:shadow-md transition-all duration-300;
     @apply border border-border/50 hover:border-border;
+    @apply relative overflow-hidden;
+  }
+  
+  .review-card::after {
+    @apply content-[''] absolute -inset-[1px] rounded-lg opacity-0 transition-opacity duration-300;
+    @apply bg-gradient-to-r from-primary/30 via-transparent to-primary/30 pointer-events-none;
+    @apply hover:opacity-100;
   }
   
   /* Interactive buttons */
@@ -216,6 +241,48 @@
     @apply shadow-sm hover:shadow-md transition-all duration-300;
     @apply hover:border-primary/20 hover:-translate-y-0.5;
   }
+
+  /* New improved buttons */
+  .btn-icon {
+    @apply flex items-center justify-center rounded-full p-2;
+    @apply transition-all duration-200 ease-in-out;
+    @apply hover:bg-primary/10 active:bg-primary/20;
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/40;
+  }
+
+  /* New action button with hover effect */
+  .action-btn {
+    @apply flex items-center gap-1.5 px-3 py-1.5 rounded-md;
+    @apply transition-all duration-200 ease-in-out;
+    @apply border border-transparent hover:border-primary/20;
+    @apply hover:bg-primary/5 active:bg-primary/10;
+    @apply text-sm font-medium;
+  }
+
+  /* Reaction button for reviews */
+  .reaction-btn {
+    @apply inline-flex items-center gap-1 p-1.5 rounded-full;
+    @apply transition-colors duration-200 bg-transparent;
+    @apply hover:bg-primary/10 active:bg-primary/20;
+    @apply text-muted-foreground hover:text-foreground;
+  }
+  
+  /* Badge with animated pulse dot */
+  .badge-with-dot {
+    @apply relative inline-flex items-center;
+  }
+  
+  .badge-dot {
+    @apply absolute -top-0.5 -right-0.5 h-2.5 w-2.5 rounded-full bg-primary;
+    @apply flex items-center justify-center animate-pulse;
+  }
+  
+  /* Empty state styling */
+  .empty-state {
+    @apply flex flex-col items-center justify-center p-8 text-center;
+    @apply border border-dashed border-muted-foreground/30 rounded-lg;
+    @apply bg-muted/20 space-y-4;
+  }
 }
 
 @keyframes fade-in {
@@ -229,9 +296,50 @@
   }
 }
 
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes pulse-border {
+  0%, 100% {
+    border-color: hsl(var(--primary) / 0.2);
+  }
+  50% {
+    border-color: hsl(var(--primary) / 0.5);
+  }
+}
+
+@keyframes slide-in-bottom {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 @layer utilities {
   .animate-fade-in {
     animation: fade-in 0.3s ease-out;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  .animate-pulse-border {
+    animation: pulse-border 2s ease-in-out infinite;
+  }
+  
+  .animate-slide-in-bottom {
+    animation: slide-in-bottom 0.3s ease-out;
   }
 
   /* Improved match card for premium feel */
@@ -267,5 +375,30 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+  }
+  
+  /* New accessibility focus styles */
+  .focus-ring {
+    @apply focus:outline-none focus:ring-2 focus:ring-primary/60 focus:ring-offset-2 focus:ring-offset-background;
+  }
+  
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-primary to-blue-700 bg-clip-text text-transparent;
+  }
+  
+  /* Gradient border */
+  .gradient-border {
+    border-image: linear-gradient(to right, hsl(var(--primary)), transparent) 1;
+  }
+  
+  /* Hover lift effect */
+  .hover-lift {
+    @apply transition-transform duration-200 ease-out hover:-translate-y-1;
+  }
+  
+  /* Shadow on hover */
+  .hover-shadow {
+    @apply transition-shadow duration-200 hover:shadow-md;
   }
 }

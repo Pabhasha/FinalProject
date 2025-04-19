@@ -1,6 +1,6 @@
 
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "sonner";
+import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -24,9 +24,9 @@ const NotFound = lazy(() => import('./pages/NotFound'));
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
-// Loading fallback
+// Enhanced loading fallback with skeleton UI
 const PageLoader = () => (
-  <div className="container mx-auto px-4 py-8">
+  <div className="container mx-auto px-4 py-8 animate-pulse">
     <div className="space-y-8">
       <Skeleton className="h-12 w-[250px]" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -65,7 +65,13 @@ const App = () => (
         <ThemeProvider defaultTheme="dark" attribute="class">
           <TooltipProvider>
             <Toaster />
-            <Sonner position="top-right" closeButton richColors expand={false} />
+            <Sonner 
+              position="top-right" 
+              closeButton 
+              richColors 
+              expand={false}
+              className="z-[100]"
+            />
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
@@ -117,7 +123,7 @@ const App = () => (
                   </Suspense>
                 } />
                 
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                {/* Catch-all route */}
                 <Route path="*" element={
                   <Suspense fallback={<PageLoader />}>
                     <NotFound />
