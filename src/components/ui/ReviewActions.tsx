@@ -8,6 +8,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { Card, CardContent } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from "sonner";
+import { Badge } from '@/components/ui/badge';
 
 interface ReviewActionsProps {
   reviewId: string;
@@ -50,8 +51,14 @@ export function ReviewActions({ reviewId, initialLikes, initialDislikes = 0 }: R
       // Update counts
       if (voteType === 'upvote') {
         setLikes(likes - 1);
+        toast("Upvote removed", {
+          description: "Your upvote has been removed from this review.",
+        });
       } else {
         setDislikes(dislikes - 1);
+        toast("Downvote removed", {
+          description: "Your downvote has been removed from this review.",
+        });
       }
       return;
     }
@@ -66,13 +73,25 @@ export function ReviewActions({ reviewId, initialLikes, initialDislikes = 0 }: R
     if (previousVote === 'upvote' && voteType === 'downvote') {
       setLikes(likes - 1);
       setDislikes(dislikes + 1);
+      toast("Vote changed to downvote", {
+        description: "Your vote has been changed from upvote to downvote.",
+      });
     } else if (previousVote === 'downvote' && voteType === 'upvote') {
       setDislikes(dislikes - 1);
       setLikes(likes + 1);
+      toast("Vote changed to upvote", {
+        description: "Your vote has been changed from downvote to upvote.",
+      });
     } else if (voteType === 'upvote') {
       setLikes(likes + 1);
+      toast("Review upvoted", {
+        description: "Thanks for your feedback!",
+      });
     } else {
       setDislikes(dislikes + 1);
+      toast("Review downvoted", {
+        description: "Thanks for your feedback!",
+      });
     }
   };
   
@@ -133,24 +152,33 @@ export function ReviewActions({ reviewId, initialLikes, initialDislikes = 0 }: R
       
       <Popover open={isReplyOpen} onOpenChange={setIsReplyOpen}>
         <PopoverTrigger asChild>
-          <button className="flex items-center hover:text-primary transition-colors">
-            <MessageSquare className="w-4 h-4 mr-1" />
-            <span>Reply {replies.length > 0 && `(${replies.length})`}</span>
+          <button className="flex items-center hover:text-primary transition-colors group relative">
+            <MessageSquare className="w-4 h-4 mr-1 group-hover:scale-110 transition-transform" />
+            <span>Reply</span>
+            {replies.length > 0 && (
+              <Badge 
+                variant="secondary" 
+                className="ml-1.5 h-5 min-w-5 px-1 flex items-center justify-center text-xs font-semibold bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+              >
+                {replies.length}
+              </Badge>
+            )}
           </button>
         </PopoverTrigger>
-        <PopoverContent className="w-80">
+        <PopoverContent className="w-80 shadow-lg shadow-primary/5 border-primary/10">
           <div className="space-y-4">
             <div className="text-sm font-medium">Reply to this review</div>
             <Textarea 
               placeholder="Write your reply..." 
               value={replyText}
               onChange={(e) => setReplyText(e.target.value)}
-              className="min-h-[100px]"
+              className="min-h-[100px] focus-visible:ring-primary/50"
             />
             <div className="flex justify-end">
               <Button 
                 onClick={handleAddReply} 
                 disabled={!replyText.trim()}
+                className="transition-all duration-300 hover:shadow-md hover:shadow-primary/20"
               >
                 Post Reply
               </Button>
@@ -159,9 +187,9 @@ export function ReviewActions({ reviewId, initialLikes, initialDislikes = 0 }: R
             {replies.length > 0 && (
               <div className="mt-4">
                 <div className="text-sm font-medium mb-2">Replies</div>
-                <div className="space-y-3 max-h-[200px] overflow-y-auto">
+                <div className="space-y-3 max-h-[200px] overflow-y-auto pr-1">
                   {replies.map((reply, index) => (
-                    <Card key={index} className="bg-muted/50">
+                    <Card key={index} className="bg-muted/50 hover:shadow-sm transition-shadow">
                       <CardContent className="p-3">
                         <p className="text-sm">{reply}</p>
                       </CardContent>

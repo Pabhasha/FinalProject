@@ -7,20 +7,56 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { AdminProvider } from "@/context/AdminContext";
 import { ThemeProvider } from "next-themes";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Suspense, lazy } from "react";
 
 import Index from "./pages/Index";
-import MatchDetails from "./pages/MatchDetails";
-import CategoryPage from "./pages/CategoryPage";
-import Lists from "./pages/Lists";
-import Profile from "./pages/Profile";
-import Auth from "./pages/Auth";
-import NotFound from "./pages/NotFound";
+
+// Lazy-loaded pages for better performance
+const MatchDetails = lazy(() => import('./pages/MatchDetails'));
+const CategoryPage = lazy(() => import('./pages/CategoryPage'));
+const Lists = lazy(() => import('./pages/Lists'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Auth = lazy(() => import('./pages/Auth'));
+const NotFound = lazy(() => import('./pages/NotFound'));
 
 // Admin Routes
-import AdminLogin from "./pages/AdminLogin";
-import AdminDashboard from "./pages/AdminDashboard";
+const AdminLogin = lazy(() => import('./pages/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
-const queryClient = new QueryClient();
+// Loading fallback
+const PageLoader = () => (
+  <div className="container mx-auto px-4 py-8">
+    <div className="space-y-8">
+      <Skeleton className="h-12 w-[250px]" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <Skeleton className="h-[300px] w-full rounded-xl" />
+          <Skeleton className="h-8 w-3/4" />
+          <Skeleton className="h-4 w-1/2" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-[200px] w-full rounded-xl" />
+          <div className="grid grid-cols-2 gap-4">
+            <Skeleton className="h-24 w-full rounded-lg" />
+            <Skeleton className="h-24 w-full rounded-lg" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+// Configure React Query
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 1,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+    },
+  },
+});
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -29,24 +65,64 @@ const App = () => (
         <ThemeProvider defaultTheme="dark" attribute="class">
           <TooltipProvider>
             <Toaster />
-            <Sonner />
+            <Sonner position="top-right" closeButton richColors expand={false} />
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/match/:id" element={<MatchDetails />} />
-                <Route path="/category/:slug" element={<CategoryPage />} />
-                <Route path="/lists" element={<Lists />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/register" element={<Auth />} />
-                <Route path="/login" element={<Auth />} />
+                <Route path="/match/:id" element={
+                  <Suspense fallback={<PageLoader />}>
+                    <MatchDetails />
+                  </Suspense>
+                } />
+                <Route path="/category/:slug" element={
+                  <Suspense fallback={<PageLoader />}>
+                    <CategoryPage />
+                  </Suspense>
+                } />
+                <Route path="/lists" element={
+                  <Suspense fallback={<PageLoader />}>
+                    <Lists />
+                  </Suspense>
+                } />
+                <Route path="/profile" element={
+                  <Suspense fallback={<PageLoader />}>
+                    <Profile />
+                  </Suspense>
+                } />
+                <Route path="/auth" element={
+                  <Suspense fallback={<PageLoader />}>
+                    <Auth />
+                  </Suspense>
+                } />
+                <Route path="/register" element={
+                  <Suspense fallback={<PageLoader />}>
+                    <Auth />
+                  </Suspense>
+                } />
+                <Route path="/login" element={
+                  <Suspense fallback={<PageLoader />}>
+                    <Auth />
+                  </Suspense>
+                } />
                 
                 {/* Admin Routes */}
-                <Route path="/admin-login" element={<AdminLogin />} />
-                <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                <Route path="/admin-login" element={
+                  <Suspense fallback={<PageLoader />}>
+                    <AdminLogin />
+                  </Suspense>
+                } />
+                <Route path="/admin/dashboard" element={
+                  <Suspense fallback={<PageLoader />}>
+                    <AdminDashboard />
+                  </Suspense>
+                } />
                 
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
+                <Route path="*" element={
+                  <Suspense fallback={<PageLoader />}>
+                    <NotFound />
+                  </Suspense>
+                } />
               </Routes>
             </BrowserRouter>
           </TooltipProvider>
