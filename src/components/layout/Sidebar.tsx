@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock, Trophy, ChevronsDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { mockLists } from '@/utils/mockData';
+import { mockMatches, mockLists } from '@/utils/mockData';
 import { categories } from '@/utils/categoryData';
 import { useMatchEngagement } from '@/hooks/useMatchEngagement';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -23,6 +23,9 @@ const Sidebar: React.FC = () => {
 
   // Get recent lists
   const recentLists = mockLists.slice(0, 3);
+
+  // For recently added section
+  const recentlyAddedMatches = mockMatches.slice(3, 6);
 
   return (
     <aside 
@@ -396,7 +399,7 @@ const Sidebar: React.FC = () => {
             
             {!collapsed ? (
               <ul className="space-y-1">
-                {mockMatches.slice(3, 6).map(match => (
+                {recentlyAddedMatches.map(match => (
                   <li key={match.id} className="group">
                     <Link 
                       to={`/match/${match.id}`}
