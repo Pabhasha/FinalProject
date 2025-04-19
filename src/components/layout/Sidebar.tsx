@@ -3,12 +3,15 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock, Trophy, ChevronsDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { mockMatches, mockLists } from '@/utils/mockData';
+import { mockLists } from '@/utils/mockData';
 import { categories } from '@/utils/categoryData';
+import { useMatchEngagement } from '@/hooks/useMatchEngagement';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const Sidebar: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [competitionsExpanded, setCompetitionsExpanded] = useState(true);
+  const { trendingMatches, topRatedMatches, isLoading } = useMatchEngagement();
 
   const toggleSidebar = () => {
     setCollapsed(!collapsed);
@@ -18,9 +21,7 @@ const Sidebar: React.FC = () => {
     setCompetitionsExpanded(!competitionsExpanded);
   };
 
-  // Get trending and top rated matches
-  const trendingMatches = mockMatches.slice(0, 3);
-  const topRatedMatches = [...mockMatches].sort(() => Math.random() - 0.5).slice(0, 3);
+  // Get recent lists
   const recentLists = mockLists.slice(0, 3);
 
   return (
@@ -128,67 +129,85 @@ const Sidebar: React.FC = () => {
             </div>
             
             {!collapsed ? (
-              <ul className="space-y-1">
-                {trendingMatches.map(match => (
-                  <li key={match.id} className="group">
+              isLoading ? (
+                <div className="px-3 space-y-3">
+                  {[...Array(3)].map((_, idx) => (
+                    <div key={idx} className="flex items-center space-x-2">
+                      <Skeleton className="w-4 h-4 rounded-full" />
+                      <Skeleton className="w-4 h-4 rounded-full" />
+                      <Skeleton className="w-36 h-4" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <ul className="space-y-1">
+                  {trendingMatches.map(match => (
+                    <li key={match.id} className="group">
+                      <Link 
+                        to={`/match/${match.id}`}
+                        className={cn(
+                          "flex items-center py-2 px-3 rounded-md",
+                          "transition-all duration-200 hover:bg-sidebar-accent/90",
+                          "group-hover:shadow-md group-hover:translate-x-1",
+                          "text-sm text-sidebar-foreground/90"
+                        )}
+                      >
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <img 
+                            src={match.homeTeam.logo} 
+                            alt={match.homeTeam.name} 
+                            className="w-4 h-4 object-contain" 
+                          />
+                          <span className="text-xs">vs</span>
+                          <img 
+                            src={match.awayTeam.logo} 
+                            alt={match.awayTeam.name} 
+                            className="w-4 h-4 object-contain" 
+                          />
+                        </div>
+                        <span className="ml-2 truncate">
+                          {match.homeTeam.name} vs {match.awayTeam.name}
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                  <li>
                     <Link 
-                      to={`/match/${match.id}`}
-                      className={cn(
-                        "flex items-center py-2 px-3 rounded-md",
-                        "transition-all duration-200 hover:bg-sidebar-accent/90",
-                        "group-hover:shadow-md group-hover:translate-x-1",
-                        "text-sm text-sidebar-foreground/90"
-                      )}
+                      to="/matches" 
+                      className="text-xs text-blaugrana-primary hover:underline block pt-2 px-3"
                     >
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <img 
-                          src={match.homeTeam.logo} 
-                          alt={match.homeTeam.name} 
-                          className="w-4 h-4 object-contain" 
-                        />
-                        <span className="text-xs">vs</span>
-                        <img 
-                          src={match.awayTeam.logo} 
-                          alt={match.awayTeam.name} 
-                          className="w-4 h-4 object-contain" 
-                        />
-                      </div>
-                      <span className="ml-2 truncate">
-                        {match.homeTeam.name} vs {match.awayTeam.name}
-                      </span>
+                      View all matches
                     </Link>
                   </li>
-                ))}
-                <li>
-                  <Link 
-                    to="/matches" 
-                    className="text-xs text-blaugrana-primary hover:underline block pt-2 px-3"
-                  >
-                    View all matches
-                  </Link>
-                </li>
-              </ul>
+                </ul>
+              )
             ) : (
               <ul className="space-y-2">
-                {trendingMatches.map(match => (
+                {(isLoading ? [...Array(3)].map((_, i) => ({id: `skeleton-${i}`})) : trendingMatches).map((match, idx) => (
                   <li key={match.id}>
-                    <Link 
-                      to={`/match/${match.id}`}
-                      className={cn(
-                        "flex justify-center py-1.5 rounded-full",
-                        "transition-all duration-200 hover:bg-sidebar-accent/80",
-                        "hover:shadow-glow-primary"
-                      )}
-                      title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
-                    >
-                      <div className="flex items-center">
-                        <img 
-                          src={match.homeTeam.logo} 
-                          alt={match.homeTeam.name} 
-                          className="w-5 h-5 object-contain" 
-                        />
+                    {isLoading ? (
+                      <div className="flex justify-center">
+                        <Skeleton className="w-5 h-5 rounded-full" />
                       </div>
-                    </Link>
+                    ) : (
+                      <Link 
+                        to={`/match/${match.id}`}
+                        className={cn(
+                          "flex justify-center py-1.5 rounded-full",
+                          "transition-all duration-200 hover:bg-sidebar-accent/80",
+                          "hover:shadow-glow-primary"
+                        )}
+                        title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
+                      >
+                        <div className="flex items-center">
+                          <img 
+                            src={match.homeTeam.logo} 
+                            alt={match.homeTeam.name} 
+                            className="w-5 h-5 object-contain" 
+                          />
+                        </div>
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -212,67 +231,88 @@ const Sidebar: React.FC = () => {
             </div>
             
             {!collapsed ? (
-              <ul className="space-y-1">
-                {topRatedMatches.map(match => (
-                  <li key={match.id} className="group">
+              isLoading ? (
+                <div className="px-3 space-y-3">
+                  {[...Array(3)].map((_, idx) => (
+                    <div key={idx} className="flex items-center space-x-2">
+                      <Skeleton className="w-4 h-4 rounded-full" />
+                      <Skeleton className="w-4 h-4 rounded-full" />
+                      <Skeleton className="w-36 h-4" />
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <ul className="space-y-1">
+                  {topRatedMatches.map(match => (
+                    <li key={match.id} className="group">
+                      <Link 
+                        to={`/match/${match.id}`}
+                        className={cn(
+                          "flex items-center py-2 px-3 rounded-md",
+                          "transition-all duration-200 hover:bg-sidebar-accent/90",
+                          "group-hover:shadow-md group-hover:translate-x-1",
+                          "text-sm text-sidebar-foreground/90"
+                        )}
+                      >
+                        <div className="flex items-center gap-2 flex-shrink-0">
+                          <img 
+                            src={match.homeTeam.logo} 
+                            alt={match.homeTeam.name} 
+                            className="w-4 h-4 object-contain" 
+                          />
+                          <span className="text-xs">vs</span>
+                          <img 
+                            src={match.awayTeam.logo} 
+                            alt={match.awayTeam.name} 
+                            className="w-4 h-4 object-contain" 
+                          />
+                        </div>
+                        <span className="ml-2 truncate">
+                          {match.homeTeam.name} vs {match.awayTeam.name}
+                          <span className="ml-1 text-xs text-primary">
+                            ({match.engagement?.ratingAverage.toFixed(1)}★)
+                          </span>
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                  <li>
                     <Link 
-                      to={`/match/${match.id}`}
-                      className={cn(
-                        "flex items-center py-2 px-3 rounded-md",
-                        "transition-all duration-200 hover:bg-sidebar-accent/90",
-                        "group-hover:shadow-md group-hover:translate-x-1",
-                        "text-sm text-sidebar-foreground/90"
-                      )}
+                      to="/matches" 
+                      className="text-xs text-blaugrana-primary hover:underline block pt-2 px-3"
                     >
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <img 
-                          src={match.homeTeam.logo} 
-                          alt={match.homeTeam.name} 
-                          className="w-4 h-4 object-contain" 
-                        />
-                        <span className="text-xs">vs</span>
-                        <img 
-                          src={match.awayTeam.logo} 
-                          alt={match.awayTeam.name} 
-                          className="w-4 h-4 object-contain" 
-                        />
-                      </div>
-                      <span className="ml-2 truncate">
-                        {match.homeTeam.name} vs {match.awayTeam.name}
-                      </span>
+                      View all matches
                     </Link>
                   </li>
-                ))}
-                <li>
-                  <Link 
-                    to="/matches" 
-                    className="text-xs text-blaugrana-primary hover:underline block pt-2 px-3"
-                  >
-                    View all matches
-                  </Link>
-                </li>
-              </ul>
+                </ul>
+              )
             ) : (
               <ul className="space-y-2">
-                {topRatedMatches.map(match => (
+                {(isLoading ? [...Array(3)].map((_, i) => ({id: `skeleton-${i}`})) : topRatedMatches).map((match, idx) => (
                   <li key={match.id}>
-                    <Link 
-                      to={`/match/${match.id}`}
-                      className={cn(
-                        "flex justify-center py-1.5 rounded-full",
-                        "transition-all duration-200 hover:bg-sidebar-accent/80",
-                        "hover:shadow-glow-primary"
-                      )}
-                      title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
-                    >
-                      <div className="flex items-center">
-                        <img 
-                          src={match.awayTeam.logo} 
-                          alt={match.awayTeam.name} 
-                          className="w-5 h-5 object-contain" 
-                        />
+                    {isLoading ? (
+                      <div className="flex justify-center">
+                        <Skeleton className="w-5 h-5 rounded-full" />
                       </div>
-                    </Link>
+                    ) : (
+                      <Link 
+                        to={`/match/${match.id}`}
+                        className={cn(
+                          "flex justify-center py-1.5 rounded-full",
+                          "transition-all duration-200 hover:bg-sidebar-accent/80",
+                          "hover:shadow-glow-primary"
+                        )}
+                        title={`${match.homeTeam.name} vs ${match.awayTeam.name} (${match.engagement?.ratingAverage.toFixed(1)}★)`}
+                      >
+                        <div className="flex items-center">
+                          <img 
+                            src={match.awayTeam.logo} 
+                            alt={match.awayTeam.name} 
+                            className="w-5 h-5 object-contain" 
+                          />
+                        </div>
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ul>

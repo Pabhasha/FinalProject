@@ -32,6 +32,15 @@ export interface Match {
   };
   poster: string;
   highlights?: string;
+  engagement?: {
+    views: number;
+    ratings: number;
+    ratingAverage: number;
+    reviews: number;
+    lastEngagementDate?: string;
+  };
+  trendingScore?: number;
+  qualityScore?: number;
 }
 
 export interface Review {
@@ -59,7 +68,34 @@ export interface List {
   lastUpdated: string;
 }
 
-export const mockMatches: Match[] = [
+const addEngagementData = (matches: Match[]): Match[] => {
+  return matches.map(match => {
+    const matchDate = new Date(match.date);
+    const daysSinceMatch = Math.max(1, (new Date().getTime() - matchDate.getTime()) / (1000 * 3600 * 24));
+    
+    const isClassic = match.highlights?.includes('classic') || 
+                     match.score.homeScore + match.score.awayScore > 4;
+    
+    const views = Math.floor(1000 / Math.sqrt(daysSinceMatch)) + (isClassic ? 500 : 0);
+    const ratings = Math.floor(views * (0.05 + Math.random() * 0.10));
+    const ratingBase = isClassic ? 4.2 : 3.5;
+    const ratingAverage = ratingBase + (Math.random() * 0.8 - 0.4);
+    const reviews = Math.floor(ratings * (0.15 + Math.random() * 0.10));
+    
+    return {
+      ...match,
+      engagement: {
+        views,
+        ratings,
+        ratingAverage,
+        reviews,
+        lastEngagementDate: new Date(Date.now() - Math.random() * 1000 * 3600 * 24 * 7).toISOString()
+      }
+    };
+  });
+};
+
+export const mockMatches: Match[] = addEngagementData([
   {
     id: "m1",
     homeTeam: {
@@ -805,7 +841,7 @@ export const mockMatches: Match[] = [
     poster: "https://www.manutd.com/AssetPicker/images/0/0/16/231/1084066/GettyImages_514897201632870544064_large.jpg",
     highlights: "https://www.youtube.com/watch?v=3kQMjNla0SI"
   }
-];
+]);
 
 export const mockReviews: Review[] = [
   {
