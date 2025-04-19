@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { AdminProvider } from "@/context/AdminContext";
 import { ThemeProvider } from "next-themes";
@@ -72,65 +72,63 @@ const App = () => (
               expand={false}
               className="z-[100]"
             />
-            <BrowserRouter>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/match/:id" element={
-                  <Suspense fallback={<PageLoader />}>
-                    <MatchDetails />
-                  </Suspense>
-                } />
-                <Route path="/category/:slug" element={
-                  <Suspense fallback={<PageLoader />}>
-                    <CategoryPage />
-                  </Suspense>
-                } />
-                <Route path="/lists" element={
-                  <Suspense fallback={<PageLoader />}>
-                    <Lists />
-                  </Suspense>
-                } />
-                <Route path="/profile" element={
-                  <Suspense fallback={<PageLoader />}>
-                    <Profile />
-                  </Suspense>
-                } />
-                <Route path="/auth" element={
-                  <Suspense fallback={<PageLoader />}>
-                    <Auth />
-                  </Suspense>
-                } />
-                <Route path="/register" element={
-                  <Suspense fallback={<PageLoader />}>
-                    <Auth />
-                  </Suspense>
-                } />
-                <Route path="/login" element={
-                  <Suspense fallback={<PageLoader />}>
-                    <Auth />
-                  </Suspense>
-                } />
-                
-                {/* Admin Routes */}
-                <Route path="/admin-login" element={
-                  <Suspense fallback={<PageLoader />}>
-                    <AdminLogin />
-                  </Suspense>
-                } />
-                <Route path="/admin/dashboard" element={
-                  <Suspense fallback={<PageLoader />}>
-                    <AdminDashboard />
-                  </Suspense>
-                } />
-                
-                {/* Catch-all route */}
-                <Route path="*" element={
-                  <Suspense fallback={<PageLoader />}>
-                    <NotFound />
-                  </Suspense>
-                } />
-              </Routes>
-            </BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/match/:id" element={
+                <Suspense fallback={<PageLoader />}>
+                  <MatchDetails />
+                </Suspense>
+              } />
+              <Route path="/category/:slug" element={
+                <Suspense fallback={<PageLoader />}>
+                  <CategoryPage />
+                </Suspense>
+              } />
+              <Route path="/lists" element={
+                <Suspense fallback={<PageLoader />}>
+                  <Lists />
+                </Suspense>
+              } />
+              <Route path="/profile" element={
+                <Suspense fallback={<PageLoader />}>
+                  <Profile />
+                </Suspense>
+              } />
+              <Route path="/auth" element={
+                <Suspense fallback={<PageLoader />}>
+                  <Auth />
+                </Suspense>
+              } />
+              <Route path="/register" element={
+                <Suspense fallback={<PageLoader />}>
+                  <Auth />
+                </Suspense>
+              } />
+              <Route path="/login" element={
+                <Suspense fallback={<PageLoader />}>
+                  <Auth />
+                </Suspense>
+              } />
+              
+              {/* Admin Routes */}
+              <Route path="/admin-login" element={
+                <Suspense fallback={<PageLoader />}>
+                  <AdminLogin />
+                </Suspense>
+              } />
+              <Route path="/admin/dashboard" element={
+                <Suspense fallback={<PageLoader />}>
+                  <AdminDashboard />
+                </Suspense>
+              } />
+              
+              {/* Catch-all route */}
+              <Route path="*" element={
+                <Suspense fallback={<PageLoader />}>
+                  <NotFound />
+                </Suspense>
+              } />
+            </Routes>
           </TooltipProvider>
         </ThemeProvider>
       </AdminProvider>

@@ -1,16 +1,16 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Search } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { mockMatches, Match } from '@/utils/mockData';
 import { cn } from '@/lib/utils';
 
-const SearchBar: React.FC = () => {
+// Create a component that doesn't depend on router context for initial render
+const SearchBarContent: React.FC<{ navigate: (path: string) => void }> = ({ navigate }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Match[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     // Filter matches based on query
@@ -112,6 +112,37 @@ const SearchBar: React.FC = () => {
       )}
     </div>
   );
+};
+
+// Wrapper component that safely uses router hooks
+const SearchBar: React.FC = () => {
+  // Check if we're in a browser environment before using router hooks
+  if (typeof window === "undefined") {
+    // Server-side rendering fallback
+    return <div className="w-full max-w-md h-10"></div>;
+  }
+  
+  try {
+    // Try to use the navigate hook, but handle errors gracefully
+    const navigate = useNavigate();
+    return <SearchBarContent navigate={navigate} />;
+  } catch (error) {
+    console.error("Router context not available for SearchBar:", error);
+    // Return a non-interactive version as fallback
+    return (
+      <div className="relative w-full max-w-md">
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search matches, teams, competitions..."
+            className="w-full h-10 px-4 pl-10 bg-secondary text-foreground rounded-full focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+            disabled
+          />
+          <Search className="w-4 h-4 absolute left-3 top-3 text-muted-foreground" />
+        </div>
+      </div>
+    );
+  }
 };
 
 export default SearchBar;
