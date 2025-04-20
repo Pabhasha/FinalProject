@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock, Trophy, ChevronsDown } from 'lucide-react';
@@ -81,6 +82,39 @@ const Sidebar: React.FC = () => {
   const recentLists = mockLists.slice(0, 3);
 
   const recentlyAddedMatches = mockMatches.slice(3, 6);
+  
+  // Create a minimal skeleton match for loading states
+  const createSkeletonMatch = (): Match => ({
+    id: `skeleton-${Math.random().toString(36).substring(7)}`,
+    homeTeam: {
+      id: 'skeleton-home',
+      name: 'Loading...',
+      logo: '',
+      country: 'Loading...'
+    },
+    awayTeam: {
+      id: 'skeleton-away',
+      name: 'Loading...',
+      logo: '',
+      country: 'Loading...'
+    },
+    score: {
+      homeScore: 0,
+      awayScore: 0,
+    },
+    date: '',
+    stadium: {
+      name: '',
+      city: '',
+      country: ''
+    },
+    competition: {
+      id: '',
+      name: '',
+      logo: ''
+    },
+    poster: ''
+  });
 
   return (
     <aside 
@@ -211,7 +245,7 @@ const Sidebar: React.FC = () => {
               )
             ) : (
               <ul className="space-y-2">
-                {(isLoading ? [...Array(3)].map((_, i) => ({id: `skeleton-${i}`})) : trendingMatches).map((match, idx) => (
+                {(isLoading ? [...Array(3)].map(() => createSkeletonMatch()) : trendingMatches).map((match, idx) => (
                   <li key={match.id}>
                     {isLoading ? (
                       <div className="flex justify-center">
@@ -271,7 +305,7 @@ const Sidebar: React.FC = () => {
               )
             ) : (
               <ul className="space-y-2">
-                {(isLoading ? [...Array(3)].map((_, i) => ({id: `skeleton-${i}`})) : topRatedMatches).map((match, idx) => (
+                {(isLoading ? [...Array(3)].map(() => createSkeletonMatch()) : topRatedMatches).map((match) => (
                   <li key={match.id}>
                     {isLoading ? (
                       <div className="flex justify-center">

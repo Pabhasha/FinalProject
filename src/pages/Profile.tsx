@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import { useAuth } from '@/context/AuthContext';
 import { getTeamById } from '@/utils/teamData';
-import { Settings, ListChecks, Star, MessageSquare, Edit2 } from 'lucide-react';
+import { Settings, ListChecks, Star, MessageSquare } from 'lucide-react';
 import MatchCard from '@/components/ui/MatchCard';
 import { mockMatches } from '@/utils/mockData';
 import { cn } from '@/lib/utils';
@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import RegisterForm from '@/components/auth/RegisterForm';
 import LoginForm from '@/components/auth/LoginForm';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
   Dialog,
   DialogContent,

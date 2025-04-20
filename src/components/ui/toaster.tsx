@@ -11,13 +11,18 @@ import {
 import { cn } from "@/lib/utils"
 import { CheckCircle, AlertCircle, Info } from "lucide-react"
 
+// Extended toast props to support our custom variants
+type ToastProps = React.ComponentPropsWithoutRef<typeof Toast> & {
+  variant?: "default" | "destructive" | "success" | "info"
+}
+
 export function Toaster() {
   const { toasts } = useToast()
 
   return (
     <ToastProvider>
       {toasts.map(function ({ id, title, description, action, ...props }) {
-        const variantProp = props.variant || "default"
+        const variantProp = (props as ToastProps).variant || "default"
         
         return (
           <Toast 
