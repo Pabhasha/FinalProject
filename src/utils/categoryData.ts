@@ -60,30 +60,6 @@ export const categories: Category[] = [
     description: "The fierce rivalry between FC Barcelona and Real Madrid C.F.",
     bannerImage: "https://assets.laliga.com/assets/2019/09/27/xlarge/9c723d7c3c66950132ca5115c42d5720.jpeg",
     matches: getMatchesByTeams('Barcelona', 'Real Madrid')
-  },
-  {
-    id: "premier-league",
-    title: "Premier League Classics",
-    slug: "premier-league",
-    description: "Legendary matches from England's top-flight football league.",
-    bannerImage: "https://resources.premierleague.com/photos/2020/09/10/4db171c8-1d51-4b05-be29-830caf3c100c/PL_ATHEM_HIRES_2020.jpg?width=1350",
-    matches: getMatchesByLeague('Premier League')
-  },
-  {
-    id: "la-liga",
-    title: "La Liga",
-    slug: "la-liga",
-    description: "The best matches from Spain's top professional football division.",
-    bannerImage: "https://assets.laliga.com/assets/logos/laliga-v/laliga-v-1200x1200.jpg",
-    matches: getMatchesByLeague('La Liga')
-  },
-  {
-    id: "serie-a",
-    title: "Serie A",
-    slug: "serie-a",
-    description: "Classic matches from Italy's premier football league.",
-    bannerImage: "https://upload.wikimedia.org/wikipedia/en/6/6c/Serie_A_logo.png",
-    matches: getMatchesByLeague('Serie A')
   }
 ];
 
