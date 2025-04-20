@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -91,7 +90,6 @@ export function ReviewActions({ reviewId, initialLikes, initialDislikes = 0 }: R
       toast("Review upvoted", {
         description: "Thanks for your feedback!",
         duration: 2000,
-        variant: "success",
       });
     } else {
       setDislikes(dislikes + 1);
@@ -121,7 +119,6 @@ export function ReviewActions({ reviewId, initialLikes, initialDislikes = 0 }: R
     toast("Reply added", {
       description: "Your reply has been added to this review.",
       duration: 2000,
-      variant: "success"
     });
   };
   
