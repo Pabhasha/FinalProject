@@ -28,14 +28,7 @@ const getMatchesByTeams = (team1: string, team2: string): Match[] => {
   );
 };
 
-// Filter matches by league
-const getMatchesByLeague = (league: string): Match[] => {
-  return mockMatches.filter(match => 
-    match.competition.name.toLowerCase().includes(league.toLowerCase())
-  );
-};
-
-// Create categories with unique entries
+// Create categories with unique entries (removing duplicates and Serie A)
 export const categories: Category[] = [
   {
     id: "champions-league",

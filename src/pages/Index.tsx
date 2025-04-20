@@ -94,7 +94,7 @@ const Index = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5, duration: 0.5 }}
             >
-              {['Champions League', 'Premier League', 'La Liga', 'World Cup', 'Serie A'].map((tag) => (
+              {['Champions League', 'Premier League', 'La Liga', 'World Cup'].map((tag) => (
                 <Link 
                   key={tag} 
                   to={`/category/${tag.toLowerCase().replace(' ', '-')}`}
