@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Star, Heart, MessageSquare, Share2, ListChecks, Play, Award, Calendar, MapPin } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
 import MatchRating from '@/components/ui/MatchRating';
-import { getMatchById, getReviewsForMatch } from '@/utils/mockData';
+import { getMatchById, getReviewsForMatch, Match, Review } from '@/utils/mockData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { toast } from "sonner";
 import { cn } from '@/lib/utils';
@@ -35,10 +35,19 @@ const ImageLoader = ({ src, alt, className }: { src: string, alt: string, classN
   );
 };
 
+interface MatchWithDescription extends Match {
+  description?: string;
+}
+
+interface ExtendedReview extends Review {
+  author: string;
+  comment: string;
+}
+
 const MatchDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const match = getMatchById(id || '');
-  const reviews = getReviewsForMatch(id || '');
+  const match = getMatchById(id || '') as MatchWithDescription;
+  const reviews = getReviewsForMatch(id || '') as ExtendedReview[];
   const isMobile = useIsMobile();
   
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -158,12 +167,10 @@ const MatchDetails = () => {
       description: "Your review has been submitted successfully!",
     });
     
-    // In a real app, we would save the review to the backend
     setReviewContent('');
     setIsWritingReview(false);
   };
   
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -263,7 +270,10 @@ const MatchDetails = () => {
                 <Card>
                   <CardContent className="p-6">
                     <h2 className="text-lg font-semibold mb-4">Rate this match</h2>
-                    <MatchRating onChange={handleRatingChange} />
+                    <MatchRating 
+                      matchId={id || 'unknown'} 
+                      onRatingChange={handleRatingChange} 
+                    />
                     
                     <div className="flex items-center justify-between mt-6">
                       <button 
@@ -313,7 +323,7 @@ const MatchDetails = () => {
                 <Card className="mt-6">
                   <CardContent className="p-6">
                     <h2 className="text-lg font-semibold mb-4">Match Details</h2>
-                    <p className="text-sm text-muted-foreground">{match.description}</p>
+                    <p className="text-sm text-muted-foreground">{match?.description || "No description available."}</p>
                     <ul className="mt-4 space-y-2">
                       <li className="flex items-center gap-2 text-sm">
                         <Calendar className="w-4 h-4 text-muted-foreground" />
@@ -341,9 +351,13 @@ const MatchDetails = () => {
                     ) : (
                       reviews.map(review => (
                         <div key={review.id} className="mb-4">
-                          <p className="font-medium">{review.author}</p>
-                          <p className="text-sm text-muted-foreground">{review.comment}</p>
-                          <ReviewActions />
+                          <p className="font-medium">{review.author || "Anonymous User"}</p>
+                          <p className="text-sm text-muted-foreground">{review.comment || "No comment"}</p>
+                          <ReviewActions 
+                            reviewId={review.id} 
+                            initialLikes={review.likes || 0} 
+                            initialDislikes={review.dislikes || 0}
+                          />
                         </div>
                       ))
                     )}

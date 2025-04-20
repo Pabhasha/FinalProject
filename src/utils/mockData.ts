@@ -13,47 +13,43 @@ export interface Match {
   score: {
     homeScore: number;
     awayScore: number;
-    extraTime?: boolean;
     penalties?: {
       homeScore: number;
       awayScore: number;
     };
+    extraTime?: boolean;
   };
   date: string;
-  competition: {
-    name: string;
-    logo: string;
-  };
-  stage?: string;
   stadium: {
     name: string;
     city: string;
     country: string;
   };
+  competition: {
+    id: string;
+    name: string;
+    logo: string;
+  };
   poster: string;
   highlights?: string;
+  description?: string;
   engagement?: {
-    views: number;
-    ratings: number;
     ratingAverage: number;
-    reviews: number;
-    lastEngagementDate?: string;
+    reviewCount: number;
+    watchCount: number;
   };
-  trendingScore?: number;
-  qualityScore?: number;
 }
 
 export interface Review {
   id: string;
   matchId: string;
   userId: string;
-  username: string;
-  userAvatar?: string;
   rating: number;
-  content: string;
-  spoiler: boolean;
+  author: string;
+  comment: string;
   likes: number;
-  createdAt: string;
+  dislikes: number;
+  date: string;
 }
 
 export interface List {
@@ -85,11 +81,9 @@ const addEngagementData = (matches: Match[]): Match[] => {
     return {
       ...match,
       engagement: {
-        views,
-        ratings,
         ratingAverage,
-        reviews,
-        lastEngagementDate: new Date(Date.now() - Math.random() * 1000 * 3600 * 24 * 7).toISOString()
+        reviewCount: reviews,
+        watchCount: views
       }
     };
   });
@@ -119,6 +113,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2022-12-18T15:00:00Z",
     competition: {
+      id: "c1",
       name: "FIFA World Cup",
       logo: "https://media.api-sports.io/football/leagues/1.png"
     },
@@ -149,6 +144,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2019-05-07T19:00:00Z",
     competition: {
+      id: "c2",
       name: "UEFA Champions League",
       logo: "https://media.api-sports.io/football/leagues/2.png"
     },
@@ -179,6 +175,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2022-04-26T19:00:00Z",
     competition: {
+      id: "c2",
       name: "UEFA Champions League",
       logo: "https://media.api-sports.io/football/leagues/2.png"
     },
@@ -209,6 +206,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2020-08-14T19:00:00Z",
     competition: {
+      id: "c2",
       name: "UEFA Champions League",
       logo: "https://media.api-sports.io/football/leagues/2.png"
     },
@@ -239,6 +237,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2017-03-08T19:45:00Z",
     competition: {
+      id: "c2",
       name: "UEFA Champions League",
       logo: "https://media.api-sports.io/football/leagues/2.png"
     },
@@ -269,6 +268,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "1999-05-26T19:00:00Z",
     competition: {
+      id: "c2",
       name: "UEFA Champions League",
       logo: "https://media.api-sports.io/football/leagues/2.png"
     },
@@ -299,6 +299,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2009-05-02T19:00:00Z",
     competition: {
+      id: "c2",
       name: "La Liga",
       logo: "https://media.api-sports.io/football/leagues/140.png"
     },
@@ -331,6 +332,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2014-07-08T20:00:00Z",
     competition: {
+      id: "c3",
       name: "FIFA World Cup",
       logo: "https://media.api-sports.io/football/leagues/1.png"
     },
@@ -362,6 +364,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2010-07-11T19:30:00Z",
     competition: {
+      id: "c3",
       name: "FIFA World Cup",
       logo: "https://media.api-sports.io/football/leagues/1.png"
     },
@@ -394,6 +397,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2015-11-21T19:15:00Z",
     competition: {
+      id: "c4",
       name: "La Liga",
       logo: "https://media.api-sports.io/football/leagues/140.png"
     },
@@ -424,6 +428,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2010-11-29T20:00:00Z",
     competition: {
+      id: "c4",
       name: "La Liga",
       logo: "https://media.api-sports.io/football/leagues/140.png"
     },
@@ -456,6 +461,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2012-05-13T15:00:00Z",
     competition: {
+      id: "c5",
       name: "Premier League",
       logo: "https://media.api-sports.io/football/leagues/39.png"
     },
@@ -486,6 +492,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "1996-04-03T19:00:00Z",
     competition: {
+      id: "c5",
       name: "Premier League",
       logo: "https://media.api-sports.io/football/leagues/39.png"
     },
@@ -516,6 +523,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2009-09-20T15:30:00Z",
     competition: {
+      id: "c5",
       name: "Premier League",
       logo: "https://media.api-sports.io/football/leagues/39.png"
     },
@@ -548,6 +556,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2018-10-28T19:15:00Z",
     competition: {
+      id: "c4",
       name: "La Liga",
       logo: "https://media.api-sports.io/football/leagues/140.png"
     },
@@ -578,6 +587,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2005-11-19T21:00:00Z",
     competition: {
+      id: "c4",
       name: "La Liga",
       logo: "https://media.api-sports.io/football/leagues/140.png"
     },
@@ -608,6 +618,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2009-05-02T20:00:00Z",
     competition: {
+      id: "c4",
       name: "La Liga",
       logo: "https://media.api-sports.io/football/leagues/140.png"
     },
@@ -638,6 +649,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2019-11-21T20:00:00Z",
     competition: {
+      id: "c4",
       name: "La Liga",
       logo: "https://media.api-sports.io/football/leagues/140.png"
     },
@@ -675,6 +687,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2006-07-09T19:00:00Z",
     competition: {
+      id: "c6",
       name: "FIFA World Cup",
       logo: "https://media.api-sports.io/football/leagues/1.png"
     },
@@ -706,6 +719,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2018-07-11T19:00:00Z",
     competition: {
+      id: "c6",
       name: "FIFA World Cup",
       logo: "https://media.api-sports.io/football/leagues/1.png"
     },
@@ -737,6 +751,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2014-07-13T20:00:00Z",
     competition: {
+      id: "c6",
       name: "FIFA World Cup",
       logo: "https://media.api-sports.io/football/leagues/1.png"
     },
@@ -769,6 +784,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2009-04-21T19:00:00Z",
     competition: {
+      id: "c5",
       name: "Premier League",
       logo: "https://media.api-sports.io/football/leagues/39.png"
     },
@@ -799,6 +815,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2011-08-28T15:00:00Z",
     competition: {
+      id: "c5",
       name: "Premier League",
       logo: "https://media.api-sports.io/football/leagues/39.png"
     },
@@ -829,6 +846,7 @@ export const mockMatches: Match[] = addEngagementData([
     },
     date: "2001-09-29T14:00:00Z",
     competition: {
+      id: "c5",
       name: "Premier League",
       logo: "https://media.api-sports.io/football/leagues/39.png"
     },
@@ -848,37 +866,34 @@ export const mockReviews: Review[] = [
     id: "r1",
     matchId: "m1",
     userId: "u1",
-    username: "football_fan",
-    userAvatar: "https://randomuser.me/api/portraits/men/32.jpg",
     rating: 5,
-    content: "The best World Cup final I've ever seen. Messi vs Mbappé, drama, goals, penalties... This match had it all!",
-    spoiler: false,
+    author: "football_fan",
+    comment: "The best World Cup final I've ever seen. Messi vs Mbappé, drama, goals, penalties... This match had it all!",
     likes: 245,
-    createdAt: "2022-12-19T08:30:00Z"
+    dislikes: 0,
+    date: "2022-12-19T08:30:00Z"
   },
   {
     id: "r2",
     matchId: "m2",
     userId: "u2",
-    username: "ynwa_forever",
-    userAvatar: "https://randomuser.me/api/portraits/women/44.jpg",
     rating: 5,
-    content: "Corner taken quickly... ORIGI!!! What a night at Anfield. One of the greatest comebacks in football history.",
-    spoiler: false,
+    author: "ynwa_forever",
+    comment: "Corner taken quickly... ORIGI!!! What a night at Anfield. One of the greatest comebacks in football history.",
     likes: 189,
-    createdAt: "2019-05-08T10:15:00Z"
+    dislikes: 0,
+    date: "2019-05-08T10:15:00Z"
   },
   {
     id: "r3",
     matchId: "m3",
     userId: "u3",
-    username: "football_tactics",
-    userAvatar: "https://randomuser.me/api/portraits/men/22.jpg",
     rating: 4.5,
-    content: "A tactical masterclass from Guardiola. City dominated but Madrid's resilience is something else.",
-    spoiler: false,
+    author: "football_tactics",
+    comment: "A tactical masterclass from Guardiola. City dominated but Madrid's resilience is something else.",
     likes: 78,
-    createdAt: "2022-04-27T14:20:00Z"
+    dislikes: 0,
+    date: "2022-04-27T14:20:00Z"
   }
 ];
 

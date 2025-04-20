@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock, Trophy, ChevronsDown } from 'lucide-react';
@@ -83,17 +82,14 @@ const Sidebar: React.FC = () => {
 
   const recentlyAddedMatches = mockMatches.slice(3, 6);
   
-  // Create a minimal skeleton match for loading states
   const createSkeletonMatch = (): Match => ({
     id: `skeleton-${Math.random().toString(36).substring(7)}`,
     homeTeam: {
-      id: 'skeleton-home',
       name: 'Loading...',
       logo: '',
       country: 'Loading...'
     },
     awayTeam: {
-      id: 'skeleton-away',
       name: 'Loading...',
       logo: '',
       country: 'Loading...'
