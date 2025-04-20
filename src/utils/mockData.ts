@@ -1,3 +1,4 @@
+
 export interface Match {
   id: string;
   homeTeam: {
@@ -33,10 +34,14 @@ export interface Match {
   poster: string;
   highlights?: string;
   description?: string;
+  stage?: string;
   engagement?: {
     ratingAverage: number;
+    ratings?: number;
     reviewCount: number;
+    reviews?: number;
     watchCount: number;
+    views?: number;
   };
 }
 
@@ -82,8 +87,11 @@ const addEngagementData = (matches: Match[]): Match[] => {
       ...match,
       engagement: {
         ratingAverage,
+        ratings,
         reviewCount: reviews,
-        watchCount: views
+        reviews,
+        watchCount: views,
+        views
       }
     };
   });

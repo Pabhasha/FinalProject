@@ -17,7 +17,12 @@ export const calculateTrendingScore = (match: Match): number => {
   const recencyScore = 100 * Math.exp(-0.1 * daysSinceMatch);
   
   // Engagement metrics
-  const { ratings, reviews, views } = match.engagement || { ratings: 0, reviews: 0, views: 0 };
+  const engagement = match.engagement || { ratingAverage: 0, ratings: 0, reviews: 0, reviewCount: 0, views: 0, watchCount: 0 };
+  
+  // Use either the direct property or its alternative
+  const ratings = engagement.ratings || 0;
+  const reviews = engagement.reviews || engagement.reviewCount || 0;
+  const views = engagement.views || engagement.watchCount || 0;
   
   // Weight recent activity more heavily
   const engagementScore = (views * 1) + (ratings * 5) + (reviews * 10);
@@ -31,16 +36,19 @@ export const calculateTrendingScore = (match: Match): number => {
  * Higher scores mean higher quality
  */
 export const calculateQualityScore = (match: Match): number => {
-  const { ratings, ratingAverage, reviews } = match.engagement || { 
-    ratings: 0, 
+  const engagement = match.engagement || { 
     ratingAverage: 0, 
-    reviews: 0 
+    ratings: 0,
+    reviewCount: 0,
+    reviews: 0
   };
   
   // Base quality is the average rating (0-5 scale)
-  const ratingScore = ratingAverage * 20; // Convert to 0-100 scale
+  const ratingScore = engagement.ratingAverage * 20; // Convert to 0-100 scale
   
   // Volume factor - more ratings and reviews increase confidence
+  const ratings = engagement.ratings || 0;
+  const reviews = engagement.reviews || engagement.reviewCount || 0;
   const volumeFactor = Math.min(1, (ratings + reviews) / 10); // Caps at 1.0 when 10+ combined ratings/reviews
   
   // Content factor - matches with more reviews get a boost
