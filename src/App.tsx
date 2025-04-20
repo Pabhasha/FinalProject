@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,6 +13,7 @@ import Index from "./pages/Index";
 
 // Lazy-loaded pages for better performance
 const MatchDetails = lazy(() => import('./pages/MatchDetails'));
+const Matches = lazy(() => import('./pages/Matches'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const Lists = lazy(() => import('./pages/Lists'));
 const Profile = lazy(() => import('./pages/Profile'));
@@ -77,6 +77,11 @@ const App = () => (
               <Route path="/match/:id" element={
                 <Suspense fallback={<PageLoader />}>
                   <MatchDetails />
+                </Suspense>
+              } />
+              <Route path="/matches" element={
+                <Suspense fallback={<PageLoader />}>
+                  <Matches />
                 </Suspense>
               } />
               <Route path="/category/:slug" element={
