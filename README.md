@@ -1,5 +1,5 @@
 
-# matchlogiverse
+# FootballTrackr
 
 A football match tracking platform where users can track, rate, and review their favorite football matches.
 

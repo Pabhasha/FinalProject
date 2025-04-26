@@ -80,17 +80,27 @@ const RegisterForm = () => {
         values.favoriteTeamId
       );
       
-      toast.success('Account created successfully!');
+      const response = await fetch("http:// 127.0.0.1/api/admin", {  
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        
+        body: JSON.stringify(values)
+      }); 
+      
+      const data = await response.json();  
+      if (!response.ok) throw new Error(data.error || "Failed to create account");
+      
+      toast.success("Account created successfully");
       navigate('/profile');
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to create account';
-      setFormError(errorMessage);
-      toast.error(errorMessage);
+    } catch (error) { 
+      setFormError(error instanceof Error ? error.message : 'Error creating account');
+      console.error("Registration error:", error);
     } finally {
       setIsLoading(false);
     }
-  };
-
+  }
   // Filter teams based on search query
   const filteredTeams = teams.filter(team => 
     team.name.toLowerCase().includes(teamSearchQuery.toLowerCase()) || 

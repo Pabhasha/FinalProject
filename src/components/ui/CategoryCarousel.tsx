@@ -27,7 +27,7 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
   description
 }) => {
   // Take only the first 12 matches for the carousel
-  const displayMatches = matches.slice(0, 12);
+  const displayMatches = matches?.slice(0, 12);
   
   return (
     <div className="space-y-3">
@@ -64,7 +64,7 @@ const CategoryCarousel: React.FC<CategoryCarouselProps> = ({
         className="w-full"
       >
         <CarouselContent className="-ml-2 md:-ml-4">
-          {displayMatches.map((match) => (
+          {displayMatches?.map((match) => (
             <CarouselItem key={match.id} className="pl-2 md:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6">
               <MatchCard match={match} size="sm" />
             </CarouselItem>
