@@ -9,6 +9,8 @@ import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import MatchCard from '@/components/ui/MatchCard';
+import { mockMatches } from '@/utils/mockData';
 
 const Index = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -41,6 +43,11 @@ const Index = () => {
       transition: { type: "spring", stiffness: 100 }
     }
   };
+
+  // Football classics - featured legendary matches
+  const classicMatches = mockMatches
+    .filter(match => match.rating >= 4.5)
+    .slice(0, 10);
   
   return (
     <MainLayout>
@@ -77,9 +84,9 @@ const Index = () => {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.3, duration: 0.5 }}
               >
-                <Link to="/lists">
+                <Link to="/matches">
                   <Button variant="outline" className="group">
-                    View Lists
+                    View All
                     <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                   </Button>
                 </Link>
@@ -106,6 +113,37 @@ const Index = () => {
             </motion.div>
           )}
         </section>
+        
+        {/* Discover Football Classics - Horizontal Scrolling Section */}
+        {!isLoading && (
+          <motion.section 
+            className="mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+          >
+            <div className="relative">
+              <div className="overflow-x-auto pb-6 -mx-4 px-4 scroll-smooth scrollbar-none">
+                <div className="flex gap-4 min-w-max">
+                  {classicMatches.map((match, index) => (
+                    <div 
+                      key={match.id} 
+                      className="w-72 flex-shrink-0 transition-all"
+                    >
+                      <MatchCard 
+                        match={match} 
+                        size="lg" 
+                        variant={index % 3 === 0 ? 'premium' : 'default'}
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-background to-transparent pointer-events-none"></div>
+              <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent pointer-events-none"></div>
+            </div>
+          </motion.section>
+        )}
         
         <ScrollArea className="w-full">
           <div className="space-y-10 pb-8">
