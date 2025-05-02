@@ -6,7 +6,6 @@ import { getCategoryBySlug } from '@/utils/categoryData';
 import MatchCard from '@/components/ui/MatchCard';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Match } from '@/utils/mockData';
 import { Search } from 'lucide-react';
 
 const CategoryPage = () => {
@@ -46,14 +45,10 @@ const CategoryPage = () => {
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       case 'rating-desc':
         // Since averageRating doesn't exist in the Match type, we'll use a default value of 0
-        const ratingA = 0; // This would be a.averageRating if it existed
-        const ratingB = 0; // This would be b.averageRating if it existed
-        return ratingB - ratingA;
+        return (b.isClassic ? 1 : 0) - (a.isClassic ? 1 : 0);
       case 'popularity':
         // Since viewCount doesn't exist in the Match type, we'll use a default value of 0
-        const viewsA = 0; // This would be a.viewCount if it existed
-        const viewsB = 0; // This would be b.viewCount if it existed
-        return viewsB - viewsA;
+        return (b.isClassic ? 1 : 0) - (a.isClassic ? 1 : 0);
       default:
         return new Date(b.date).getTime() - new Date(a.date).getTime();
     }

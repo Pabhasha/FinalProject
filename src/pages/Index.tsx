@@ -45,8 +45,14 @@ const Index = () => {
   };
 
   // Football classics - featured legendary matches
+  // Using a property that exists in Match type for filtering
   const classicMatches = mockMatches
-    .filter(match => match.rating >= 4.5)
+    .filter(match => 
+      // Filter matches with significant historical context
+      match.isClassic || 
+      match.competition.name.includes("Final") || 
+      match.description?.includes("historic")
+    )
     .slice(0, 10);
   
   return (
@@ -195,6 +201,7 @@ const Index = () => {
                       matches={category.matches}
                       categorySlug={category.slug}
                       description={category.description}
+                      hideTitle={true} // This prevents the title from being shown again in the carousel
                     />
                   </motion.div>
                 ))}
