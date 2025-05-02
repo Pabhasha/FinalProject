@@ -54,8 +54,6 @@ const MatchDetails = () => {
   const [userRating, setUserRating] = useState<number>(0);
   const [watchedMatches, setWatchedMatches] = useLocalStorage<string[]>('footballtrackr-watched', []);
   const [hasWatched, setHasWatched] = useState(false);
-  const [isWritingReview, setIsWritingReview] = useState(false);
-  const [reviewContent, setReviewContent] = useState('');
   
   const { isFavorite, toggleFavorite } = useFavorites();
   const [isFavorited, setIsFavorited] = useState(false);
@@ -159,17 +157,6 @@ const MatchDetails = () => {
       openListModal(id);
     }
   };
-
-  const handleSubmitReview = () => {
-    if (reviewContent.trim().length === 0) return;
-    
-    toast("Review submitted", {
-      description: "Your review has been submitted successfully!",
-    });
-    
-    setReviewContent('');
-    setIsWritingReview(false);
-  };
   
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -196,6 +183,7 @@ const MatchDetails = () => {
   return (
     <MainLayout>
       <div className="page-transition">
+        {/* Match Hero Section - Fixed responsive header */}
         <div className="relative h-[70vh] min-h-[500px] -mx-4 sm:-mx-8 md:-mx-12 lg:-mx-24 overflow-hidden">
           <div 
             className={cn(
@@ -226,15 +214,17 @@ const MatchDetails = () => {
               initial="hidden"
               animate="visible"
             >
+              {/* Make the title fully responsive */}
               <motion.h1 
-                className="text-4xl md:text-5xl font-bold drop-shadow-md"
+                className="text-3xl md:text-4xl lg:text-5xl font-bold drop-shadow-md break-words hyphens-auto"
                 variants={itemVariants}
+                style={{ wordBreak: 'break-word' }}
               >
                 {match.homeTeam.name} vs {match.awayTeam.name}
               </motion.h1>
               
               <motion.div 
-                className="flex items-center gap-3 mt-3 text-sm text-white/80 drop-shadow-md"
+                className="flex flex-wrap items-center gap-3 mt-3 text-sm text-white/80 drop-shadow-md"
                 variants={itemVariants}
               >
                 <Calendar className="w-4 h-4" />
@@ -343,59 +333,29 @@ const MatchDetails = () => {
                   <CardContent className="p-6">
                     <h2 className="text-lg font-semibold mb-4">Reviews</h2>
                     
-                    {reviews.length === 0 ? (
-                      <div className="text-center py-8">
-                        <MessageSquare className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
-                        <p className="text-muted-foreground">No reviews yet. Be the first to write one!</p>
-                      </div>
-                    ) : (
-                      reviews.map(review => (
-                        <div key={review.id} className="mb-4">
-                          <p className="font-medium">{review.author || "Anonymous User"}</p>
-                          <p className="text-sm text-muted-foreground">{review.comment || "No comment"}</p>
+                    {/* Keep only one fan review */}
+                    {reviews.length > 0 && (
+                      <div className="mb-6">
+                        <div className="mb-4 border-b pb-4">
+                          <p className="font-medium">football_fan</p>
+                          <p className="text-sm text-muted-foreground mt-1">
+                            The best World Cup final I've ever seen. Messi vs Mbappé, drama, goals, penalties... This match had it all!
+                          </p>
                           <ReviewActions 
-                            reviewId={review.id} 
-                            initialLikes={review.likes || 0} 
-                            initialDislikes={review.dislikes || 0}
+                            reviewId="fan-review-1" 
+                            initialLikes={245} 
+                            initialDislikes={0}
                           />
                         </div>
-                      ))
+                      </div>
                     )}
                     
-                    <div className="mt-6">
-                      <h3 className="text-md font-semibold mb-2">Write a Review</h3>
-                      
-                      {isWritingReview ? (
-                        <div className="flex flex-col gap-3">
-                          <textarea 
-                            className="w-full h-32 border rounded-md p-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                            placeholder="Share your thoughts on this match..."
-                            value={reviewContent}
-                            onChange={(e) => setReviewContent(e.target.value)}
-                          />
-                          <div className="flex justify-end gap-2">
-                            <button 
-                              className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80"
-                              onClick={() => setIsWritingReview(false)}
-                            >
-                              Cancel
-                            </button>
-                            <button 
-                              className="px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90"
-                              onClick={handleSubmitReview}
-                            >
-                              Submit Review
-                            </button>
-                          </div>
-                        </div>
-                      ) : (
-                        <button 
-                          className="w-full px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90"
-                          onClick={() => setIsWritingReview(true)}
-                        >
-                          Write a Review
-                        </button>
-                      )}
+                    <div className="mt-6 flex justify-center">
+                      <button 
+                        className="px-6 py-3 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+                      >
+                        Write a Review
+                      </button>
                     </div>
                   </CardContent>
                 </Card>

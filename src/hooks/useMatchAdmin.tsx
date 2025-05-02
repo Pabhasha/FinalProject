@@ -21,6 +21,7 @@ export interface MatchData {
   highlights?: string;
   isPublished?: boolean;
   background?: string;
+  backgroundImage?: string;  // New field for admin background image
   engagementStats?: {
     ratingCount: number;
     reviewCount: number;
@@ -43,6 +44,7 @@ const initialMatches: MatchData[] = importedMockMatches.map(match => ({
   location: `${match.stadium.name}, ${match.stadium.city}, ${match.stadium.country}`,
   image: match.poster,
   background: match.poster,
+  backgroundImage: match.poster,  // Initialize with the same poster image
   highlights: match.highlights,
   isPublished: true,
   ratings: [],
@@ -114,11 +116,25 @@ export const useMatchAdmin = () => {
     return id;
   };
 
+  // Update match background image
+  const updateMatchBackgroundImage = async (id: string, imageUrl: string) => {
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    
+    setMatches((prev) =>
+      prev.map((match) =>
+        match.id === id ? { ...match, backgroundImage: imageUrl } : match
+      )
+    );
+    return imageUrl;
+  };
+
   return {
     matches,
     getMatches,
     addMatch,
     updateMatch,
     deleteMatch,
+    updateMatchBackgroundImage,
   };
 };

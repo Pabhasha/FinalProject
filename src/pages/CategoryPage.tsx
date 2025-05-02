@@ -75,7 +75,7 @@ const CategoryPage = () => {
             </div>
           )}
           <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
-            <h1 className="text-3xl font-bold text-white">{category.title}</h1>
+            <h1 className="text-3xl font-bold text-white break-words hyphens-auto">{category.title}</h1>
             {category.description && (
               <p className="text-white/80 mt-2 max-w-2xl">{category.description}</p>
             )}
@@ -108,9 +108,9 @@ const CategoryPage = () => {
           </div>
         </div>
         
-        {/* Match Grid */}
+        {/* Match Grid - Improved responsive grid */}
         {sortedMatches.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
             {sortedMatches.map(match => (
               <MatchCard key={match.id} match={match} />
             ))}
