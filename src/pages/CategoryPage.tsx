@@ -75,9 +75,9 @@ const CategoryPage = () => {
             </div>
           )}
           <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
-            <h1 className="text-3xl font-bold text-white break-words hyphens-auto">{category.title}</h1>
+            <h1 className="text-2xl xs:text-3xl font-bold text-white break-words hyphens-auto max-w-full">{category.title}</h1>
             {category.description && (
-              <p className="text-white/80 mt-2 max-w-2xl">{category.description}</p>
+              <p className="text-white/80 mt-2 max-w-2xl line-clamp-2">{category.description}</p>
             )}
           </div>
         </div>

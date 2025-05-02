@@ -183,7 +183,7 @@ const MatchDetails = () => {
   return (
     <MainLayout>
       <div className="page-transition">
-        {/* Match Hero Section - Fixed responsive header */}
+        {/* Match Hero Section - Improved responsive header */}
         <div className="relative h-[70vh] min-h-[500px] -mx-4 sm:-mx-8 md:-mx-12 lg:-mx-24 overflow-hidden">
           <div 
             className={cn(
@@ -214,23 +214,27 @@ const MatchDetails = () => {
               initial="hidden"
               animate="visible"
             >
-              {/* Make the title fully responsive */}
+              {/* Improved title responsiveness */}
               <motion.h1 
-                className="text-3xl md:text-4xl lg:text-5xl font-bold drop-shadow-md break-words hyphens-auto"
+                className="text-2xl xs:text-3xl md:text-4xl lg:text-5xl font-bold drop-shadow-md break-words hyphens-auto max-w-full"
                 variants={itemVariants}
-                style={{ wordBreak: 'break-word' }}
+                style={{ 
+                  wordBreak: 'break-word', 
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis'
+                }}
               >
                 {match.homeTeam.name} vs {match.awayTeam.name}
               </motion.h1>
               
               <motion.div 
-                className="flex flex-wrap items-center gap-3 mt-3 text-sm text-white/80 drop-shadow-md"
+                className="flex flex-wrap items-center gap-3 mt-3 text-xs sm:text-sm text-white/80 drop-shadow-md"
                 variants={itemVariants}
               >
                 <Calendar className="w-4 h-4" />
                 <span>{match.date}</span>
                 <MapPin className="w-4 h-4" />
-                <span>{match.stadium.name}, {match.stadium.city}</span>
+                <span className="truncate max-w-[200px] sm:max-w-none">{match.stadium.name}, {match.stadium.city}</span>
               </motion.div>
               
               <motion.div 
@@ -334,21 +338,19 @@ const MatchDetails = () => {
                     <h2 className="text-lg font-semibold mb-4">Reviews</h2>
                     
                     {/* Keep only one fan review */}
-                    {reviews.length > 0 && (
-                      <div className="mb-6">
-                        <div className="mb-4 border-b pb-4">
-                          <p className="font-medium">football_fan</p>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            The best World Cup final I've ever seen. Messi vs Mbappé, drama, goals, penalties... This match had it all!
-                          </p>
-                          <ReviewActions 
-                            reviewId="fan-review-1" 
-                            initialLikes={245} 
-                            initialDislikes={0}
-                          />
-                        </div>
+                    <div className="mb-6">
+                      <div className="mb-4 border-b pb-4">
+                        <p className="font-medium">football_fan</p>
+                        <p className="text-sm text-muted-foreground mt-1">
+                          The best World Cup final I've ever seen. Messi vs Mbappé, drama, goals, penalties... This match had it all!
+                        </p>
+                        <ReviewActions 
+                          reviewId="fan-review-1" 
+                          initialLikes={245} 
+                          initialDislikes={0}
+                        />
                       </div>
-                    )}
+                    </div>
                     
                     <div className="mt-6 flex justify-center">
                       <button 
