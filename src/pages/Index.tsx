@@ -45,13 +45,18 @@ const Index = () => {
   };
 
   // Football classics - featured legendary matches
-  // Using a property that exists in Match type for filtering
+  // Using existing properties to determine "classic" matches
   const classicMatches = mockMatches
     .filter(match => 
       // Filter matches with significant historical context
-      match.isClassic || 
+      match.engagement?.ratingAverage >= 4.0 || 
       match.competition.name.includes("Final") || 
-      match.description?.includes("historic")
+      match.description?.includes("historic") ||
+      // High-scoring games are often classics
+      (match.score.homeScore + match.score.awayScore >= 5) ||
+      // Matches with penalties or extra time tend to be dramatic
+      match.score.penalties || 
+      match.score.extraTime
     )
     .slice(0, 10);
   

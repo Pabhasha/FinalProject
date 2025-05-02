@@ -44,11 +44,15 @@ const CategoryPage = () => {
       case 'date-asc':
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       case 'rating-desc':
-        // Since averageRating doesn't exist in the Match type, we'll use a default value of 0
-        return (b.isClassic ? 1 : 0) - (a.isClassic ? 1 : 0);
+        // Use existing engagement data for rating if available, otherwise use competition prestige or goals scored
+        const ratingA = a.engagement?.ratingAverage || (a.stage === 'Final' ? 5 : (a.score.homeScore + a.score.awayScore) / 4);
+        const ratingB = b.engagement?.ratingAverage || (b.stage === 'Final' ? 5 : (b.score.homeScore + b.score.awayScore) / 4);
+        return ratingB - ratingA;
       case 'popularity':
-        // Since viewCount doesn't exist in the Match type, we'll use a default value of 0
-        return (b.isClassic ? 1 : 0) - (a.isClassic ? 1 : 0);
+        // Use existing engagement data for views if available, otherwise use goals as a proxy for excitement
+        const viewsA = a.engagement?.watchCount || (a.score.homeScore + a.score.awayScore) * 100;
+        const viewsB = b.engagement?.watchCount || (b.score.homeScore + b.score.awayScore) * 100;
+        return viewsB - viewsA;
       default:
         return new Date(b.date).getTime() - new Date(a.date).getTime();
     }
