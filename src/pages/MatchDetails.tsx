@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import { Star, Heart, MessageSquare, Share2, ListChecks, Play, Award, Calendar, MapPin } from 'lucide-react';
@@ -183,14 +184,14 @@ const MatchDetails = () => {
   return (
     <MainLayout>
       <div className="page-transition">
-        {/* Match Hero Section - Improved responsive header */}
+        {/* Match Hero Section - Enhanced responsive header */}
         <div className="relative h-[70vh] min-h-[500px] -mx-4 sm:-mx-8 md:-mx-12 lg:-mx-24 overflow-hidden">
           <div 
             className={cn(
               "absolute inset-0 bg-cover bg-center transition-opacity duration-1000",
               imageLoaded ? "opacity-40" : "opacity-0"
             )}
-            style={{ backgroundImage: `url(${match.poster})` }}
+            style={{ backgroundImage: `url(${match.backgroundImage || match.poster})` }}
           ></div>
           
           <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
@@ -214,14 +215,17 @@ const MatchDetails = () => {
               initial="hidden"
               animate="visible"
             >
-              {/* Improved title responsiveness */}
+              {/* Greatly improved title responsiveness */}
               <motion.h1 
-                className="text-2xl xs:text-3xl md:text-4xl lg:text-5xl font-bold drop-shadow-md break-words hyphens-auto max-w-full"
+                className="text-xl xs:text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold drop-shadow-md break-words hyphens-auto max-w-full"
                 variants={itemVariants}
                 style={{ 
                   wordBreak: 'break-word', 
                   overflow: 'hidden',
-                  textOverflow: 'ellipsis'
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: '2',
+                  WebkitBoxOrient: 'vertical'
                 }}
               >
                 {match.homeTeam.name} vs {match.awayTeam.name}
@@ -337,7 +341,7 @@ const MatchDetails = () => {
                   <CardContent className="p-6">
                     <h2 className="text-lg font-semibold mb-4">Reviews</h2>
                     
-                    {/* Keep only one fan review */}
+                    {/* Just one fan review as requested */}
                     <div className="mb-6">
                       <div className="mb-4 border-b pb-4">
                         <p className="font-medium">football_fan</p>

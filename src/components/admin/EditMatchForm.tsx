@@ -28,7 +28,7 @@ const matchSchema = z.object({
   result: z.string().min(1, 'Result is required'),
   description: z.string().min(10, 'Description must be at least 10 characters'),
   location: z.string().min(1, 'Location is required'),
-  highlights: z.string().optional(),
+  highlights: z.string().url('Must be a valid URL').or(z.string().length(0)),
   isPublished: z.boolean().default(true),
   image: z.any().optional(),
   background: z.any().optional(),
@@ -111,6 +111,7 @@ const EditMatchForm = ({ match, onClose }: EditMatchFormProps) => {
         location: values.location,
         image: imageUrl,
         background: backgroundUrl,
+        backgroundImage: backgroundUrl, // Make sure backgroundImage is updated
         highlights: values.highlights || undefined,
         isPublished: values.isPublished,
       });
@@ -267,6 +268,7 @@ const EditMatchForm = ({ match, onClose }: EditMatchFormProps) => {
                   placeholder="https://www.youtube.com/watch?v=..." 
                   type="url"
                   {...field} 
+                  value={field.value || ''}
                 />
               </FormControl>
               <FormMessage />

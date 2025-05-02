@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const AdminDashboard = () => {
   const { isAuthenticated } = useAdmin();
-  const [activeTab, setActiveTab] = useState<string>('add');
+  const [activeTab, setActiveTab] = useState<string>('manage');
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   // Protect route - redirect if not authenticated
