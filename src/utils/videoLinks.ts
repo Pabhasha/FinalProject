@@ -18,3 +18,19 @@ export const highlightLinks: Record<string, string> = {
 export const getWorkingHighlightLink = (matchId: string): string => {
   return highlightLinks[matchId] || '';
 };
+
+// Function to get a YouTube thumbnail from YouTube URL
+export const getYouTubeThumbnail = (url: string): string => {
+  if (!url) return '';
+  
+  // Extract video ID
+  const regExp = /^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  
+  if (match && match[2].length === 11) {
+    // Use maxresdefault for highest quality, or 0 for a smaller thumbnail
+    return `https://img.youtube.com/vi/${match[2]}/maxresdefault.jpg`;
+  }
+  
+  return '';
+};
