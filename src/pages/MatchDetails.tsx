@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, Suspense } from 'react';
 import { useParams } from 'react-router-dom';
 import { Star, Heart, MessageSquare, Share2, ListChecks, Play, Award, Calendar, MapPin } from 'lucide-react';
@@ -38,6 +37,7 @@ const ImageLoader = ({ src, alt, className }: { src: string, alt: string, classN
 
 interface MatchWithDescription extends Match {
   description?: string;
+  backgroundImage?: string; // Add the backgroundImage property
 }
 
 interface ExtendedReview extends Review {
