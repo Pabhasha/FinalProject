@@ -3,13 +3,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import { Star } from 'lucide-react';
-import { getMatchById, getReviewsForMatch } from '@/utils/mockData';
+import { getMatchById } from '@/utils/mockData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { toast } from "sonner";
 import { useFavorites } from '@/hooks/useFavorites';
 import { useLists } from '@/hooks/useLists';
 import ListModal from '@/components/ui/ListModal';
 import { motion } from 'framer-motion';
+import { useReviews } from '@/hooks/useReviews';
 
 // Import new components
 import MatchHeader from '@/components/match/MatchHeader';
@@ -20,7 +21,6 @@ import MatchReviews from '@/components/match/MatchReviews';
 const MatchDetailsPage = () => {
   const { id } = useParams<{ id: string }>();
   const match = getMatchById(id || '');
-  const reviews = getReviewsForMatch(id || '') || [];
   
   const [userRating, setUserRating] = useState<number>(0);
   const [watchedMatches, setWatchedMatches] = useLocalStorage<string[]>('footballtrackr-watched', []);
@@ -30,6 +30,12 @@ const MatchDetailsPage = () => {
   const [isFavorited, setIsFavorited] = useState(false);
   
   const { isListModalOpen, openListModal, closeListModal } = useLists();
+  const { getMatchReviews, hasUserReviewed, getUserReview, addReview } = useReviews();
+  
+  // Get reviews for this match
+  const reviews = id ? getMatchReviews(id) : [];
+  const userReview = id ? getUserReview(id) : null;
+  const userHasReviewed = id ? hasUserReviewed(id) : false;
   
   useEffect(() => {
     if (id) {
@@ -121,10 +127,10 @@ const MatchDetailsPage = () => {
     }
   };
   
-  const handleWriteReview = () => {
-    toast("Coming soon", {
-      description: "Review functionality will be available soon!",
-    });
+  const handleWriteReview = ({ comment, rating }: { comment: string; rating: number }) => {
+    if (id) {
+      addReview(id, comment, rating);
+    }
   };
 
   return (
@@ -164,8 +170,11 @@ const MatchDetailsPage = () => {
               {/* Right column - Reviews */}
               <div className="md:col-span-2">
                 <MatchReviews 
+                  matchId={id || ''}
                   reviews={reviews}
                   onWriteReview={handleWriteReview}
+                  hasUserReviewed={userHasReviewed}
+                  userReview={userReview}
                 />
               </div>
             </div>

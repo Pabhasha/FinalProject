@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -12,6 +13,8 @@ import RegisterForm from '@/components/auth/RegisterForm';
 import LoginForm from '@/components/auth/LoginForm';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useReviews } from '@/hooks/useReviews';
+import { getMatchById } from '@/utils/mockData';
 import {
   Dialog,
   DialogContent,
@@ -33,6 +36,7 @@ const Profile = () => {
   const { user, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('logged');
   const [watchedMatches] = useLocalStorage<string[]>('footballtrackr-watched', []);
+  const { getAllUserReviews } = useReviews();
   
   // Get favorite team data if user has selected one
   const favoriteTeam = user?.favoriteTeamId ? getTeamById(user.favoriteTeamId) : undefined;
@@ -41,6 +45,9 @@ const Profile = () => {
   const userWatchedMatches = mockMatches.filter(match => 
     watchedMatches.includes(match.id)
   );
+  
+  // Get all reviews by the current user
+  const userReviews = getAllUserReviews();
 
   // Check if the user is authenticated
   if (!isAuthenticated) {
@@ -183,7 +190,7 @@ const Profile = () => {
             <div className="text-sm text-muted-foreground">Matches Logged</div>
           </div>
           <div className="bg-card p-4 rounded-lg text-center">
-            <div className="text-3xl font-bold">0</div>
+            <div className="text-3xl font-bold">{userReviews.length}</div>
             <div className="text-sm text-muted-foreground">Reviews</div>
           </div>
           <div className="bg-card p-4 rounded-lg text-center">
@@ -259,19 +266,84 @@ const Profile = () => {
           )}
           
           {activeTab === 'reviews' && (
-            <div className="bg-card rounded-lg p-8 text-center">
-              <h3 className="text-lg font-medium mb-2">No reviews yet</h3>
-              <p className="text-muted-foreground mb-4">
-                Share your thoughts on matches you've watched by writing reviews.
-              </p>
-              {userWatchedMatches.length > 0 ? (
-                <Button asChild>
-                  <Link to={`/match/${userWatchedMatches[0].id}`}>Write Your First Review</Link>
-                </Button>
+            <div>
+              {userReviews.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {userReviews.map(review => {
+                    const match = getMatchById(review.matchId);
+                    return match ? (
+                      <div key={review.id} className="bg-card rounded-lg overflow-hidden">
+                        <div className="flex border-b">
+                          <Link to={`/match/${match.id}`} className="flex-grow p-4">
+                            <div className="flex items-center">
+                              <div className="flex items-center gap-2 flex-1">
+                                <div className="flex">
+                                  <img 
+                                    src={match.teams.home.logo} 
+                                    alt={match.teams.home.name} 
+                                    className="w-5 h-5 object-contain" 
+                                  />
+                                  <span className="mx-1 text-sm">vs</span>
+                                  <img 
+                                    src={match.teams.away.logo} 
+                                    alt={match.teams.away.name} 
+                                    className="w-5 h-5 object-contain" 
+                                  />
+                                </div>
+                                <span className="font-medium text-sm line-clamp-1 pl-2">
+                                  {match.teams.home.name} vs {match.teams.away.name}
+                                </span>
+                              </div>
+                              <div className="flex items-center ml-2">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <span key={i} className={cn(
+                                    "text-xs",
+                                    i < review.rating ? "text-yellow-400" : "text-gray-300"
+                                  )}>
+                                    ★
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </Link>
+                        </div>
+                        <div className="p-4">
+                          <p className="text-sm mb-2">{review.comment}</p>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(review.createdAt).toLocaleDateString()}
+                            </span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              asChild
+                            >
+                              <Link to={`/match/${match.id}`}>
+                                View Match
+                              </Link>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null;
+                  })}
+                </div>
               ) : (
-                <Button asChild>
-                  <Link to="/">Explore Matches</Link>
-                </Button>
+                <div className="bg-card rounded-lg p-8 text-center">
+                  <h3 className="text-lg font-medium mb-2">No reviews yet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Share your thoughts on matches you've watched by writing reviews.
+                  </p>
+                  {userWatchedMatches.length > 0 ? (
+                    <Button asChild>
+                      <Link to={`/match/${userWatchedMatches[0].id}`}>Write Your First Review</Link>
+                    </Button>
+                  ) : (
+                    <Button asChild>
+                      <Link to="/">Explore Matches</Link>
+                    </Button>
+                  )}
+                </div>
               )}
             </div>
           )}
