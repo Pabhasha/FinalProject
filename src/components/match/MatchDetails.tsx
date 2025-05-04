@@ -14,8 +14,8 @@ interface MatchDetailsProps {
 const MatchDetails = ({ match }: MatchDetailsProps) => {
   return (
     <Card>
-      <CardContent className="p-4 sm:p-6">
-        <h2 className="text-lg font-semibold mb-4">Match Details</h2>
+      <CardContent className="p-4">
+        <h2 className="text-lg font-semibold mb-3">Match Details</h2>
         
         <p className="text-sm text-muted-foreground mb-4 line-clamp-6 md:line-clamp-none">
           {match?.description || "No description available."}

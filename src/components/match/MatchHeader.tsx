@@ -8,7 +8,6 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Button } from '@/components/ui/button';
 import { Match } from '@/utils/mockData';
 import { getWorkingHighlightLink, getYouTubeThumbnail } from '@/utils/videoLinks';
-import VideoPlayer from '@/components/ui/VideoPlayer';
 
 interface MatchHeaderProps {
   match: Match & { 
@@ -23,7 +22,6 @@ const MatchHeader = ({ match, formatScore }: MatchHeaderProps) => {
   const [imageLoaded, setImageLoaded] = React.useState(false);
   const placeholderImg = "https://via.placeholder.com/400x600";
   const highlightLink = match.id ? getWorkingHighlightLink(match.id) : '';
-  const youtubeThumbnail = highlightLink ? getYouTubeThumbnail(highlightLink) : '';
   
   React.useEffect(() => {
     if (!match) return;
@@ -56,9 +54,9 @@ const MatchHeader = ({ match, formatScore }: MatchHeaderProps) => {
   };
 
   return (
-    <div className="relative w-full overflow-hidden -mt-8 sm:-mx-8 md:-mx-12 lg:-mx-24">
+    <div className="relative w-full overflow-hidden">
       {/* Fixed aspect ratio container for consistent layout */}
-      <AspectRatio ratio={isMobile ? 4/5 : 16/9} className="min-h-[300px] max-h-[70vh]">
+      <AspectRatio ratio={isMobile ? 16/9 : 21/9} className="min-h-[250px] max-h-[60vh]">
         {/* Background image with proper overlay */}
         <div 
           className={cn(
@@ -86,7 +84,7 @@ const MatchHeader = ({ match, formatScore }: MatchHeaderProps) => {
         )}
         
         {/* Content container with improved padding */}
-        <div className="relative h-full container mx-auto px-4 sm:px-6 flex flex-col justify-end pb-6 sm:pb-8 md:pb-12">
+        <div className="relative h-full container mx-auto px-4 flex flex-col justify-end pb-6 sm:pb-8">
           {/* Competition badge */}
           <div className="bg-secondary/90 backdrop-blur-sm rounded-full px-3 py-1 w-fit mb-3">
             <span className="uppercase text-xs font-semibold tracking-wider text-secondary-foreground">
@@ -102,7 +100,7 @@ const MatchHeader = ({ match, formatScore }: MatchHeaderProps) => {
             animate="visible"
           >
             <motion.h1 
-              className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold drop-shadow-lg break-words hyphens-auto line-clamp-2"
+              className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-bold drop-shadow-lg break-words hyphens-auto line-clamp-2"
               variants={itemVariants}
             >
               {match.homeTeam.name} vs {match.awayTeam.name}

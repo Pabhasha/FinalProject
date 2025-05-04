@@ -3,7 +3,6 @@ import React from 'react';
 import { Star, Heart, Share2, ListChecks } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { toast } from 'sonner';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface MatchActionsProps {
@@ -30,11 +29,11 @@ const MatchActions = ({
 }: MatchActionsProps) => {
   return (
     <Card className="overflow-hidden">
-      <CardContent className="p-4 sm:p-6">
+      <CardContent className="p-4">
         {/* Rating section */}
-        <h2 className="text-lg font-semibold mb-4">Rate this match</h2>
+        <h2 className="text-lg font-semibold mb-3">Rate this match</h2>
 
-        {/* Rating stars component will be rendered here */}
+        {/* Rating stars component */}
         <div className="flex items-center justify-center mb-4">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
@@ -45,7 +44,7 @@ const MatchActions = ({
             >
               <Star
                 className={cn(
-                  "w-8 h-8",
+                  "w-6 h-6 sm:w-7 sm:h-7",
                   star <= userRating
                     ? "text-yellow-400 fill-yellow-400"
                     : "text-gray-300"
@@ -56,7 +55,7 @@ const MatchActions = ({
         </div>
         
         {/* Action buttons with improved layout */}
-        <div className="grid grid-cols-2 gap-3 mt-6">
+        <div className="grid grid-cols-2 gap-2 mt-4">
           <Button 
             variant={hasWatched ? "default" : "secondary"}
             className={cn(
@@ -66,6 +65,7 @@ const MatchActions = ({
             onClick={onAddToWatched}
             disabled={hasWatched}
             aria-pressed={hasWatched}
+            size="sm"
           >
             <Star className="w-4 h-4 mr-1 flex-shrink-0" />
             <span className="truncate">{hasWatched ? "Logged" : "Log Match"}</span>
@@ -76,6 +76,7 @@ const MatchActions = ({
             onClick={onToggleFavorite}
             className="w-full"
             aria-pressed={isFavorited}
+            size="sm"
           >
             <Heart className={cn("w-4 h-4 mr-1 flex-shrink-0", isFavorited && "fill-current")} />
             <span className="truncate">{isFavorited ? "Favorited" : "Favorite"}</span>
@@ -83,24 +84,24 @@ const MatchActions = ({
         </div>
         
         {/* Secondary actions with improved layout */}
-        <div className="flex items-center justify-between mt-4 pt-4 border-t border-border/40">
+        <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/40">
           <Button 
             variant="ghost"
             size="sm"
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-xs text-muted-foreground hover:text-foreground"
             onClick={onShareMatch}
           >
-            <Share2 className="w-4 h-4 mr-1" />
+            <Share2 className="w-3 h-3 mr-1" />
             Share
           </Button>
           
           <Button 
             variant="ghost"
             size="sm"
-            className="text-sm text-muted-foreground hover:text-foreground"
+            className="text-xs text-muted-foreground hover:text-foreground"
             onClick={onAddToList}
           >
-            <ListChecks className="w-4 h-4 mr-1" />
+            <ListChecks className="w-3 h-3 mr-1" />
             Add to List
           </Button>
         </div>

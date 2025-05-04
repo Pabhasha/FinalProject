@@ -17,18 +17,18 @@ interface MatchReviewsProps {
 const MatchReviews = ({ reviews, onWriteReview }: MatchReviewsProps) => {
   return (
     <Card className="h-full">
-      <CardContent className="p-4 sm:p-6">
-        <h2 className="text-lg font-semibold mb-4">Reviews</h2>
+      <CardContent className="p-4">
+        <h2 className="text-lg font-semibold mb-3">Reviews</h2>
         
         {reviews.length > 0 ? (
-          <div className="space-y-4 mb-6">
+          <div className="space-y-3 mb-4">
             {reviews.map((review, index) => (
               <div 
                 key={index} 
-                className="mb-4 border-b border-border/40 pb-4 last:border-0"
+                className="mb-3 border-b border-border/40 pb-3 last:border-0"
               >
-                <p className="font-medium">{review.author}</p>
-                <p className="text-sm text-muted-foreground my-2">
+                <p className="font-medium text-sm sm:text-base">{review.author}</p>
+                <p className="text-xs sm:text-sm text-muted-foreground my-2">
                   {review.comment}
                 </p>
                 <ReviewActions 
@@ -40,14 +40,14 @@ const MatchReviews = ({ reviews, onWriteReview }: MatchReviewsProps) => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-6 text-muted-foreground text-sm">
             <p>No reviews yet. Be the first to review!</p>
           </div>
         )}
         
-        {/* Write review button - improved positioning */}
-        <div className="mt-6 flex justify-center sm:justify-start">
-          <Button onClick={onWriteReview}>
+        {/* Write review button */}
+        <div className="mt-4 flex justify-center sm:justify-start">
+          <Button onClick={onWriteReview} size="sm">
             <MessageSquare className="w-4 h-4 mr-2" />
             Write a Review
           </Button>

@@ -130,7 +130,7 @@ const MatchDetailsPage = () => {
   return (
     <MainLayout>
       <motion.div 
-        className="page-transition"
+        className="page-transition w-full"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
@@ -139,11 +139,11 @@ const MatchDetailsPage = () => {
         <MatchHeader match={match} formatScore={formatScore} />
         
         {/* Main content section with improved grid layout */}
-        <section className="py-6 sm:py-8 md:py-12">
+        <section className="py-6 sm:py-8">
           <div className="container max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
               {/* Left column - Rating/Actions */}
-              <div className="md:col-span-1 space-y-6">
+              <div className="md:col-span-1 space-y-4">
                 {/* Rating and actions card */}
                 <MatchActions
                   matchId={id || ''}
