@@ -92,11 +92,47 @@ export function useReviews() {
     return Object.values(userReviews);
   };
 
+  // Admin functions
+  
+  // Get all reviews (admin only)
+  const getAllReviews = () => {
+    return allReviews;
+  };
+
+  // Delete a review (admin only)
+  const deleteReview = async (reviewId: string) => {
+    // Simulate server delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    const reviewToDelete = allReviews.find(review => review.id === reviewId);
+    
+    if (reviewToDelete) {
+      // Remove from all reviews
+      setAllReviews(allReviews.filter(review => review.id !== reviewId));
+      
+      // If it belongs to a user, remove from their reviews too
+      if (reviewToDelete.userId) {
+        setUserReviews(prev => {
+          const updated = { ...prev };
+          if (updated[reviewToDelete.matchId]) {
+            delete updated[reviewToDelete.matchId];
+          }
+          return updated;
+        });
+      }
+    }
+    
+    return true;
+  };
+
   return {
     getMatchReviews,
     hasUserReviewed,
     getUserReview,
     addReview,
-    getAllUserReviews
+    getAllUserReviews,
+    // Admin functions
+    getAllReviews,
+    deleteReview
   };
 }

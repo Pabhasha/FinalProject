@@ -5,12 +5,14 @@ import { useAdmin } from '@/hooks/useAdmin';
 import AdminLayout from '@/components/admin/AdminLayout';
 import AddMatchForm from '@/components/admin/AddMatchForm';
 import MatchesList from '@/components/admin/MatchesList';
+import ReviewsManagement from '@/components/admin/ReviewsManagement';
+import AdminStats from '@/components/admin/AdminStats';
 import AdminHeader from '@/components/admin/AdminHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const AdminDashboard = () => {
   const { isAuthenticated } = useAdmin();
-  const [activeTab, setActiveTab] = useState<string>('manage');
+  const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [activeCategory, setActiveCategory] = useState<string>('all');
 
   // Protect route - redirect if not authenticated
@@ -27,10 +29,16 @@ const AdminDashboard = () => {
         onValueChange={setActiveTab}
         className="w-full"
       >
-        <TabsList className="grid w-full grid-cols-2">
+        <TabsList className="grid w-full grid-cols-4">
+          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
           <TabsTrigger value="add">Add Match</TabsTrigger>
           <TabsTrigger value="manage">Manage Matches</TabsTrigger>
+          <TabsTrigger value="reviews">Manage Reviews</TabsTrigger>
         </TabsList>
+        
+        <TabsContent value="dashboard" className="px-1 py-6">
+          <AdminStats />
+        </TabsContent>
         
         <TabsContent value="add" className="px-1">
           <AddMatchForm />
@@ -75,6 +83,10 @@ const AdminDashboard = () => {
             </div>
           </div>
           <MatchesList category={activeCategory} />
+        </TabsContent>
+        
+        <TabsContent value="reviews" className="px-1">
+          <ReviewsManagement />
         </TabsContent>
       </Tabs>
     </AdminLayout>
