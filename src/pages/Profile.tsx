@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -279,19 +278,19 @@ const Profile = () => {
                               <div className="flex items-center gap-2 flex-1">
                                 <div className="flex">
                                   <img 
-                                    src={match.teams.home.logo} 
-                                    alt={match.teams.home.name} 
+                                    src={match.homeTeam.logo} 
+                                    alt={match.homeTeam.name} 
                                     className="w-5 h-5 object-contain" 
                                   />
                                   <span className="mx-1 text-sm">vs</span>
                                   <img 
-                                    src={match.teams.away.logo} 
-                                    alt={match.teams.away.name} 
+                                    src={match.awayTeam.logo} 
+                                    alt={match.awayTeam.name} 
                                     className="w-5 h-5 object-contain" 
                                   />
                                 </div>
                                 <span className="font-medium text-sm line-clamp-1 pl-2">
-                                  {match.teams.home.name} vs {match.teams.away.name}
+                                  {match.homeTeam.name} vs {match.awayTeam.name}
                                 </span>
                               </div>
                               <div className="flex items-center ml-2">

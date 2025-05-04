@@ -78,9 +78,9 @@ export function useReviews() {
       [matchId]: newReview
     });
 
+    // Use the standard toast API without variant property
     toast("Review posted", {
-      description: "Your review has been posted successfully!",
-      variant: "success"
+      description: "Your review has been posted successfully!"
     });
     
     return newReview;
