@@ -4,6 +4,7 @@ import { Star, Heart, Share2, ListChecks } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { useTheme } from 'next-themes';
 
 interface MatchActionsProps {
   matchId: string;
@@ -27,8 +28,15 @@ const MatchActions = ({
   onShareMatch,
   onAddToList,
 }: MatchActionsProps) => {
+  const { theme } = useTheme();
+  const isDark = theme === 'dark';
+  
   return (
-    <Card className="overflow-hidden">
+    <Card className={cn(
+      "overflow-hidden transition-all duration-300",
+      "hover:shadow-md",
+      isDark ? "hover:border-primary/30" : "hover:border-primary/50"
+    )}>
       <CardContent className="p-4">
         {/* Rating section */}
         <h2 className="text-lg font-semibold mb-3">Rate this match</h2>
@@ -47,7 +55,7 @@ const MatchActions = ({
                   "w-6 h-6 sm:w-7 sm:h-7",
                   star <= userRating
                     ? "text-yellow-400 fill-yellow-400"
-                    : "text-gray-300"
+                    : isDark ? "text-gray-300" : "text-gray-300"
                 )}
               />
             </button>
@@ -61,6 +69,7 @@ const MatchActions = ({
             className={cn(
               "w-full transition-colors",
               hasWatched && "bg-green-600 hover:bg-green-700",
+              !hasWatched && !isDark && "border border-gray-300"
             )}
             onClick={onAddToWatched}
             disabled={hasWatched}
@@ -74,21 +83,33 @@ const MatchActions = ({
           <Button 
             variant={isFavorited ? "default" : "secondary"}
             onClick={onToggleFavorite}
-            className="w-full"
+            className={cn(
+              "w-full",
+              !isFavorited && !isDark && "border border-gray-300"
+            )}
             aria-pressed={isFavorited}
             size="sm"
           >
-            <Heart className={cn("w-4 h-4 mr-1 flex-shrink-0", isFavorited && "fill-current")} />
+            <Heart className={cn(
+              "w-4 h-4 mr-1 flex-shrink-0", 
+              isFavorited && "fill-current"
+            )} />
             <span className="truncate">{isFavorited ? "Favorited" : "Favorite"}</span>
           </Button>
         </div>
         
         {/* Secondary actions with improved layout */}
-        <div className="flex items-center justify-between mt-4 pt-3 border-t border-border/40">
+        <div className={cn(
+          "flex items-center justify-between mt-4 pt-3",
+          isDark ? "border-t border-border/40" : "border-t border-gray-200"
+        )}>
           <Button 
             variant="ghost"
             size="sm"
-            className="text-xs text-muted-foreground hover:text-foreground"
+            className={cn(
+              "text-xs hover:text-foreground",
+              isDark ? "text-muted-foreground" : "text-gray-600"
+            )}
             onClick={onShareMatch}
           >
             <Share2 className="w-3 h-3 mr-1" />
@@ -98,7 +119,10 @@ const MatchActions = ({
           <Button 
             variant="ghost"
             size="sm"
-            className="text-xs text-muted-foreground hover:text-foreground"
+            className={cn(
+              "text-xs hover:text-foreground",
+              isDark ? "text-muted-foreground" : "text-gray-600"
+            )}
             onClick={onAddToList}
           >
             <ListChecks className="w-3 h-3 mr-1" />
