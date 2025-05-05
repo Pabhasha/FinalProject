@@ -1,17 +1,17 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useAuth } from '@/context/AuthContext';
 import { getTeamById } from '@/utils/teamData';
-import { Settings, ListChecks, Star, MessageSquare, Edit2 } from 'lucide-react';
+import { Settings, ListChecks, Star, MessageSquare } from 'lucide-react';
 import MatchCard from '@/components/ui/MatchCard';
 import { mockMatches } from '@/utils/mockData';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import RegisterForm from '@/components/auth/RegisterForm';
 import LoginForm from '@/components/auth/LoginForm';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
 import {
   Dialog,
   DialogContent,
@@ -89,50 +89,29 @@ const Profile = () => {
 
   return (
     <MainLayout>
-      <div className="page-transition">
+      <div className="page-transition max-w-7xl mx-auto px-4 py-8">
         {/* Profile Header */}
-        <div className="relative mb-8">
-          {/* Banner Image */}
-          <div className="h-48 rounded-xl overflow-hidden bg-gradient-to-r from-primary/30 to-primary/10">
-            {user?.banner && (
-              <img 
-                src={user.banner} 
-                alt="Profile Banner" 
-                className="w-full h-full object-cover" 
-              />
-            )}
-          </div>
-          
-          {/* Profile Info */}
-          <div className="flex flex-col md:flex-row md:items-end -mt-16 md:-mt-12 px-4 md:px-6">
-            {/* Avatar */}
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-background overflow-hidden bg-card">
+        <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center gap-6">
+            <Avatar className="w-24 h-24 border-2 border-primary/20">
               {user?.avatar ? (
-                <img 
-                  src={user.avatar} 
-                  alt={user.username} 
-                  className="w-full h-full object-cover" 
-                />
+                <AvatarImage src={user.avatar} alt={user.username} />
               ) : (
-                <div className="w-full h-full bg-primary/20 flex items-center justify-center">
-                  <span className="text-3xl font-bold text-primary">
-                    {user?.username.charAt(0).toUpperCase()}
-                  </span>
-                </div>
+                <AvatarFallback className="bg-primary/5 text-lg">
+                  {user?.username.charAt(0).toUpperCase()}
+                </AvatarFallback>
               )}
-            </div>
+            </Avatar>
             
-            {/* User Info */}
-            <div className="mt-4 md:mt-0 md:ml-6 md:mb-3">
-              <h1 className="text-2xl font-bold">{user?.username}</h1>
-              <p className="text-muted-foreground">
+            <div>
+              <h1 className="text-2xl font-bold mb-1">{user?.username}</h1>
+              <p className="text-muted-foreground text-sm">
                 Member since {new Date(user?.createdAt || Date.now()).toLocaleDateString()}
               </p>
               {user?.bio && (
                 <p className="mt-2 text-sm max-w-2xl">{user.bio}</p>
               )}
               
-              {/* Favorite Team */}
               {favoriteTeam && (
                 <div className="mt-3 flex items-center">
                   <span className="text-sm text-muted-foreground mr-2">Favorite Team:</span>
@@ -149,40 +128,52 @@ const Profile = () => {
                 </div>
               )}
             </div>
-            
-            {/* Edit Profile */}
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button 
-                  className="mt-4 md:mt-0 md:ml-auto md:mb-3" 
-                  variant="secondary"
-                >
-                  <Settings className="w-4 h-4 mr-2" />
-                  Edit Profile
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Edit Profile</DialogTitle>
-                  <DialogDescription>
-                    Update your profile information
-                  </DialogDescription>
-                </DialogHeader>
-                <Tabs defaultValue="profile" className="mt-4">
-                  <TabsList className="grid grid-cols-2">
-                    <TabsTrigger value="profile">Profile</TabsTrigger>
-                    <TabsTrigger value="team">Favorite Team</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="profile" className="space-y-4 pt-4">
-                    <p>Profile editing coming soon...</p>
-                  </TabsContent>
-                  <TabsContent value="team" className="space-y-4 pt-4">
-                    <p>Team editing coming soon...</p>
-                  </TabsContent>
-                </Tabs>
-              </DialogContent>
-            </Dialog>
           </div>
+          
+          {/* Edit Profile */}
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Settings className="w-4 h-4 mr-2" />
+                Edit Profile
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Edit Profile</DialogTitle>
+                <DialogDescription>
+                  Update your profile information
+                </DialogDescription>
+              </DialogHeader>
+              <Tabs defaultValue="profile" className="mt-4">
+                <TabsList className="grid grid-cols-2">
+                  <TabsTrigger value="profile">Profile</TabsTrigger>
+                  <TabsTrigger value="team">Favorite Team</TabsTrigger>
+                </TabsList>
+                <TabsContent value="profile" className="space-y-4 pt-4">
+                  <div className="space-y-4">
+                    <div className="flex flex-col items-center gap-4">
+                      <Avatar className="w-24 h-24">
+                        {user?.avatar ? (
+                          <AvatarImage src={user.avatar} alt={user.username} />
+                        ) : (
+                          <AvatarFallback>
+                            {user?.username.charAt(0).toUpperCase()}
+                          </AvatarFallback>
+                        )}
+                      </Avatar>
+                      <Button variant="outline" size="sm">
+                        Change Profile Picture
+                      </Button>
+                    </div>
+                  </div>
+                </TabsContent>
+                <TabsContent value="team" className="space-y-4 pt-4">
+                  <p>Team editing coming soon...</p>
+                </TabsContent>
+              </Tabs>
+            </DialogContent>
+          </Dialog>
         </div>
         
         {/* Stats Summary */}

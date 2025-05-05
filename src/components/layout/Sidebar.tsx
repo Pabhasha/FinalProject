@@ -1,9 +1,8 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronsRight, ChevronsLeft, TrendingUp, Star, ListChecks, Clock, Trophy, ChevronsDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { mockMatches, mockLists } from '@/utils/mockData';
+import { mockMatches, mockLists, Match } from '@/utils/mockData';
 import { categories } from '@/utils/categoryData';
 import { useMatchEngagement } from '@/hooks/useMatchEngagement';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -21,11 +20,97 @@ const Sidebar: React.FC = () => {
     setCompetitionsExpanded(!competitionsExpanded);
   };
 
-  // Get recent lists
+  const renderMatchItem = (match: Match, showRating = false) => {
+    return !collapsed ? (
+      <Link 
+        to={`/match/${match.id}`}
+        className={cn(
+          "flex items-center py-2 px-3 rounded-md",
+          "transition-all duration-200 hover:bg-sidebar-accent/90",
+          "group-hover:shadow-md group-hover:translate-x-1",
+          "text-sm text-sidebar-foreground/90"
+        )}
+      >
+        <div className="flex items-center gap-2 flex-shrink-0">
+          <img 
+            src={match.homeTeam.logo} 
+            alt={match.homeTeam.name} 
+            className="w-4 h-4 object-contain" 
+          />
+          <span className="text-xs">vs</span>
+          <img 
+            src={match.awayTeam.logo} 
+            alt={match.awayTeam.name} 
+            className="w-4 h-4 object-contain" 
+          />
+        </div>
+        <span className="ml-2 truncate">
+          {match.homeTeam.name} vs {match.awayTeam.name}
+          {showRating && match.engagement?.ratingAverage && (
+            <span className="ml-1 text-xs text-primary">
+              ({match.engagement.ratingAverage.toFixed(1)}★)
+            </span>
+          )}
+        </span>
+      </Link>
+    ) : (
+      <Link 
+        to={`/match/${match.id}`}
+        className={cn(
+          "flex justify-center py-1.5 rounded-full",
+          "transition-all duration-200 hover:bg-sidebar-accent/80",
+          "hover:shadow-glow-primary"
+        )}
+        title={`${match.homeTeam.name} vs ${match.awayTeam.name}${
+          showRating && match.engagement?.ratingAverage 
+            ? ` (${match.engagement.ratingAverage.toFixed(1)}★)` 
+            : ''
+        }`}
+      >
+        <div className="flex items-center">
+          <img 
+            src={showRating ? match.awayTeam.logo : match.homeTeam.logo} 
+            alt={showRating ? match.awayTeam.name : match.homeTeam.name} 
+            className="w-5 h-5 object-contain" 
+          />
+        </div>
+      </Link>
+    );
+  };
+
   const recentLists = mockLists.slice(0, 3);
 
-  // For recently added section
   const recentlyAddedMatches = mockMatches.slice(3, 6);
+  
+  const createSkeletonMatch = (): Match => ({
+    id: `skeleton-${Math.random().toString(36).substring(7)}`,
+    homeTeam: {
+      name: 'Loading...',
+      logo: '',
+      country: 'Loading...'
+    },
+    awayTeam: {
+      name: 'Loading...',
+      logo: '',
+      country: 'Loading...'
+    },
+    score: {
+      homeScore: 0,
+      awayScore: 0,
+    },
+    date: '',
+    stadium: {
+      name: '',
+      city: '',
+      country: ''
+    },
+    competition: {
+      id: '',
+      name: '',
+      logo: ''
+    },
+    poster: ''
+  });
 
   return (
     <aside 
@@ -36,7 +121,6 @@ const Sidebar: React.FC = () => {
         collapsed ? "w-16" : "w-64"
       )}
     >
-      {/* Toggle Button - moved up to reduce gap */}
       <button 
         onClick={toggleSidebar}
         className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center text-sidebar-foreground hover:text-primary transition-all hover:scale-110"
@@ -49,11 +133,8 @@ const Sidebar: React.FC = () => {
         )}
       </button>
 
-      {/* Sidebar Content - adjusted mt value to remove gap */}
       <div className="p-4 mt-6">
-        {/* Sections */}
         <div className="space-y-6">
-          {/* Competitions Section */}
           <div className="relative">
             <div 
               className={cn(
@@ -115,7 +196,6 @@ const Sidebar: React.FC = () => {
             ) : null}
           </div>
           
-          {/* Trending Matches */}
           <div className="relative">
             <div className={cn(
               "flex items-center mb-3 rounded-md p-2",
@@ -146,32 +226,7 @@ const Sidebar: React.FC = () => {
                 <ul className="space-y-1">
                   {trendingMatches.map(match => (
                     <li key={match.id} className="group">
-                      <Link 
-                        to={`/match/${match.id}`}
-                        className={cn(
-                          "flex items-center py-2 px-3 rounded-md",
-                          "transition-all duration-200 hover:bg-sidebar-accent/90",
-                          "group-hover:shadow-md group-hover:translate-x-1",
-                          "text-sm text-sidebar-foreground/90"
-                        )}
-                      >
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <img 
-                            src={match.homeTeam.logo} 
-                            alt={match.homeTeam.name} 
-                            className="w-4 h-4 object-contain" 
-                          />
-                          <span className="text-xs">vs</span>
-                          <img 
-                            src={match.awayTeam.logo} 
-                            alt={match.awayTeam.name} 
-                            className="w-4 h-4 object-contain" 
-                          />
-                        </div>
-                        <span className="ml-2 truncate">
-                          {match.homeTeam.name} vs {match.awayTeam.name}
-                        </span>
-                      </Link>
+                      {renderMatchItem(match)}
                     </li>
                   ))}
                   <li>
@@ -186,30 +241,14 @@ const Sidebar: React.FC = () => {
               )
             ) : (
               <ul className="space-y-2">
-                {(isLoading ? [...Array(3)].map((_, i) => ({id: `skeleton-${i}`})) : trendingMatches).map((match, idx) => (
+                {(isLoading ? [...Array(3)].map(() => createSkeletonMatch()) : trendingMatches).map((match, idx) => (
                   <li key={match.id}>
                     {isLoading ? (
                       <div className="flex justify-center">
                         <Skeleton className="w-5 h-5 rounded-full" />
                       </div>
                     ) : (
-                      <Link 
-                        to={`/match/${match.id}`}
-                        className={cn(
-                          "flex justify-center py-1.5 rounded-full",
-                          "transition-all duration-200 hover:bg-sidebar-accent/80",
-                          "hover:shadow-glow-primary"
-                        )}
-                        title={`${match.homeTeam.name} vs ${match.awayTeam.name}`}
-                      >
-                        <div className="flex items-center">
-                          <img 
-                            src={match.homeTeam.logo} 
-                            alt={match.homeTeam.name} 
-                            className="w-5 h-5 object-contain" 
-                          />
-                        </div>
-                      </Link>
+                      renderMatchItem(match)
                     )}
                   </li>
                 ))}
@@ -217,7 +256,6 @@ const Sidebar: React.FC = () => {
             )}
           </div>
 
-          {/* Top Rated Matches */}
           <div className="relative">
             <div className={cn(
               "flex items-center mb-3 rounded-md p-2",
@@ -248,35 +286,7 @@ const Sidebar: React.FC = () => {
                 <ul className="space-y-1">
                   {topRatedMatches.map(match => (
                     <li key={match.id} className="group">
-                      <Link 
-                        to={`/match/${match.id}`}
-                        className={cn(
-                          "flex items-center py-2 px-3 rounded-md",
-                          "transition-all duration-200 hover:bg-sidebar-accent/90",
-                          "group-hover:shadow-md group-hover:translate-x-1",
-                          "text-sm text-sidebar-foreground/90"
-                        )}
-                      >
-                        <div className="flex items-center gap-2 flex-shrink-0">
-                          <img 
-                            src={match.homeTeam.logo} 
-                            alt={match.homeTeam.name} 
-                            className="w-4 h-4 object-contain" 
-                          />
-                          <span className="text-xs">vs</span>
-                          <img 
-                            src={match.awayTeam.logo} 
-                            alt={match.awayTeam.name} 
-                            className="w-4 h-4 object-contain" 
-                          />
-                        </div>
-                        <span className="ml-2 truncate">
-                          {match.homeTeam.name} vs {match.awayTeam.name}
-                          <span className="ml-1 text-xs text-primary">
-                            ({match.engagement?.ratingAverage.toFixed(1)}★)
-                          </span>
-                        </span>
-                      </Link>
+                      {renderMatchItem(match, true)}
                     </li>
                   ))}
                   <li>
@@ -291,30 +301,14 @@ const Sidebar: React.FC = () => {
               )
             ) : (
               <ul className="space-y-2">
-                {(isLoading ? [...Array(3)].map((_, i) => ({id: `skeleton-${i}`})) : topRatedMatches).map((match, idx) => (
+                {(isLoading ? [...Array(3)].map(() => createSkeletonMatch()) : topRatedMatches).map((match) => (
                   <li key={match.id}>
                     {isLoading ? (
                       <div className="flex justify-center">
                         <Skeleton className="w-5 h-5 rounded-full" />
                       </div>
                     ) : (
-                      <Link 
-                        to={`/match/${match.id}`}
-                        className={cn(
-                          "flex justify-center py-1.5 rounded-full",
-                          "transition-all duration-200 hover:bg-sidebar-accent/80",
-                          "hover:shadow-glow-primary"
-                        )}
-                        title={`${match.homeTeam.name} vs ${match.awayTeam.name} (${match.engagement?.ratingAverage.toFixed(1)}★)`}
-                      >
-                        <div className="flex items-center">
-                          <img 
-                            src={match.awayTeam.logo} 
-                            alt={match.awayTeam.name} 
-                            className="w-5 h-5 object-contain" 
-                          />
-                        </div>
-                      </Link>
+                      renderMatchItem(match, true)
                     )}
                   </li>
                 ))}
@@ -322,7 +316,6 @@ const Sidebar: React.FC = () => {
             )}
           </div>
 
-          {/* Lists */}
           <div className="relative">
             <div className={cn(
               "flex items-center mb-3 rounded-md p-2",
@@ -381,7 +374,6 @@ const Sidebar: React.FC = () => {
             )}
           </div>
 
-          {/* Recently Added */}
           <div className="relative">
             <div className={cn(
               "flex items-center mb-3 rounded-md p-2",
@@ -401,32 +393,7 @@ const Sidebar: React.FC = () => {
               <ul className="space-y-1">
                 {recentlyAddedMatches.map(match => (
                   <li key={match.id} className="group">
-                    <Link 
-                      to={`/match/${match.id}`}
-                      className={cn(
-                        "flex items-center py-2 px-3 rounded-md",
-                        "transition-all duration-200 hover:bg-sidebar-accent/90",
-                        "group-hover:shadow-md group-hover:translate-x-1",
-                        "text-sm text-sidebar-foreground/90"
-                      )}
-                    >
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <img 
-                          src={match.homeTeam.logo} 
-                          alt={match.homeTeam.name} 
-                          className="w-4 h-4 object-contain" 
-                        />
-                        <span className="text-xs">vs</span>
-                        <img 
-                          src={match.awayTeam.logo} 
-                          alt={match.awayTeam.name} 
-                          className="w-4 h-4 object-contain" 
-                        />
-                      </div>
-                      <span className="ml-2 truncate">
-                        {match.homeTeam.name} vs {match.awayTeam.name}
-                      </span>
-                    </Link>
+                    {renderMatchItem(match)}
                   </li>
                 ))}
               </ul>

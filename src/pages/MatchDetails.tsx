@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { Star, Heart, MessageSquare, Share2, ListChecks, Play, Award, Calendar, MapPin } from 'lucide-react';
 import MainLayout from '@/components/layout/MainLayout';
 import MatchRating from '@/components/ui/MatchRating';
-import { getMatchById, getReviewsForMatch } from '@/utils/mockData';
+import { getMatchById, getReviewsForMatch, Match, Review } from '@/utils/mockData';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { toast } from "sonner";
 import { cn } from '@/lib/utils';
@@ -16,12 +16,38 @@ import { ReviewActions } from '@/components/ui/ReviewActions';
 import { motion } from 'framer-motion';
 import { Skeleton } from '@/components/ui/skeleton';
 
-// ... keep existing code (imports and component setup)
+const placeholderImg = "https://via.placeholder.com/400x600";
+
+const ImageLoader = ({ src, alt, className }: { src: string, alt: string, className?: string }) => {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <motion.img
+      src={src}
+      alt={alt}
+      className={className}
+      style={{ opacity: loaded ? 1 : 0 }}
+      onLoad={() => setLoaded(true)}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    />
+  );
+};
+
+interface MatchWithDescription extends Match {
+  description?: string;
+}
+
+interface ExtendedReview extends Review {
+  author: string;
+  comment: string;
+}
 
 const MatchDetails = () => {
   const { id } = useParams<{ id: string }>();
-  const match = getMatchById(id || '');
-  const reviews = getReviewsForMatch(id || '');
+  const match = getMatchById(id || '') as MatchWithDescription;
+  const reviews = getReviewsForMatch(id || '') as ExtendedReview[];
   const isMobile = useIsMobile();
   
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -88,7 +114,6 @@ const MatchDetails = () => {
     toast("Rating saved", {
       description: `You rated this match ${rating} stars.`,
       duration: 3000,
-      variant: "success"
     });
   };
 
@@ -98,7 +123,6 @@ const MatchDetails = () => {
       setHasWatched(true);
       toast("Match logged", {
         description: "This match has been added to your watched list.",
-        variant: "success"
       });
     }
   };
@@ -111,7 +135,6 @@ const MatchDetails = () => {
         description: isNowFavorite 
           ? "This match has been added to your favorites." 
           : "This match has been removed from your favorites.",
-        variant: isNowFavorite ? "success" : "default"
       });
     }
   };
@@ -122,13 +145,11 @@ const MatchDetails = () => {
       .then(() => {
         toast("Link copied", {
           description: "Match link copied to clipboard. Share with your friends!",
-          variant: "success"
         });
       })
       .catch(() => {
         toast("Failed to copy link", {
           description: "Please try again or copy the URL manually.",
-          variant: "destructive"
         });
       });
   };
@@ -144,15 +165,12 @@ const MatchDetails = () => {
     
     toast("Review submitted", {
       description: "Your review has been submitted successfully!",
-      variant: "success"
     });
     
-    // In a real app, we would save the review to the backend
     setReviewContent('');
     setIsWritingReview(false);
   };
   
-  // Animation variants
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: { 
@@ -187,15 +205,203 @@ const MatchDetails = () => {
             style={{ backgroundImage: `url(${match.poster})` }}
           ></div>
           
-          {/* ... keep existing code (background and loading states) */}
+          <div className="absolute inset-0 bg-gradient-to-t from-background to-transparent"></div>
+          
+          {!imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Skeleton className="w-32 h-48 rounded-md" />
+            </div>
+          )}
           
           <div className="relative h-full container mx-auto px-4 flex flex-col justify-end pb-12">
-            {/* ... keep existing code (competition badge and match details) */}
+            <div className="bg-secondary/80 rounded-full px-4 py-1 w-fit mb-3">
+              <span className="uppercase text-xs font-semibold tracking-wider text-secondary-foreground">
+                {match.competition.name}
+              </span>
+            </div>
+            
+            <motion.div 
+              className="text-white"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              <motion.h1 
+                className="text-4xl md:text-5xl font-bold drop-shadow-md"
+                variants={itemVariants}
+              >
+                {match.homeTeam.name} vs {match.awayTeam.name}
+              </motion.h1>
+              
+              <motion.div 
+                className="flex items-center gap-3 mt-3 text-sm text-white/80 drop-shadow-md"
+                variants={itemVariants}
+              >
+                <Calendar className="w-4 h-4" />
+                <span>{match.date}</span>
+                <MapPin className="w-4 h-4" />
+                <span>{match.stadium.name}, {match.stadium.city}</span>
+              </motion.div>
+              
+              <motion.div 
+                className="flex items-center gap-4 mt-4"
+                variants={itemVariants}
+              >
+                <div className="flex items-center gap-2">
+                  <Award className="w-5 h-5 text-yellow-500" />
+                  <span className="font-semibold">{formatScore()}</span>
+                </div>
+                
+                {match.highlights && (
+                  <a href={match.highlights} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
+                    <Play className="w-4 h-4" />
+                    <span>Highlights</span>
+                  </a>
+                )}
+              </motion.div>
+            </motion.div>
           </div>
         </div>
         
         <section className="py-12">
-          {/* ... keep existing code (reviews section) */}
+          <div className="container max-w-7xl mx-auto px-4">
+            <div className="flex flex-col md:flex-row gap-8">
+              <div className="md:w-1/3">
+                <Card>
+                  <CardContent className="p-6">
+                    <h2 className="text-lg font-semibold mb-4">Rate this match</h2>
+                    <MatchRating 
+                      matchId={id || 'unknown'} 
+                      onRatingChange={handleRatingChange} 
+                    />
+                    
+                    <div className="flex items-center justify-between mt-6">
+                      <button 
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+                          hasWatched ? "bg-green-500 text-green-500 hover:bg-green-500/90" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                        )}
+                        onClick={handleAddToWatched}
+                        disabled={hasWatched}
+                      >
+                        <Star className="w-4 h-4" />
+                        {hasWatched ? "Logged" : "Log Match"}
+                      </button>
+                      
+                      <button 
+                        className={cn(
+                          "flex items-center gap-2 px-4 py-2 rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none",
+                          isFavorited ? "bg-primary text-primary-foreground hover:bg-primary/90" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                        )}
+                        onClick={handleToggleFavorite}
+                      >
+                        <Heart className="w-4 h-4" />
+                        {isFavorited ? "Unfavorite" : "Favorite"}
+                      </button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between mt-4">
+                      <button 
+                        className="text-sm text-muted-foreground hover:underline"
+                        onClick={handleShareMatch}
+                      >
+                        <Share2 className="w-4 h-4 mr-1 inline-block" />
+                        Share
+                      </button>
+                      
+                      <button 
+                        className="text-sm text-muted-foreground hover:underline"
+                        onClick={handleAddToList}
+                      >
+                        <ListChecks className="w-4 h-4 mr-1 inline-block" />
+                        Add to List
+                      </button>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <Card className="mt-6">
+                  <CardContent className="p-6">
+                    <h2 className="text-lg font-semibold mb-4">Match Details</h2>
+                    <p className="text-sm text-muted-foreground">{match?.description || "No description available."}</p>
+                    <ul className="mt-4 space-y-2">
+                      <li className="flex items-center gap-2 text-sm">
+                        <Calendar className="w-4 h-4 text-muted-foreground" />
+                        <span>{match.date}</span>
+                      </li>
+                      <li className="flex items-center gap-2 text-sm">
+                        <MapPin className="w-4 h-4 text-muted-foreground" />
+                        <span>{match.stadium.name}, {match.stadium.city}</span>
+                      </li>
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+              
+              <div className="md:w-2/3">
+                <Card>
+                  <CardContent className="p-6">
+                    <h2 className="text-lg font-semibold mb-4">Reviews</h2>
+                    
+                    {reviews.length === 0 ? (
+                      <div className="text-center py-8">
+                        <MessageSquare className="w-6 h-6 mx-auto mb-2 text-muted-foreground" />
+                        <p className="text-muted-foreground">No reviews yet. Be the first to write one!</p>
+                      </div>
+                    ) : (
+                      reviews.map(review => (
+                        <div key={review.id} className="mb-4">
+                          <p className="font-medium">{review.author || "Anonymous User"}</p>
+                          <p className="text-sm text-muted-foreground">{review.comment || "No comment"}</p>
+                          <ReviewActions 
+                            reviewId={review.id} 
+                            initialLikes={review.likes || 0} 
+                            initialDislikes={review.dislikes || 0}
+                          />
+                        </div>
+                      ))
+                    )}
+                    
+                    <div className="mt-6">
+                      <h3 className="text-md font-semibold mb-2">Write a Review</h3>
+                      
+                      {isWritingReview ? (
+                        <div className="flex flex-col gap-3">
+                          <textarea 
+                            className="w-full h-32 border rounded-md p-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                            placeholder="Share your thoughts on this match..."
+                            value={reviewContent}
+                            onChange={(e) => setReviewContent(e.target.value)}
+                          />
+                          <div className="flex justify-end gap-2">
+                            <button 
+                              className="px-4 py-2 rounded-md text-sm font-medium bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                              onClick={() => setIsWritingReview(false)}
+                            >
+                              Cancel
+                            </button>
+                            <button 
+                              className="px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90"
+                              onClick={handleSubmitReview}
+                            >
+                              Submit Review
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <button 
+                          className="w-full px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90"
+                          onClick={() => setIsWritingReview(true)}
+                        >
+                          Write a Review
+                        </button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
       

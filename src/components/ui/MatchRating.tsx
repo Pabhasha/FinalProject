@@ -9,6 +9,7 @@ interface MatchRatingProps {
   initialRating?: number;
   size?: 'sm' | 'md' | 'lg';
   onRatingChange?: (rating: number) => void;
+  onChange?: (rating: number) => void; // Adding this prop for backward compatibility
   readOnly?: boolean;
 }
 
@@ -17,6 +18,7 @@ const MatchRating: React.FC<MatchRatingProps> = ({
   initialRating,
   size = 'md',
   onRatingChange,
+  onChange, // Add the prop here
   readOnly = false
 }) => {
   const [userRatings, setUserRatings] = useLocalStorage<Record<string, number>>('footballtrackr-ratings', {});
@@ -56,9 +58,14 @@ const MatchRating: React.FC<MatchRatingProps> = ({
       [matchId]: value
     }));
     
-    // Call the callback if provided
+    // Call the callbacks if provided
     if (onRatingChange) {
       onRatingChange(value);
+    }
+    
+    // Support legacy onChange prop
+    if (onChange) {
+      onChange(value);
     }
   };
 
