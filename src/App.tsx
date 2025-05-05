@@ -1,4 +1,4 @@
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from '@/components/ui/sonner';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -58,87 +58,91 @@ const queryClient = new QueryClient({
   },
 });
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <AuthProvider>
-      <AdminProvider>
-        <ThemeProvider defaultTheme="dark" attribute="class">
-          <TooltipProvider>
-            <Toaster />
-            <Sonner 
-              position="top-right" 
-              closeButton 
-              richColors 
-              expand={false}
-              className="z-[100]"
-            />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/match/:id" element={
-                <Suspense fallback={<PageLoader />}>
-                  <MatchDetails />
-                </Suspense>
-              } />
-              <Route path="/matches" element={
-                <Suspense fallback={<PageLoader />}>
-                  <Matches />
-                </Suspense>
-              } />
-              <Route path="/category/:slug" element={
-                <Suspense fallback={<PageLoader />}>
-                  <CategoryPage />
-                </Suspense>
-              } />
-              <Route path="/lists" element={
-                <Suspense fallback={<PageLoader />}>
-                  <Lists />
-                </Suspense>
-              } />
-              <Route path="/profile" element={
-                <Suspense fallback={<PageLoader />}>
-                  <Profile />
-                </Suspense>
-              } />
-              <Route path="/auth" element={
-                <Suspense fallback={<PageLoader />}>
-                  <Auth />
-                </Suspense>
-              } />
-              <Route path="/register" element={
-                <Suspense fallback={<PageLoader />}>
-                  <Auth />
-                </Suspense>
-              } />
-              <Route path="/login" element={
-                <Suspense fallback={<PageLoader />}>
-                  <Auth />
-                </Suspense>
-              } />
-              
-              {/* Admin Routes */}
-              <Route path="/admin-login" element={
-                <Suspense fallback={<PageLoader />}>
-                  <AdminLogin />
-                </Suspense>
-              } />
-              <Route path="/admin/dashboard" element={
-                <Suspense fallback={<PageLoader />}>
-                  <AdminDashboard />
-                </Suspense>
-              } />
-              
-              {/* Catch-all route */}
-              <Route path="*" element={
-                <Suspense fallback={<PageLoader />}>
-                  <NotFound />
-                </Suspense>
-              } />
-            </Routes>
-          </TooltipProvider>
-        </ThemeProvider>
-      </AdminProvider>
-    </AuthProvider>
-  </QueryClientProvider>
-);
+function App() {
+  return (
+    <>
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <AdminProvider>
+            <ThemeProvider defaultTheme="dark" attribute="class">
+              <TooltipProvider>
+                <Toaster />
+                <Sonner 
+                  position="top-right" 
+                  closeButton 
+                  richColors 
+                  expand={false}
+                  className="z-[100]"
+                />
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/match/:id" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <MatchDetails />
+                    </Suspense>
+                  } />
+                  <Route path="/matches" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Matches />
+                    </Suspense>
+                  } />
+                  <Route path="/category/:slug" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <CategoryPage />
+                    </Suspense>
+                  } />
+                  <Route path="/lists" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Lists />
+                    </Suspense>
+                  } />
+                  <Route path="/profile" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Profile />
+                    </Suspense>
+                  } />
+                  <Route path="/auth" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Auth />
+                    </Suspense>
+                  } />
+                  <Route path="/register" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Auth />
+                    </Suspense>
+                  } />
+                  <Route path="/login" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Auth />
+                    </Suspense>
+                  } />
+                  
+                  {/* Admin Routes */}
+                  <Route path="/admin-login" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <AdminLogin />
+                    </Suspense>
+                  } />
+                  <Route path="/admin/dashboard" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <AdminDashboard />
+                    </Suspense>
+                  } />
+                  
+                  {/* Catch-all route */}
+                  <Route path="*" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <NotFound />
+                    </Suspense>
+                  } />
+                </Routes>
+              </TooltipProvider>
+            </ThemeProvider>
+          </AdminProvider>
+        </AuthProvider>
+      </QueryClientProvider>
+    </>
+  );
+}
 
 export default App;
