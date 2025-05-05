@@ -17,6 +17,7 @@ import { useReviews } from '@/hooks/useReviews';
 import { getMatchById } from '@/utils/mockData';
 import { useLists } from '@/hooks/useLists';
 import CreateListModal from '@/components/ui/CreateListModal';
+import ChangePasswordForm from '@/components/user/ChangePasswordForm';
 import {
   Dialog,
   DialogContent,
@@ -156,9 +157,10 @@ const Profile = () => {
                 </DialogDescription>
               </DialogHeader>
               <Tabs defaultValue="profile" className="mt-4">
-                <TabsList className="grid grid-cols-2">
+                <TabsList className="grid grid-cols-3">
                   <TabsTrigger value="profile">Profile</TabsTrigger>
                   <TabsTrigger value="team">Favorite Team</TabsTrigger>
+                  <TabsTrigger value="password">Change Password</TabsTrigger>
                 </TabsList>
                 <TabsContent value="profile" className="space-y-4 pt-4">
                   <div className="space-y-4">
@@ -180,6 +182,9 @@ const Profile = () => {
                 </TabsContent>
                 <TabsContent value="team" className="space-y-4 pt-4">
                   <p>Team editing coming soon...</p>
+                </TabsContent>
+                <TabsContent value="password" className="space-y-4 pt-4">
+                  <ChangePasswordForm />
                 </TabsContent>
               </Tabs>
             </DialogContent>
