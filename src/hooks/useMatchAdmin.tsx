@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { getWorkingHighlightLink } from '@/utils/videoLinks';
 
 // Import initial data to populate the admin dashboard
 import { mockMatches as importedMockMatches } from '@/utils/mockData';
@@ -21,6 +22,7 @@ export interface MatchData {
   highlights?: string;
   isPublished?: boolean;
   background?: string;
+  backgroundImage?: string;  // Field for admin background image
   engagementStats?: {
     ratingCount: number;
     reviewCount: number;
@@ -28,7 +30,7 @@ export interface MatchData {
   };
 }
 
-// Convert mockMatches to the correct MatchData format
+// Convert mockMatches to the correct MatchData format with working highlight links
 const initialMatches: MatchData[] = importedMockMatches.map(match => ({
   id: match.id,
   slug: `${match.homeTeam.name.toLowerCase()}-vs-${match.awayTeam.name.toLowerCase()}-${match.date.replace(/[^0-9]/g, '')}`,
@@ -43,7 +45,8 @@ const initialMatches: MatchData[] = importedMockMatches.map(match => ({
   location: `${match.stadium.name}, ${match.stadium.city}, ${match.stadium.country}`,
   image: match.poster,
   background: match.poster,
-  highlights: match.highlights,
+  backgroundImage: match.poster,  // Initialize with the same poster image
+  highlights: getWorkingHighlightLink(match.id) || match.highlights, // Use working links
   isPublished: true,
   ratings: [],
   reviews: [],
@@ -114,11 +117,39 @@ export const useMatchAdmin = () => {
     return id;
   };
 
+  // Update match background image
+  const updateMatchBackgroundImage = async (id: string, imageUrl: string) => {
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    
+    setMatches((prev) =>
+      prev.map((match) =>
+        match.id === id ? { ...match, backgroundImage: imageUrl } : match
+      )
+    );
+    return imageUrl;
+  };
+
+  // Update match highlight video
+  const updateMatchHighlight = async (id: string, videoUrl: string) => {
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    
+    setMatches((prev) =>
+      prev.map((match) =>
+        match.id === id ? { ...match, highlights: videoUrl } : match
+      )
+    );
+    return videoUrl;
+  };
+
   return {
     matches,
     getMatches,
     addMatch,
     updateMatch,
     deleteMatch,
+    updateMatchBackgroundImage,
+    updateMatchHighlight
   };
 };

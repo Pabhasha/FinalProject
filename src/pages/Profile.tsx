@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
@@ -12,6 +13,11 @@ import RegisterForm from '@/components/auth/RegisterForm';
 import LoginForm from '@/components/auth/LoginForm';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useReviews } from '@/hooks/useReviews';
+import { getMatchById } from '@/utils/mockData';
+import { useLists } from '@/hooks/useLists';
+import CreateListModal from '@/components/ui/CreateListModal';
+import ChangePasswordForm from '@/components/user/ChangePasswordForm';
 import {
   Dialog,
   DialogContent,
@@ -33,6 +39,8 @@ const Profile = () => {
   const { user, isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>('logged');
   const [watchedMatches] = useLocalStorage<string[]>('footballtrackr-watched', []);
+  const { getAllUserReviews } = useReviews();
+  const { lists, openCreateListModal, isCreateListModalOpen, closeCreateListModal } = useLists();
   
   // Get favorite team data if user has selected one
   const favoriteTeam = user?.favoriteTeamId ? getTeamById(user.favoriteTeamId) : undefined;
@@ -41,6 +49,9 @@ const Profile = () => {
   const userWatchedMatches = mockMatches.filter(match => 
     watchedMatches.includes(match.id)
   );
+  
+  // Get all reviews by the current user
+  const userReviews = getAllUserReviews();
 
   // Check if the user is authenticated
   if (!isAuthenticated) {
@@ -146,9 +157,10 @@ const Profile = () => {
                 </DialogDescription>
               </DialogHeader>
               <Tabs defaultValue="profile" className="mt-4">
-                <TabsList className="grid grid-cols-2">
+                <TabsList className="grid grid-cols-3">
                   <TabsTrigger value="profile">Profile</TabsTrigger>
                   <TabsTrigger value="team">Favorite Team</TabsTrigger>
+                  <TabsTrigger value="password">Change Password</TabsTrigger>
                 </TabsList>
                 <TabsContent value="profile" className="space-y-4 pt-4">
                   <div className="space-y-4">
@@ -171,6 +183,9 @@ const Profile = () => {
                 <TabsContent value="team" className="space-y-4 pt-4">
                   <p>Team editing coming soon...</p>
                 </TabsContent>
+                <TabsContent value="password" className="space-y-4 pt-4">
+                  <ChangePasswordForm />
+                </TabsContent>
               </Tabs>
             </DialogContent>
           </Dialog>
@@ -183,11 +198,11 @@ const Profile = () => {
             <div className="text-sm text-muted-foreground">Matches Logged</div>
           </div>
           <div className="bg-card p-4 rounded-lg text-center">
-            <div className="text-3xl font-bold">0</div>
+            <div className="text-3xl font-bold">{userReviews.length}</div>
             <div className="text-sm text-muted-foreground">Reviews</div>
           </div>
           <div className="bg-card p-4 rounded-lg text-center">
-            <div className="text-3xl font-bold">0</div>
+            <div className="text-3xl font-bold">{lists.length}</div>
             <div className="text-sm text-muted-foreground">Lists Created</div>
           </div>
         </div>
@@ -259,32 +274,157 @@ const Profile = () => {
           )}
           
           {activeTab === 'reviews' && (
-            <div className="bg-card rounded-lg p-8 text-center">
-              <h3 className="text-lg font-medium mb-2">No reviews yet</h3>
-              <p className="text-muted-foreground mb-4">
-                Share your thoughts on matches you've watched by writing reviews.
-              </p>
-              {userWatchedMatches.length > 0 ? (
-                <Button asChild>
-                  <Link to={`/match/${userWatchedMatches[0].id}`}>Write Your First Review</Link>
-                </Button>
+            <div>
+              {userReviews.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {userReviews.map(review => {
+                    const match = getMatchById(review.matchId);
+                    return match ? (
+                      <div key={review.id} className="bg-card rounded-lg overflow-hidden">
+                        <div className="flex border-b">
+                          <Link to={`/match/${match.id}`} className="flex-grow p-4">
+                            <div className="flex items-center">
+                              <div className="flex items-center gap-2 flex-1">
+                                <div className="flex">
+                                  <img 
+                                    src={match.homeTeam.logo} 
+                                    alt={match.homeTeam.name} 
+                                    className="w-5 h-5 object-contain" 
+                                  />
+                                  <span className="mx-1 text-sm">vs</span>
+                                  <img 
+                                    src={match.awayTeam.logo} 
+                                    alt={match.awayTeam.name} 
+                                    className="w-5 h-5 object-contain" 
+                                  />
+                                </div>
+                                <span className="font-medium text-sm line-clamp-1 pl-2">
+                                  {match.homeTeam.name} vs {match.awayTeam.name}
+                                </span>
+                              </div>
+                              <div className="flex items-center ml-2">
+                                {Array.from({ length: 5 }).map((_, i) => (
+                                  <span key={i} className={cn(
+                                    "text-xs",
+                                    i < review.rating ? "text-yellow-400" : "text-gray-300"
+                                  )}>
+                                    ★
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          </Link>
+                        </div>
+                        <div className="p-4">
+                          <p className="text-sm mb-2">{review.comment}</p>
+                          <div className="flex justify-between items-center">
+                            <span className="text-xs text-muted-foreground">
+                              {new Date(review.createdAt).toLocaleDateString()}
+                            </span>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              asChild
+                            >
+                              <Link to={`/match/${match.id}`}>
+                                View Match
+                              </Link>
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : null;
+                  })}
+                </div>
               ) : (
-                <Button asChild>
-                  <Link to="/">Explore Matches</Link>
-                </Button>
+                <div className="bg-card rounded-lg p-8 text-center">
+                  <h3 className="text-lg font-medium mb-2">No reviews yet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Share your thoughts on matches you've watched by writing reviews.
+                  </p>
+                  {userWatchedMatches.length > 0 ? (
+                    <Button asChild>
+                      <Link to={`/match/${userWatchedMatches[0].id}`}>Write Your First Review</Link>
+                    </Button>
+                  ) : (
+                    <Button asChild>
+                      <Link to="/">Explore Matches</Link>
+                    </Button>
+                  )}
+                </div>
               )}
             </div>
           )}
           
           {activeTab === 'lists' && (
-            <div className="bg-card rounded-lg p-8 text-center">
-              <h3 className="text-lg font-medium mb-2">No lists created yet</h3>
-              <p className="text-muted-foreground mb-4">
-                Create lists to organize your favorite matches, memorable moments, or greatest comebacks.
-              </p>
-              <Button asChild>
-                <Link to="/lists">Create Your First List</Link>
-              </Button>
+            <div>
+              {lists.length > 0 ? (
+                <div>
+                  <div className="flex justify-between mb-6">
+                    <h2 className="text-lg font-medium">Your Lists</h2>
+                    <Button size="sm" onClick={() => openCreateListModal()}>Create New List</Button>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {lists.map(list => (
+                      <Link 
+                        key={list.id} 
+                        to={`/lists`} 
+                        className="bg-card border border-border rounded-lg p-4 hover:border-primary/50 transition-all"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          // Handle list click action here
+                        }}
+                      >
+                        <h3 className="font-medium">{list.name}</h3>
+                        {list.description && (
+                          <p className="text-muted-foreground text-sm mt-1 line-clamp-2">
+                            {list.description}
+                          </p>
+                        )}
+                        <div className="mt-3 flex items-center justify-between text-sm">
+                          <span className="text-muted-foreground">
+                            {list.matches.length} {list.matches.length === 1 ? 'match' : 'matches'}
+                          </span>
+                          {list.matches.length > 0 && (
+                            <div className="flex -space-x-2 overflow-hidden">
+                              {list.matches.slice(0, 3).map(matchId => {
+                                const match = getMatchById(matchId);
+                                return match ? (
+                                  <div 
+                                    key={matchId} 
+                                    className="inline-block h-6 w-6 rounded-full border-2 border-background"
+                                  >
+                                    <img 
+                                      src={match.homeTeam.logo} 
+                                      alt={match.homeTeam.name} 
+                                      className="h-full w-full object-contain" 
+                                    />
+                                  </div>
+                                ) : null;
+                              })}
+                              {list.matches.length > 3 && (
+                                <div className="flex items-center justify-center h-6 w-6 rounded-full bg-secondary text-xs font-medium">
+                                  +{list.matches.length - 3}
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-card rounded-lg p-8 text-center">
+                  <h3 className="text-lg font-medium mb-2">No lists created yet</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Create lists to organize your favorite matches, memorable moments, or greatest comebacks.
+                  </p>
+                  <Button onClick={() => openCreateListModal()}>Create Your First List</Button>
+                </div>
+              )}
+              
+              <CreateListModal isOpen={isCreateListModalOpen} onClose={closeCreateListModal} />
             </div>
           )}
         </div>

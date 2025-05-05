@@ -6,7 +6,6 @@ import { getCategoryBySlug } from '@/utils/categoryData';
 import MatchCard from '@/components/ui/MatchCard';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Match } from '@/utils/mockData';
 import { Search } from 'lucide-react';
 
 const CategoryPage = () => {
@@ -45,14 +44,14 @@ const CategoryPage = () => {
       case 'date-asc':
         return new Date(a.date).getTime() - new Date(b.date).getTime();
       case 'rating-desc':
-        // Since averageRating doesn't exist in the Match type, we'll use a default value of 0
-        const ratingA = 0; // This would be a.averageRating if it existed
-        const ratingB = 0; // This would be b.averageRating if it existed
+        // Use existing engagement data for rating if available, otherwise use competition prestige or goals scored
+        const ratingA = a.engagement?.ratingAverage || (a.stage === 'Final' ? 5 : (a.score.homeScore + a.score.awayScore) / 4);
+        const ratingB = b.engagement?.ratingAverage || (b.stage === 'Final' ? 5 : (b.score.homeScore + b.score.awayScore) / 4);
         return ratingB - ratingA;
       case 'popularity':
-        // Since viewCount doesn't exist in the Match type, we'll use a default value of 0
-        const viewsA = 0; // This would be a.viewCount if it existed
-        const viewsB = 0; // This would be b.viewCount if it existed
+        // Use existing engagement data for views if available, otherwise use goals as a proxy for excitement
+        const viewsA = a.engagement?.watchCount || (a.score.homeScore + a.score.awayScore) * 100;
+        const viewsB = b.engagement?.watchCount || (b.score.homeScore + b.score.awayScore) * 100;
         return viewsB - viewsA;
       default:
         return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -76,9 +75,9 @@ const CategoryPage = () => {
             </div>
           )}
           <div className="absolute inset-0 bg-black/40 flex flex-col justify-end p-6">
-            <h1 className="text-3xl font-bold text-white">{category.title}</h1>
+            <h1 className="text-xl xs:text-2xl sm:text-3xl font-bold text-white break-words hyphens-auto max-w-full">{category.title}</h1>
             {category.description && (
-              <p className="text-white/80 mt-2 max-w-2xl">{category.description}</p>
+              <p className="text-white/80 mt-2 max-w-2xl line-clamp-2">{category.description}</p>
             )}
           </div>
         </div>
@@ -109,9 +108,9 @@ const CategoryPage = () => {
           </div>
         </div>
         
-        {/* Match Grid */}
+        {/* Match Grid - Improved responsive grid */}
         {sortedMatches.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
             {sortedMatches.map(match => (
               <MatchCard key={match.id} match={match} />
             ))}

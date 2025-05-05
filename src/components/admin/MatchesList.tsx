@@ -20,7 +20,7 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Pencil, Trash2, Star, MessageSquare, Eye, EyeOff, ChevronDown, ChevronUp } from 'lucide-react';
+import { Pencil, Trash2, Star, MessageSquare, Eye, EyeOff, ChevronDown, ChevronUp, Image, Video } from 'lucide-react';
 import { useMatchAdmin } from '@/hooks/useMatchAdmin';
 import EditMatchForm from './EditMatchForm';
 
@@ -29,11 +29,17 @@ interface MatchesListProps {
 }
 
 const MatchesList = ({ category }: MatchesListProps) => {
-  const { getMatches, deleteMatch } = useMatchAdmin();
+  const { getMatches, deleteMatch, updateMatchBackgroundImage, updateMatchHighlight } = useMatchAdmin();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isBackgroundDialogOpen, setIsBackgroundDialogOpen] = useState(false);
+  const [isHighlightDialogOpen, setIsHighlightDialogOpen] = useState(false);
   const [selectedMatch, setSelectedMatch] = useState<any>(null);
+  const [backgroundImageUrl, setBackgroundImageUrl] = useState('');
+  const [highlightVideoUrl, setHighlightVideoUrl] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isUpdatingBackground, setIsUpdatingBackground] = useState(false);
+  const [isUpdatingHighlight, setIsUpdatingHighlight] = useState(false);
   const [showDrafts, setShowDrafts] = useState(true);
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -78,6 +84,18 @@ const MatchesList = ({ category }: MatchesListProps) => {
     setSelectedMatch(match);
     setIsDeleteDialogOpen(true);
   };
+  
+  const handleBackgroundClick = (match: any) => {
+    setSelectedMatch(match);
+    setBackgroundImageUrl(match.backgroundImage || match.image || '');
+    setIsBackgroundDialogOpen(true);
+  };
+  
+  const handleHighlightClick = (match: any) => {
+    setSelectedMatch(match);
+    setHighlightVideoUrl(match.highlights || '');
+    setIsHighlightDialogOpen(true);
+  };
 
   const confirmDelete = async () => {
     if (!selectedMatch) return;
@@ -92,6 +110,38 @@ const MatchesList = ({ category }: MatchesListProps) => {
       console.error(error);
     } finally {
       setIsDeleting(false);
+    }
+  };
+  
+  const confirmBackgroundUpdate = async () => {
+    if (!selectedMatch || !backgroundImageUrl.trim()) return;
+    
+    setIsUpdatingBackground(true);
+    try {
+      await updateMatchBackgroundImage(selectedMatch.id, backgroundImageUrl);
+      toast.success('Background image updated successfully');
+      setIsBackgroundDialogOpen(false);
+    } catch (error) {
+      toast.error('Failed to update background image');
+      console.error(error);
+    } finally {
+      setIsUpdatingBackground(false);
+    }
+  };
+  
+  const confirmHighlightUpdate = async () => {
+    if (!selectedMatch || !highlightVideoUrl.trim()) return;
+    
+    setIsUpdatingHighlight(true);
+    try {
+      await updateMatchHighlight(selectedMatch.id, highlightVideoUrl);
+      toast.success('Highlight video updated successfully');
+      setIsHighlightDialogOpen(false);
+    } catch (error) {
+      toast.error('Failed to update highlight video');
+      console.error(error);
+    } finally {
+      setIsUpdatingHighlight(false);
     }
   };
 
@@ -175,7 +225,7 @@ const MatchesList = ({ category }: MatchesListProps) => {
                 </TableHead>
                 <TableHead>Result</TableHead>
                 <TableHead>Engagement</TableHead>
-                <TableHead className="w-[100px]">Actions</TableHead>
+                <TableHead className="w-[180px]">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -218,10 +268,11 @@ const MatchesList = ({ category }: MatchesListProps) => {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-1">
                       <Button
                         variant="ghost"
                         size="icon"
+                        title="Edit match"
                         onClick={() => handleEditClick(match)}
                       >
                         <Pencil className="h-4 w-4" />
@@ -229,6 +280,23 @@ const MatchesList = ({ category }: MatchesListProps) => {
                       <Button
                         variant="ghost"
                         size="icon"
+                        title="Set background image"
+                        onClick={() => handleBackgroundClick(match)}
+                      >
+                        <Image className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="Set highlight video"
+                        onClick={() => handleHighlightClick(match)}
+                      >
+                        <Video className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        title="Delete match"
                         onClick={() => handleDeleteClick(match)}
                       >
                         <Trash2 className="h-4 w-4 text-destructive" />
@@ -278,6 +346,106 @@ const MatchesList = ({ category }: MatchesListProps) => {
               onClose={() => setIsEditDialogOpen(false)}
             />
           )}
+        </DialogContent>
+      </Dialog>
+      
+      {/* Background Image Dialog */}
+      <Dialog open={isBackgroundDialogOpen} onOpenChange={setIsBackgroundDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Background Image</DialogTitle>
+            <DialogDescription>
+              Enter the URL of the image you want to use as the background for this match.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="backgroundUrl" className="text-sm font-medium">
+                Background Image URL
+              </label>
+              <Input
+                id="backgroundUrl"
+                value={backgroundImageUrl}
+                onChange={(e) => setBackgroundImageUrl(e.target.value)}
+                placeholder="https://example.com/image.jpg"
+              />
+            </div>
+            
+            {backgroundImageUrl && (
+              <div className="mt-4 rounded-md overflow-hidden border border-border h-[150px]">
+                <img 
+                  src={backgroundImageUrl} 
+                  alt="Background Preview" 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = '/placeholder.svg';
+                  }}
+                />
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsBackgroundDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={confirmBackgroundUpdate}
+              disabled={isUpdatingBackground || !backgroundImageUrl.trim()}
+            >
+              {isUpdatingBackground ? 'Updating...' : 'Update Background'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+      
+      {/* Highlight Video Dialog */}
+      <Dialog open={isHighlightDialogOpen} onOpenChange={setIsHighlightDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Update Highlight Video</DialogTitle>
+            <DialogDescription>
+              Enter the YouTube URL for the match highlights video.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4 py-4">
+            <div className="flex flex-col gap-2">
+              <label htmlFor="highlightUrl" className="text-sm font-medium">
+                YouTube Video URL
+              </label>
+              <Input
+                id="highlightUrl"
+                value={highlightVideoUrl}
+                onChange={(e) => setHighlightVideoUrl(e.target.value)}
+                placeholder="https://www.youtube.com/watch?v=..."
+              />
+            </div>
+            
+            {highlightVideoUrl && highlightVideoUrl.includes('youtube.com') && (
+              <div className="mt-4 rounded-md overflow-hidden border border-border aspect-video">
+                <iframe
+                  src={`https://www.youtube.com/embed/${highlightVideoUrl.split('v=')[1]?.split('&')[0] || ''}`}
+                  title="YouTube video preview"
+                  className="w-full h-full"
+                  allowFullScreen
+                ></iframe>
+              </div>
+            )}
+          </div>
+          
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsHighlightDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button 
+              onClick={confirmHighlightUpdate}
+              disabled={isUpdatingHighlight || !highlightVideoUrl.trim()}
+            >
+              {isUpdatingHighlight ? 'Updating...' : 'Update Highlights'}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </>

@@ -5,6 +5,7 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 export type List = {
   id: string;
   name: string;
+  description?: string;
   matches: string[];
   createdAt: string;
 };
@@ -12,13 +13,15 @@ export type List = {
 export const useLists = () => {
   const [lists, setLists] = useLocalStorage<List[]>('footballtrackr-lists', []);
   const [isListModalOpen, setIsListModalOpen] = useState(false);
+  const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [activeMatchId, setActiveMatchId] = useState<string | null>(null);
 
-  const createList = (name: string): List => {
+  const createList = (name: string, description?: string, initialMatches: string[] = []): List => {
     const newList: List = {
       id: crypto.randomUUID(),
       name,
-      matches: activeMatchId ? [activeMatchId] : [],
+      description,
+      matches: activeMatchId ? [...new Set([...initialMatches, activeMatchId])] : initialMatches,
       createdAt: new Date().toISOString()
     };
     
@@ -62,6 +65,16 @@ export const useLists = () => {
     setActiveMatchId(null);
   };
 
+  const openCreateListModal = (matchId?: string): void => {
+    if (matchId) setActiveMatchId(matchId);
+    setIsCreateListModalOpen(true);
+  };
+
+  const closeCreateListModal = (): void => {
+    setIsCreateListModalOpen(false);
+    if (!isListModalOpen) setActiveMatchId(null);
+  };
+
   const isMatchInList = (listId: string, matchId: string): boolean => {
     const list = lists.find(list => list.id === listId);
     return list ? list.matches.includes(matchId) : false;
@@ -77,6 +90,9 @@ export const useLists = () => {
     isListModalOpen,
     openListModal,
     closeListModal,
+    isCreateListModalOpen,
+    openCreateListModal,
+    closeCreateListModal,
     activeMatchId
   };
 };

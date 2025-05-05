@@ -18,43 +18,47 @@ interface CategoryCarouselProps {
   matches: Match[];
   categorySlug: string;
   description?: string;
+  hideTitle?: boolean;
 }
 
 const CategoryCarousel: React.FC<CategoryCarouselProps> = ({ 
   title, 
   matches,
   categorySlug,
-  description
+  description,
+  hideTitle = false
 }) => {
   // Take only the first 12 matches for the carousel
   const displayMatches = matches?.slice(0, 12);
   
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between">
-        <div>
-          <Link 
-            to={`/category/${categorySlug}`}
-            className="text-2xl font-semibold hover:text-primary transition-colors letterboxd-link group flex items-center"
+      {!hideTitle && (
+        <div className="flex items-center justify-between">
+          <div>
+            <Link 
+              to={`/category/${categorySlug}`}
+              className="text-2xl font-semibold hover:text-primary transition-colors letterboxd-link group flex items-center"
+            >
+              {title}
+              <ChevronRight className="w-5 h-5 ml-1 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+            </Link>
+            {description && (
+              <p className="text-sm text-muted-foreground mt-1 max-w-2xl">{description}</p>
+            )}
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            asChild
+            className="text-muted-foreground hover:text-foreground"
           >
-            {title}
-            <ChevronRight className="w-5 h-5 ml-1 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
-          </Link>
-          {description && (
-            <p className="text-sm text-muted-foreground mt-1 max-w-2xl">{description}</p>
-          )}
+            <Link to={`/category/${categorySlug}`}>
+              View All
+            </Link>
+          </Button>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          asChild
-          className="text-muted-foreground hover:text-foreground"
-        >
-          <Link to={`/category/${categorySlug}`}>
-            View All
-          </Link>
-        </Button>
-      </div>
+      )}
       
       <Carousel
         opts={{
