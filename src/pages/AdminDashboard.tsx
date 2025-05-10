@@ -1,92 +1,40 @@
 
 import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAdmin } from '@/hooks/useAdmin';
 import AdminLayout from '@/components/admin/AdminLayout';
-import AddMatchForm from '@/components/admin/AddMatchForm';
-import MatchesList from '@/components/admin/MatchesList';
-import ReviewsManagement from '@/components/admin/ReviewsManagement';
-import AdminStats from '@/components/admin/AdminStats';
 import AdminHeader from '@/components/admin/AdminHeader';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import AdminStats from '@/components/admin/AdminStats';
+import MatchesList from '@/components/admin/MatchesList';
+import ReviewsManagement from '@/components/admin/ReviewsManagement';
+import AddMatchForm from '@/components/admin/AddMatchForm';
 
 const AdminDashboard = () => {
-  const { isAuthenticated } = useAdmin();
-  const [activeTab, setActiveTab] = useState<string>('dashboard');
-  const [activeCategory, setActiveCategory] = useState<string>('all');
-
-  // Protect route - redirect if not authenticated
-  if (!isAuthenticated) {
-    return <Navigate to="/admin-login" replace />;
-  }
+  const [activeTab, setActiveTab] = useState("overview");
 
   return (
-    <AdminLayout>
-      <AdminHeader title="FootballTrackr Admin" />
-      
-      <Tabs 
-        value={activeTab} 
-        onValueChange={setActiveTab}
-        className="w-full"
-      >
-        <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
-          <TabsTrigger value="add">Add Match</TabsTrigger>
-          <TabsTrigger value="manage">Manage Matches</TabsTrigger>
-          <TabsTrigger value="reviews">Manage Reviews</TabsTrigger>
+    <AdminLayout title="Dashboard" subtitle="Manage your football tracker application">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="matches">Matches</TabsTrigger>
+          <TabsTrigger value="reviews">Reviews</TabsTrigger>
+          <TabsTrigger value="add-match">Add Match</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="dashboard" className="px-1 py-6">
+        <TabsContent value="overview" className="space-y-4">
           <AdminStats />
         </TabsContent>
         
-        <TabsContent value="add" className="px-1">
-          <AddMatchForm />
+        <TabsContent value="matches" className="space-y-4">
+          <MatchesList category="all" />
         </TabsContent>
         
-        <TabsContent value="manage" className="px-1">
-          <div className="mb-6">
-            <h3 className="text-lg font-medium mb-2">Filter by Category</h3>
-            <div className="flex flex-wrap gap-2">
-              <button 
-                onClick={() => setActiveCategory('all')}
-                className={`px-3 py-1 rounded-md ${activeCategory === 'all' ? 
-                  'bg-primary text-primary-foreground' : 
-                  'bg-secondary text-secondary-foreground'}`}
-              >
-                All
-              </button>
-              <button 
-                onClick={() => setActiveCategory('el-clasico')}
-                className={`px-3 py-1 rounded-md ${activeCategory === 'el-clasico' ? 
-                  'bg-primary text-primary-foreground' : 
-                  'bg-secondary text-secondary-foreground'}`}
-              >
-                El Clásico
-              </button>
-              <button 
-                onClick={() => setActiveCategory('world-cup')}
-                className={`px-3 py-1 rounded-md ${activeCategory === 'world-cup' ? 
-                  'bg-primary text-primary-foreground' : 
-                  'bg-secondary text-secondary-foreground'}`}
-              >
-                World Cup
-              </button>
-              <button 
-                onClick={() => setActiveCategory('premier-league')}
-                className={`px-3 py-1 rounded-md ${activeCategory === 'premier-league' ? 
-                  'bg-primary text-primary-foreground' : 
-                  'bg-secondary text-secondary-foreground'}`}
-              >
-                Premier League
-              </button>
-            </div>
-          </div>
-          <MatchesList category={activeCategory} />
-        </TabsContent>
-        
-        <TabsContent value="reviews" className="px-1">
+        <TabsContent value="reviews" className="space-y-4">
           <ReviewsManagement />
+        </TabsContent>
+        
+        <TabsContent value="add-match" className="space-y-4">
+          <AddMatchForm />
         </TabsContent>
       </Tabs>
     </AdminLayout>

@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { MessageSquare } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ReviewActions } from '@/components/ui/ReviewActions';
+import { ReviewActions } from '@/components/match/ReviewActions';
 import { Review } from '@/hooks/useReviews';
 import { useTheme } from 'next-themes';
 import { cn } from '@/lib/utils';

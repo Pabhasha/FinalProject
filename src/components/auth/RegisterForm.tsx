@@ -102,6 +102,7 @@ const RegisterForm = () => {
     }
   }
 
+  
   // Filter teams based on search query
   const filteredTeams = teams.filter(team => 
     team.name.toLowerCase().includes(teamSearchQuery.toLowerCase()) || 

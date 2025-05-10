@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Star, Heart, Share2, ListChecks } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useTheme } from 'next-themes';
+import MatchRating from '@/components/match/MatchRating';
 
 interface MatchActionsProps {
   matchId: string;
@@ -19,6 +19,7 @@ interface MatchActionsProps {
 }
 
 const MatchActions = ({
+  matchId,
   userRating,
   hasWatched,
   isFavorited,
@@ -43,23 +44,12 @@ const MatchActions = ({
 
         {/* Rating stars component */}
         <div className="flex items-center justify-center mb-4">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              className="focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-full p-1"
-              onClick={() => onRatingChange(star)}
-              aria-label={`Rate ${star} stars`}
-            >
-              <Star
-                className={cn(
-                  "w-6 h-6 sm:w-7 sm:h-7",
-                  star <= userRating
-                    ? "text-yellow-400 fill-yellow-400"
-                    : isDark ? "text-gray-300" : "text-gray-300"
-                )}
-              />
-            </button>
-          ))}
+          <MatchRating 
+            matchId={matchId}
+            initialRating={userRating}
+            size="lg"
+            onRatingChange={onRatingChange}
+          />
         </div>
         
         {/* Action buttons with improved layout */}

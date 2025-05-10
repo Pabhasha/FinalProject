@@ -1,8 +1,9 @@
+
 import { Toaster } from '@/components/ui/sonner';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { AdminProvider } from "@/context/AdminContext";
 import { ThemeProvider } from "next-themes";
@@ -96,11 +97,8 @@ function App() {
                       <Lists />
                     </Suspense>
                   } />
-                  <Route path="/profile" element={
-                    <Suspense fallback={<PageLoader />}>
-                      <Profile />
-                    </Suspense>
-                  } />
+                  
+                  {/* Auth Routes */}
                   <Route path="/auth" element={
                     <Suspense fallback={<PageLoader />}>
                       <Auth />
@@ -108,12 +106,17 @@ function App() {
                   } />
                   <Route path="/register" element={
                     <Suspense fallback={<PageLoader />}>
-                      <Auth />
+                      <Navigate to="/auth" replace state={{ activeTab: "register" }} />
                     </Suspense>
                   } />
                   <Route path="/login" element={
                     <Suspense fallback={<PageLoader />}>
-                      <Auth />
+                      <Navigate to="/auth" replace state={{ activeTab: "login" }} />
+                    </Suspense>
+                  } />
+                  <Route path="/profile" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Profile />
                     </Suspense>
                   } />
                   
@@ -127,6 +130,9 @@ function App() {
                     <Suspense fallback={<PageLoader />}>
                       <AdminDashboard />
                     </Suspense>
+                  } />
+                  <Route path="/admin/*" element={
+                    <Navigate to="/admin/dashboard" replace />
                   } />
                   
                   {/* Catch-all route */}
