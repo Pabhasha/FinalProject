@@ -3,14 +3,12 @@ import { Toaster } from '@/components/ui/sonner';
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { AdminProvider } from "@/context/AdminContext";
 import { ThemeProvider } from "next-themes";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Suspense, lazy } from "react";
-import { AuthRoutes } from "@/components/auth/AuthRoutes";
-import { AdminRoutes } from "@/components/admin/AdminRoutes";
 
 import Index from "./pages/Index";
 
@@ -19,7 +17,13 @@ const MatchDetails = lazy(() => import('./pages/MatchDetails'));
 const Matches = lazy(() => import('./pages/Matches'));
 const CategoryPage = lazy(() => import('./pages/CategoryPage'));
 const Lists = lazy(() => import('./pages/Lists'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Auth = lazy(() => import('./pages/Auth'));
 const NotFound = lazy(() => import('./pages/NotFound'));
+
+// Admin Routes
+const AdminLogin = lazy(() => import('./pages/AdminLogin'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
 
 // Enhanced loading fallback with skeleton UI
 const PageLoader = () => (
@@ -95,10 +99,41 @@ function App() {
                   } />
                   
                   {/* Auth Routes */}
-                  <AuthRoutes />
+                  <Route path="/auth" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Auth />
+                    </Suspense>
+                  } />
+                  <Route path="/register" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Navigate to="/auth" replace state={{ activeTab: "register" }} />
+                    </Suspense>
+                  } />
+                  <Route path="/login" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Navigate to="/auth" replace state={{ activeTab: "login" }} />
+                    </Suspense>
+                  } />
+                  <Route path="/profile" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <Profile />
+                    </Suspense>
+                  } />
                   
                   {/* Admin Routes */}
-                  <AdminRoutes />
+                  <Route path="/admin-login" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <AdminLogin />
+                    </Suspense>
+                  } />
+                  <Route path="/admin/dashboard" element={
+                    <Suspense fallback={<PageLoader />}>
+                      <AdminDashboard />
+                    </Suspense>
+                  } />
+                  <Route path="/admin/*" element={
+                    <Navigate to="/admin/dashboard" replace />
+                  } />
                   
                   {/* Catch-all route */}
                   <Route path="*" element={

@@ -1,8 +1,9 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Match } from '@/utils/mockData';
-import MatchRating from './MatchRating';
+import MatchRating from '@/components/match/MatchRating';
 import { Calendar, Trophy } from 'lucide-react';
 
 interface MatchCardProps {

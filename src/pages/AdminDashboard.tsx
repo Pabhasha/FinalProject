@@ -26,7 +26,7 @@ const AdminDashboard = () => {
         </TabsContent>
         
         <TabsContent value="matches" className="space-y-4">
-          <MatchesList />
+          <MatchesList category="all" />
         </TabsContent>
         
         <TabsContent value="reviews" className="space-y-4">
