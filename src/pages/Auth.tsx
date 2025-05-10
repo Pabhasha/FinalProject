@@ -1,21 +1,27 @@
 
-import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import MainLayout from '@/components/layout/MainLayout';
 import LoginForm from '@/components/auth/LoginForm';
 import RegisterForm from '@/components/auth/RegisterForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
-const Auth = () => {
-  const [activeTab, setActiveTab] = useState<"login" | "register">("login");
-  const { isAuthenticated } = useAuth();
+type LocationState = {
+  activeTab?: "login" | "register";
+};
 
-  // Redirect to profile if already authenticated
-  if (isAuthenticated) {
-    return <Navigate to="/profile" replace />;
-  }
+const Auth = () => {
+  const location = useLocation();
+  const state = location.state as LocationState;
+  
+  const [activeTab, setActiveTab] = useState<"login" | "register">(state?.activeTab || "login");
+
+  useEffect(() => {
+    if (state?.activeTab) {
+      setActiveTab(state.activeTab);
+    }
+  }, [state]);
 
   return (
     <MainLayout>
@@ -28,7 +34,7 @@ const Auth = () => {
           </CardHeader>
           
           <CardContent>
-            <Tabs defaultValue={activeTab} onValueChange={(value) => setActiveTab(value as "login" | "register")}>
+            <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as "login" | "register")}>
               <TabsList className="grid grid-cols-2 mb-6">
                 <TabsTrigger value="login">Sign In</TabsTrigger>
                 <TabsTrigger value="register">Create Account</TabsTrigger>
