@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { ThumbsUp, ThumbsDown, MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -26,8 +27,8 @@ interface UserReplies {
 }
 
 export function ReviewActions({ reviewId, initialLikes, initialDislikes = 0 }: ReviewActionsProps) {
-  const [userVotes, setUserVotes] = useLocalStorage<UserVotes>('footballtrackr-user-votes', {});
-  const [userReplies, setUserReplies] = useLocalStorage<UserReplies>('footballtrackr-user-replies', {});
+  const [userVotes, setUserVotes] = useLocalStorage<UserVotes>('football-tracker-user-votes', {});
+  const [userReplies, setUserReplies] = useLocalStorage<UserReplies>('football-tracker-user-replies', {});
   
   const [likes, setLikes] = useState(initialLikes);
   const [dislikes, setDislikes] = useState(initialDislikes);

@@ -21,7 +21,7 @@ const MatchRating: React.FC<MatchRatingProps> = ({
   onChange, // Add the prop here
   readOnly = false
 }) => {
-  const [userRatings, setUserRatings] = useLocalStorage<Record<string, number>>('footballtrackr-ratings', {});
+  const [userRatings, setUserRatings] = useLocalStorage<Record<string, number>>('football-tracker-ratings', {});
   const [rating, setRating] = useState<number>(0);
   const [hoverRating, setHoverRating] = useState<number>(0);
 

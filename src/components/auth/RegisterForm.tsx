@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -101,6 +100,7 @@ const RegisterForm = () => {
       setIsLoading(false);
     }
   }
+  
   // Filter teams based on search query
   const filteredTeams = teams.filter(team => 
     team.name.toLowerCase().includes(teamSearchQuery.toLowerCase()) || 
