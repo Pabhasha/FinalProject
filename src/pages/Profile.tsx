@@ -97,7 +97,7 @@ const Profile = () => {
       </MainLayout>
     );
   }
-
+console.log(user,"###########################################")
   return (
     <MainLayout>
       <div className="page-transition max-w-7xl mx-auto px-4 py-8">
@@ -115,7 +115,7 @@ const Profile = () => {
             </Avatar>
             
             <div>
-              <h1 className="text-2xl font-bold mb-1">{user?.username}</h1>
+              <h1 className="text-2xl font-bold mb-1">{user?.email}</h1>
               <p className="text-muted-foreground text-sm">
                 Member since {new Date(user?.createdAt || Date.now()).toLocaleDateString()}
               </p>

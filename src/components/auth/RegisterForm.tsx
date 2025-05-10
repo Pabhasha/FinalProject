@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
@@ -28,16 +27,13 @@ import {
 } from '@/components/ui/select';
 
 const registerSchema = z.object({
+  userId: z.string(),
   username: z.string()
     .min(3, 'Username must be at least 3 characters')
     .max(20, 'Username cannot exceed 20 characters'),
   email: z.string()
     .email('Invalid email address format'),
   password: z.string()
-    .min(8, 'Password must be at least 8 characters')
-    .refine(password => /[A-Z]/.test(password), {
-      message: 'Password must contain at least one uppercase letter',
-    })
     .refine(password => /[0-9]/.test(password), {
       message: 'Password must contain at least one number',
     }),
@@ -60,6 +56,7 @@ const RegisterForm = () => {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
+      userId: crypto.randomUUID(), 
       username: '',
       email: '',
       password: '',
@@ -74,10 +71,10 @@ const RegisterForm = () => {
       setFormError(null);
       
       await register(
+        values.userId, 
         values.username,
         values.email,
-        values.password,
-        values.favoriteTeamId
+        values.password
       );
       
       const response = await fetch("http://localhost:5000/api/admin", {  
@@ -85,14 +82,17 @@ const RegisterForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        
         body: JSON.stringify(values)
-      }); 
+      }).catch(err => {
+        console.error("Fetch error:", err);
+        throw err;
+      });
       
       const data = await response.json();  
       if (!response.ok) throw new Error(data.error || "Failed to create account");
       
       toast.success("Account created successfully");
+      localStorage.setItem("userId", values.userId);
       navigate('/profile');
     } catch (error) { 
       setFormError(error instanceof Error ? error.message : 'Error creating account');
@@ -101,6 +101,7 @@ const RegisterForm = () => {
       setIsLoading(false);
     }
   }
+
   // Filter teams based on search query
   const filteredTeams = teams.filter(team => 
     team.name.toLowerCase().includes(teamSearchQuery.toLowerCase()) || 

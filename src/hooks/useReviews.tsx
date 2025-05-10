@@ -1,8 +1,7 @@
-
-import { useState, useEffect } from 'react';
-import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { useAuth } from '@/context/AuthContext';
-import { toast } from 'sonner';
+import { useState, useEffect } from "react";
+import { useLocalStorage } from "@/hooks/useLocalStorage";
+import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 export interface Review {
   id: string;
@@ -22,12 +21,22 @@ interface UserReviewsMap {
 
 export function useReviews() {
   const { user } = useAuth();
-  const [allReviews, setAllReviews] = useLocalStorage<Review[]>('footballtrackr-reviews', []);
-  const [userReviews, setUserReviews] = useLocalStorage<UserReviewsMap>('footballtrackr-user-reviews', {});
-  
+  const [allReviews, setAllReviews] = useLocalStorage<Review[]>(
+    "footballtrackr-reviews",
+    []
+  );
+  const [userReviews, setUserReviews] = useLocalStorage<UserReviewsMap>(
+    "footballtrackr-user-reviews",
+    {}
+  );
+const user_id = localStorage.getItem("userId");
+
+
+console.log(user_id, "user_iduser_iduser_iduser_id");
+
   // Get reviews for a specific match
   const getMatchReviews = (matchId: string) => {
-    return allReviews.filter(review => review.matchId === matchId);
+    return allReviews.filter((review) => review.matchId === matchId);
   };
 
   // Check if user has already reviewed this match
@@ -44,17 +53,20 @@ export function useReviews() {
 
   // Add a new review
   const addReview = (matchId: string, comment: string, rating: number) => {
+
+
+
     if (!user) {
       toast("Sign in required", {
         description: "Please sign in to leave a review.",
       });
-      return null;
     }
 
     // Check if user already reviewed this match
     if (hasUserReviewed(matchId)) {
       toast("Already reviewed", {
-        description: "You've already reviewed this match. You can edit your review instead.",
+        description:
+          "You've already reviewed this match. You can edit your review instead.",
       });
       return null;
     }
@@ -62,27 +74,29 @@ export function useReviews() {
     const newReview: Review = {
       id: crypto.randomUUID(),
       matchId,
-      userId: user.id,
+      userId: user_id,
       author: user.username,
       comment,
       rating,
       createdAt: new Date().toISOString(),
       likes: 0,
-      dislikes: 0
+      dislikes: 0,
     };
 
     // Update both states
     setAllReviews([...allReviews, newReview]);
     setUserReviews({
       ...userReviews,
-      [matchId]: newReview
+      [matchId]: newReview,
     });
+
+    console.log(newReview, "|||||||||||||||||||||---newReview");
 
     // Use the standard toast API without variant property
     toast("Review posted", {
-      description: "Your review has been posted successfully!"
+      description: "Your review has been posted successfully!",
     });
-    
+
     return newReview;
   };
 
@@ -93,7 +107,7 @@ export function useReviews() {
   };
 
   // Admin functions
-  
+
   // Get all reviews (admin only)
   const getAllReviews = () => {
     return allReviews;
@@ -102,17 +116,17 @@ export function useReviews() {
   // Delete a review (admin only)
   const deleteReview = async (reviewId: string) => {
     // Simulate server delay
-    await new Promise(resolve => setTimeout(resolve, 500));
-    
-    const reviewToDelete = allReviews.find(review => review.id === reviewId);
-    
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    const reviewToDelete = allReviews.find((review) => review.id === reviewId);
+
     if (reviewToDelete) {
       // Remove from all reviews
-      setAllReviews(allReviews.filter(review => review.id !== reviewId));
-      
+      setAllReviews(allReviews.filter((review) => review.id !== reviewId));
+
       // If it belongs to a user, remove from their reviews too
       if (reviewToDelete.userId) {
-        setUserReviews(prev => {
+        setUserReviews((prev) => {
           const updated = { ...prev };
           if (updated[reviewToDelete.matchId]) {
             delete updated[reviewToDelete.matchId];
@@ -121,7 +135,7 @@ export function useReviews() {
         });
       }
     }
-    
+
     return true;
   };
 
@@ -133,6 +147,6 @@ export function useReviews() {
     getAllUserReviews,
     // Admin functions
     getAllReviews,
-    deleteReview
+    deleteReview,
   };
 }

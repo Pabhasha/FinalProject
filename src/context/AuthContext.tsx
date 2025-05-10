@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const register = async (username: string, email: string, password: string, favoriteTeamId: string): Promise<User> => {
     // In a real app, this would be an API call to register the user
     const newUser: User = {
-      id: crypto.randomUUID(), // generate a random ID
+      id: crypto.randomUUID(), 
       username,
       email,
       favoriteTeamId,
