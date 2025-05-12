@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useAuth } from "@/context/AuthContext";
@@ -29,10 +30,6 @@ export function useReviews() {
     "footballtrackr-user-reviews",
     {}
   );
-const user_id = localStorage.getItem("userId");
-
-
-console.log(user_id, "user_iduser_iduser_iduser_id");
 
   // Get reviews for a specific match
   const getMatchReviews = (matchId: string) => {
@@ -53,13 +50,11 @@ console.log(user_id, "user_iduser_iduser_iduser_id");
 
   // Add a new review
   const addReview = (matchId: string, comment: string, rating: number) => {
-
-
-
     if (!user) {
       toast("Sign in required", {
         description: "Please sign in to leave a review.",
       });
+      return null;
     }
 
     // Check if user already reviewed this match
@@ -74,7 +69,7 @@ console.log(user_id, "user_iduser_iduser_iduser_id");
     const newReview: Review = {
       id: crypto.randomUUID(),
       matchId,
-      userId: user_id,
+      userId: user.id,
       author: user.username,
       comment,
       rating,
@@ -89,8 +84,6 @@ console.log(user_id, "user_iduser_iduser_iduser_id");
       ...userReviews,
       [matchId]: newReview,
     });
-
-    console.log(newReview, "|||||||||||||||||||||---newReview");
 
     // Use the standard toast API without variant property
     toast("Review posted", {
