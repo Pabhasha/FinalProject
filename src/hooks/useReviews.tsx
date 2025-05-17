@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useLocalStorage } from "@/hooks/useLocalStorage";
 import { useAuth } from "@/context/AuthContext";
@@ -49,7 +48,11 @@ export function useReviews() {
   };
 
   // Add a new review
-  const addReview = (matchId: string, comment: string, rating: number) => {
+  const addReview = async (
+    matchId: string,
+    comment: string,
+    rating: number
+  ) => {
     if (!user) {
       toast("Sign in required", {
         description: "Please sign in to leave a review.",
@@ -89,6 +92,35 @@ export function useReviews() {
     toast("Review posted", {
       description: "Your review has been posted successfully!",
     });
+
+    console.log(
+      newReview,
+      "##########################################newReview"
+    );
+
+    try {
+      const response = await fetch("http://localhost:5000/api/review", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newReview),
+      }).catch((err) => {
+        console.error("Fetch error:", err);
+        throw err;
+      });
+
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data.error || "Failed to create a review");
+
+      toast.success("Review created successfully");
+    } catch (error) {
+      toast(error instanceof Error ? error.message : "Error creating account");
+      console.error("Review saving error:", error);
+    } finally {
+      console.log("Review saving process completed.");
+    }
 
     return newReview;
   };
